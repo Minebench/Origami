@@ -1,0 +1,52 @@
+From 15519ef33fc19b3286d6b032f1f988559bdff406 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Wed, 15 May 2019 23:51:15 +0100
+Subject: [PATCH] Origami POM Changes
+
+---
+ pom.xml | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/pom.xml b/pom.xml
+index 13cdc25f..4e1f0fcf 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -2,7 +2,7 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+-
++<!--
+     <parent>
+         <groupId>com.destroystokyo.paper</groupId>
+         <artifactId>paper-parent</artifactId>
+@@ -16,6 +16,17 @@
+     <name>Paper-API</name>
+     <url>https://github.com/PaperMC/Paper</url>
+     <description>An enhanced plugin API for Minecraft servers.</description>
++-->
++    <parent>
++        <groupId>de.minebench.origami</groupId>
++        <artifactId>origami-parent</artifactId>
++        <version>1.13.2-R0.1-SNAPSHOT</version>
++        <relativePath>../pom.xml</relativePath>
++    </parent>
++
++    <artifactId>origami-api</artifactId>
++    <version>1.13.2-R0.1-SNAPSHOT</version>
++    <name>Origami-API</name>
+ 
+     <properties>
+         <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
+@@ -179,7 +190,7 @@
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-shade-plugin</artifactId>
+-                <version>3.1.1</version>
++                <version>3.2.1</version>
+                 <executions>
+                     <execution>
+                         <phase>package</phase>
+-- 
+2.18.0.windows.1
+

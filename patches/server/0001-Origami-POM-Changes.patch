@@ -1,0 +1,86 @@
+From 50cad2ac2c82bf9a1d07bc0646020a31e738a385 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Wed, 15 May 2019 23:51:15 +0100
+Subject: [PATCH] Origami POM Changes
+
+---
+ pom.xml                                       | 21 ++++++++++---------
+ .../bukkit/craftbukkit/util/Versioning.java   |  2 +-
+ 2 files changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/pom.xml b/pom.xml
+index 9cbd4880..4c0f6521 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -1,11 +1,12 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+-    <artifactId>paper</artifactId>
++
++    <artifactId>origami</artifactId>
+     <packaging>jar</packaging>
+     <version>1.13.2-R0.1-SNAPSHOT</version>
+-    <name>Paper</name>
+-    <url>https://papermc.io</url>
++    <name>Origami-Server</name>
++    <url>https://minebench.de</url>
+ 
+     <properties>
+         <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
+@@ -21,16 +22,16 @@
+     </properties>
+ 
+     <parent>
+-        <groupId>com.destroystokyo.paper</groupId>
+-        <artifactId>paper-parent</artifactId>
+-        <version>dev-SNAPSHOT</version>
++        <groupId>de.minebench.origami</groupId>
++        <artifactId>origami-parent</artifactId>
++        <version>1.13.2-R0.1-SNAPSHOT</version>
+         <relativePath>../pom.xml</relativePath>
+     </parent>
+ 
+     <dependencies>
+         <dependency>
+-            <groupId>com.destroystokyo.paper</groupId>
+-            <artifactId>paper-api</artifactId>
++            <groupId>de.minebench.origami</groupId>
++            <artifactId>origami-api</artifactId>
+             <version>${project.version}</version>
+             <scope>compile</scope>
+         </dependency>
+@@ -136,7 +137,7 @@
+ 
+     <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
+     <build>
+-        <finalName>paper-${minecraft.version}</finalName>
++        <finalName>origami-${minecraft.version}</finalName>
+         <defaultGoal>clean install</defaultGoal> <!-- Paper -->
+         <plugins>
+             <plugin>
+@@ -199,7 +200,7 @@
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-shade-plugin</artifactId>
+-                <version>3.1.1</version>
++                <version>3.2.1</version>
+                 <executions>
+                     <execution>
+                         <phase>package</phase>
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+index 674096ca..d8c4f994 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+@@ -11,7 +11,7 @@ public final class Versioning {
+     public static String getBukkitVersion() {
+         String result = "Unknown-Version";
+ 
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.destroystokyo.paper/paper-api/pom.properties");
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/de.minebench.origami/origami-api/pom.properties"); // Origami
+         Properties properties = new Properties();
+ 
+         if (stream != null) {
+-- 
+2.18.0.windows.1
+
