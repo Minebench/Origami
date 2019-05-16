@@ -75,7 +75,7 @@ case "$1" in
             fi
             (grep "alias $NAME=" ~/.bashrc > /dev/null) && (sed -i "s|alias $NAME=.*|alias $NAME='. $SOURCE'|g" ~/.bashrc) || (echo "alias $NAME='. $SOURCE'" >> ~/.bashrc)
             alias "$NAME=. $SOURCE"
-            echo "You can now just type '$NAME' at any time to access the paper tool."
+            echo "You can now just type '$NAME' at any time to access the origami tool."
         fi
     ;;
     *)
@@ -92,8 +92,8 @@ case "$1" in
         echo ""
         echo " These commands require the setup command before use:"
         echo "  * r, root      | Change directory to the root of the project."
-        echo "  * a. api       | Move to the Paper-API directory."
-        echo "  * s, server    | Move to the Paper-Server directory."
+        echo "  * a. api       | Move to the ${FORK_NAME}-API directory."
+        echo "  * s, server    | Move to the ${FORK_NAME}-Server directory."
         echo "  * e, edit      | Use to edit a specific patch, give it the argument \"server\" or \"api\""
         echo "                 | respectively to edit the correct project. Use the argument \"continue\" after"
         echo "                 | the changes have been made to finish and rebuild patches. Can be called from anywhere."
