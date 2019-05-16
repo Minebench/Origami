@@ -19,11 +19,16 @@ See https://github.com/Spottedleaf/Concrete, https://github.com/starlis/empirecr
 and https://github.com/electronicboy/byof for the license of material used/modified by this project.
 
 ## Plugin developers
-In order to use Origami as a dependency you must following the steps laid out
-in `Building and setting up` and build Origami. Each time you want to update
-your dependency you must re-build concrete.
+In order to use Origami as a dependency just add the following repo and dependency to your pom:
 
-Concrete-API maven dependency:
+Origami maven repository:
+ ```xml 
+<repository>
+    <id>origami-repo</id>
+    <url>https://repo.minebench.de/</url>
+</repository>
+```
+Origami-API maven dependency:
 ```xml
 <dependency>
     <groupId>de.minebench.origami</groupId>
@@ -32,19 +37,6 @@ Concrete-API maven dependency:
     <scope>provided</scope>
  </dependency>
  ```
- 
- Concrete-Server maven dependency:
- ```xml
- <dependency>
-     <groupId>de.minebench.origami</groupId>
-     <artifactId>origami</artifactId>
-     <version>1.13.2-R0.1-SNAPSHOT</version>
-     <scope>provided</scope>
-  </dependency>
-  ```
-
-There is no repository required since the artifacts should be locally installed
-via building concrete.
 
 ## Building and setting up
 Run the following commands in the root directory:
