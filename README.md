@@ -1,9 +1,11 @@
 Origami
 ==
 
-Custom paper fork used by [Minebench.de](https://minebench.de). The fork is based off of 
-[Spottedleaf's Concrete](https://github.com/Spottedleaf/Concrete) which is based off of 
-[aikar's EMC framework](https://github.com/starlis/empirecraft).
+![Origami Logo](logo.png)
+
+Custom paper fork used by [Minebench.de](https://minebench.de). The fork is based off of
+ the framework used in [Spottedleaf's Concrete](https://github.com/Spottedleaf/Concrete)
+  which is based off of [aikar's EMC framework](https://github.com/starlis/empirecraft).
 
 ## Contact
 [IRC](http://moep.tv/chat) | [Website](https://minebench.de/)
