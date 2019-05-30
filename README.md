@@ -63,3 +63,8 @@ corresponding patch file.
 
 Use the command `./origami build` to build the api and server. Compiled jars
 will be placed under `Origami-API/target` and `Origami-Server/target`.
+
+#### Updating Paper upstream
+
+Switch into the directory of the Paper submodule and pull changes in from the 
+repository, then run `./origami up` and `./origami rb`.
