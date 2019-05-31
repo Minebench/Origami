@@ -1,0 +1,26 @@
+From 0657b83d47e414d7212a04200ecbb8866d3ac6d7 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Sat, 1 Jun 2019 00:23:04 +0100
+Subject: [PATCH] Backport fix for some babys drowning when swimming
+ (MC-134755)
+
+---
+ src/main/java/net/minecraft/server/PathfinderGoalFloat.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalFloat.java b/src/main/java/net/minecraft/server/PathfinderGoalFloat.java
+index 38a0b2db..3696c421 100644
+--- a/src/main/java/net/minecraft/server/PathfinderGoalFloat.java
++++ b/src/main/java/net/minecraft/server/PathfinderGoalFloat.java
+@@ -13,7 +13,7 @@ public class PathfinderGoalFloat extends PathfinderGoal {
+ 
+     public boolean validConditions() { return this.a(); } // Paper - OBFHELPER
+     public boolean a() {
+-        return this.a.isInWater() && this.a.bY() > 0.4D || this.a.ax();
++        return this.a.isInWater() && this.a.bY() > (this.a.getHeadHeight() < 0.4D ? 0.2D : 0.4D) || this.a.ax(); // Origami - fix some babys drowning when swimming
+     }
+ 
+     public void update() { this.e(); } // Paper - OBFHELPER
+-- 
+2.18.0.windows.1
+
