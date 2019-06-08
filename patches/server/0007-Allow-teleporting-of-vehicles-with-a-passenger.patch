@@ -1,0 +1,28 @@
+From 73fb66672c96bf3b671957f194d0662938b5077e Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Sat, 8 Jun 2019 21:57:06 +0100
+Subject: [PATCH] Allow teleporting of vehicles with a passenger
+
+This makes it work like the vanilla /teleport command as in that it
+teleports any passenger with it but dismounts any passengers when
+the world is changed. (which is a bug in Vanilla in my eyes)
+---
+ src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+index a12dd477..e9a7df98 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+@@ -354,7 +354,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+         Preconditions.checkArgument(location != null, "location");
+         location.checkFinite();
+ 
+-        if (entity.isVehicle() || entity.dead) {
++        if (entity.dead) { // Origami - allow teleporting of vehicles
+             return false;
+         }
+ 
+-- 
+2.18.0.windows.1
+
