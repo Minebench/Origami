@@ -17,7 +17,7 @@ index a8ac59d54..b31fdf7fe 100644
          // Clear existing commands
 -        CommandDispatcher dispatcher = console.commandDispatcher = new CommandDispatcher();
 +        // Origami start - Register commands directly in Vanilla dispatcher
-+        if (!OrigamiConfig.registerCommandsIntoVanillaDispatcher) {
++        if (!OrigamiConfig.pluginCommandsInVanillaDispatcher) {
 +            console.commandDispatcher= new CommandDispatcher();
 +        }
 +        CommandDispatcher dispatcher = console.commandDispatcher;

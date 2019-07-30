@@ -175,9 +175,9 @@ index 000000000..c95d167c2
 +        }
 +    }
 +
-+    public static boolean registerCommandsIntoVanillaDispatcher = false;
-+    private static void registerCommandsIntoVanillaDispatcher() {
-+        registerCommandsIntoVanillaDispatcher = getBoolean("commands.register-into-vanilla-dispatcher", registerCommandsIntoVanillaDispatcher);
++    public static boolean pluginCommandsInVanillaDispatcher = false;
++    private static void pluginCommandsInVanillaDispatcher() {
++        pluginCommandsInVanillaDispatcher = getBoolean("plugin-commands-in-vanilla-dispatcher", pluginCommandsInVanillaDispatcher);
 +    }
 +
 +}
