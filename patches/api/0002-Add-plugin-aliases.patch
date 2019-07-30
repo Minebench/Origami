@@ -1,0 +1,193 @@
+From d0b127a80cb6ee02c1a6307df40443a1b5615ac7 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Tue, 30 Jul 2019 01:49:07 +0100
+Subject: [PATCH] Add plugin aliases
+
+---
+ .../command/defaults/PluginsCommand.java      | 12 +++++
+ .../bukkit/plugin/PluginDescriptionFile.java  | 39 ++++++++++++++++
+ .../bukkit/plugin/SimplePluginManager.java    | 46 ++++++++++++++++++-
+ 3 files changed, 95 insertions(+), 2 deletions(-)
+
+diff --git a/src/main/java/org/bukkit/command/defaults/PluginsCommand.java b/src/main/java/org/bukkit/command/defaults/PluginsCommand.java
+index 6cfd9f3c..baa8fd31 100644
+--- a/src/main/java/org/bukkit/command/defaults/PluginsCommand.java
++++ b/src/main/java/org/bukkit/command/defaults/PluginsCommand.java
+@@ -46,6 +46,18 @@ public class PluginsCommand extends BukkitCommand {
+             if (org.bukkit.UnsafeValues.isLegacyPlugin(plugin)) {
+                 pluginName += "*";
+             }
++            // Origami start - add plugin aliases
++            StringBuilder aliasList = new StringBuilder();
++            for (String alias : plugin.getDescription().getAliases()) {
++                if (aliasList.length() > 0) {
++                    aliasList.append(", ");
++                }
++                aliasList.append(alias);
++            }
++            if (aliasList.length() > 0) {
++                pluginName += " (" + aliasList.toString() + ")";
++            }
++            // Origami end
+ 
+             plugins.put(pluginName, plugin.isEnabled() ? ChatColor.GREEN : ChatColor.RED);
+             // Paper end
+diff --git a/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java b/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java
+index 4574a965..d25997ff 100644
+--- a/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java
++++ b/src/main/java/org/bukkit/plugin/PluginDescriptionFile.java
+@@ -66,6 +66,10 @@ import com.google.common.collect.ImmutableSet;
+  *     <td>{@link #getName()}</td>
+  *     <td>The unique name of plugin</td>
+  * </tr><tr>
++ *     <td><code>aliases</code></td>
++ *     <td>{@link #getAliases()}</td>
++ *     <td>The aliases of the plugin - Origami feature</td>
++ * </tr><tr>
+  *     <td><code>version</code></td>
+  *     <td>{@link #getVersion()}</td>
+  *     <td>A plugin revision identifier</td>
+@@ -220,6 +224,7 @@ public final class PluginDescriptionFile {
+     };
+     String rawName = null;
+     private String name = null;
++    private List<String> aliases = ImmutableList.of(); // Origami - add plugin aliases
+     private String main = null;
+     private String classLoaderOf = null;
+     private List<String> depend = ImmutableList.of();
+@@ -301,6 +306,38 @@ public final class PluginDescriptionFile {
+         return name;
+     }
+ 
++    // Origami start - add plugin aliases
++    /**
++     * Gives the aliases of the plugin. These are usable for other plugins to depend on.
++     * <ul>
++     * <li>Must consist of all alphanumeric characters, underscores, hyphon,
++     *     and period (a-z,A-Z,0-9, _.-). Any other character will cause the
++     *     plugin.yml to fail loading.
++     * <li>A different plugin using an alias of this plugin as their name will
++     *     not result in the plugin to fail loading.
++     * <li>Case sensitive.
++     * <li>An entry of this list can be referenced in {@link #getDepend()},
++     *    {@link #getSoftDepend()}, and {@link #getLoadBefore()}.
++     * <li><code>aliases</code> must be in must be in <a
++     *     href="http://en.wikipedia.org/wiki/YAML#Lists">YAML list
++     *     format</a>.
++     * </ul>
++     * <p>
++     * In the plugin.yml, this entry is named <code>aliases</code>.
++     * <p>
++     * Example:
++     * <blockquote><pre>aliases:
++     *- OtherPluginName
++     *- OldPluginName</pre></blockquote>
++     *
++     * @return immutable list of the plugin's dependencies
++     */
++    @NotNull
++    public List<String> getAliases() {
++        return aliases;
++    }
++    // Origami end
++
+     /**
+      * Gives the version of the plugin.
+      * <ul>
+@@ -925,6 +962,8 @@ public final class PluginDescriptionFile {
+             throw new InvalidDescriptionException(ex, "name is of wrong type");
+         }
+ 
++        aliases = makePluginNameList(map, "aliases"); // Origami - add plugin aliases
++
+         try {
+             version = map.get("version").toString();
+         } catch (NullPointerException ex) {
+diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
+index 9ec042fd..b693857a 100644
+--- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
++++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
+@@ -119,6 +119,7 @@ public final class SimplePluginManager implements PluginManager {
+         }
+ 
+         Map<String, File> plugins = new HashMap<String, File>();
++        Map<String, String> pluginAliases = new HashMap<>(); // Origami - add plugin aliases
+         Set<String> loadedPlugins = new HashSet<String>();
+         Map<String, Collection<String>> dependencies = new HashMap<String, Collection<String>>();
+         Map<String, Collection<String>> softDependencies = new HashMap<String, Collection<String>>();
+@@ -162,6 +163,40 @@ public final class SimplePluginManager implements PluginManager {
+                 ));
+             }
+ 
++            // Origami start - add plugin aliases
++            String removedAlias = pluginAliases.remove(description.getName());
++            if (removedAlias != null) {
++                server.getLogger().warning(String.format(
++                        "Ambiguous plugin name `%s'. It was also an alias of `%s'",
++                        description.getName(),
++                        removedAlias
++                ));
++            }
++
++            for (String alias : description.getAliases()) {
++                File pluginFile = plugins.get(alias);
++                if (pluginFile != null) {
++                    server.getLogger().warning(String.format(
++                            "Ambiguous plugin alias `%s' of plugin `%s'. It's also the name of `%s' in `%s'",
++                            alias,
++                            file.getPath(),
++                            pluginFile.getPath(),
++                            directory.getPath()
++                    ));
++                } else {
++                    String replacedPlugin = pluginAliases.put(alias, description.getName());
++                    if (replacedPlugin != null) {
++                        server.getLogger().warning(String.format(
++                                "Ambiguous plugin alias `%s' for plugins `%s' and `%s'",
++                                alias,
++                                description.getName(),
++                                replacedPlugin
++                        ));
++                    }
++                }
++            }
++            // Origami end
++
+             Collection<String> softDependencySet = description.getSoftDepend();
+             if (softDependencySet != null && !softDependencySet.isEmpty()) {
+                 if (softDependencies.containsKey(description.getName())) {
+@@ -211,7 +246,7 @@ public final class SimplePluginManager implements PluginManager {
+                             dependencyIterator.remove();
+ 
+                         // We have a dependency not found
+-                        } else if (!plugins.containsKey(dependency)) {
++                        } else if (!plugins.containsKey(dependency) && !pluginAliases.containsKey(dependency)) { // Origami - add plugin aliases
+                             missingDependency = false;
+                             pluginIterator.remove();
+                             softDependencies.remove(plugin);
+@@ -236,7 +271,7 @@ public final class SimplePluginManager implements PluginManager {
+                         String softDependency = softDependencyIterator.next();
+ 
+                         // Soft depend is no longer around
+-                        if (!plugins.containsKey(softDependency)) {
++                        if (!plugins.containsKey(softDependency) && !pluginAliases.containsKey(softDependency)) { // Origami - add plugin aliases
+                             softDependencyIterator.remove();
+                         }
+                     }
+@@ -338,6 +373,13 @@ public final class SimplePluginManager implements PluginManager {
+         if (result != null) {
+             plugins.add(result);
+             lookupNames.put(result.getDescription().getName().toLowerCase(java.util.Locale.ENGLISH), result); // Paper
++            // Origami start - add plugin aliases
++            for (String alias : result.getDescription().getAliases()) {
++                if (!lookupNames.containsKey(alias)) {
++                    lookupNames.put(alias, result);
++                }
++            }
++            // Origami end
+         }
+ 
+         return result;
+-- 
+2.18.0.windows.1
+
