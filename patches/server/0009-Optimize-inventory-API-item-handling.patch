@@ -1,0 +1,67 @@
+From 71ea53f94194ce73c2fffbd28c85426e71d48244 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Tue, 13 Aug 2019 13:53:35 +0100
+Subject: [PATCH] Optimize inventory API item handling
+
+---
+ .../craftbukkit/inventory/CraftInventory.java     | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+index 01af98293..3b0aadb0d 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+@@ -257,11 +257,11 @@ public class CraftInventory implements Inventory {
+     }
+ 
+     private int firstPartial(ItemStack item) {
+-        ItemStack[] inventory = getStorageContents();
+-        ItemStack filteredItem = CraftItemStack.asCraftCopy(item);
+         if (item == null) {
+             return -1;
+         }
++        ItemStack[] inventory = getStorageContents();
++        ItemStack filteredItem = CraftItemStack.asCraftCopy(item);
+         for (int i = 0; i < inventory.length; i++) {
+             ItemStack cItem = inventory[i];
+             if (cItem != null && cItem.getAmount() < cItem.getMaxStackSize() && cItem.isSimilar(filteredItem)) {
+@@ -278,9 +278,10 @@ public class CraftInventory implements Inventory {
+         /* TODO: some optimization
+          *  - Create a 'firstPartial' with a 'fromIndex'
+          *  - Record the lastPartial per Material
+-         *  - Cache firstEmpty result
++         *  - Cache firstEmpty result // Implemented in Origami
+          */
+ 
++        int firstFree = -2; // Origami - Cache firstEmpty result
+         for (int i = 0; i < items.length; i++) {
+             ItemStack item = items[i];
+             while (true) {
+@@ -290,7 +291,11 @@ public class CraftInventory implements Inventory {
+                 // Drat! no partial stack
+                 if (firstPartial == -1) {
+                     // Find a free spot!
+-                    int firstFree = firstEmpty();
++                    // Origami start - Cache firstEmpty result
++                    if (firstFree == -2) {
++                        firstFree = firstEmpty();
++                    }
++                    // Origami end
+ 
+                     if (firstFree == -1) {
+                         // No space at all!
+@@ -303,9 +308,11 @@ public class CraftInventory implements Inventory {
+                             stack.setAmount(getMaxItemStack());
+                             setItem(firstFree, stack);
+                             item.setAmount(item.getAmount() - getMaxItemStack());
++                            firstFree = -2; // Origami - Cache firstEmpty result
+                         } else {
+                             // Just store it
+                             setItem(firstFree, item);
++                            firstFree = -2; // Origami - Cache firstEmpty result
+                             break;
+                         }
+                     }
+-- 
+2.18.0.windows.1
+
