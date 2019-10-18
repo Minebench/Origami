@@ -1,0 +1,39 @@
+From 57e299e1bff59cda4537aea94cd835e124b22cb2 Mon Sep 17 00:00:00 2001
+From: md_5 <git@md-5.net>
+Date: Fri, 18 Oct 2019 16:09:12 +0100
+Subject: [PATCH] SPIGOT-5317: Create accessors for entity absorption hearts
+
+---
+ src/main/java/org/bukkit/entity/Damageable.java | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/entity/Damageable.java b/src/main/java/org/bukkit/entity/Damageable.java
+index b0fe0442..fc4d3bcd 100644
+--- a/src/main/java/org/bukkit/entity/Damageable.java
++++ b/src/main/java/org/bukkit/entity/Damageable.java
+@@ -40,6 +40,22 @@ public interface Damageable extends Entity {
+      */
+     void setHealth(double health);
+ 
++    /**
++     * Gets the entity's absorption amount.
++     *
++     * @return absorption amount from 0
++     */
++    double getAbsorptionAmount();
++
++    /**
++     * Sets the entity's absorption amount.
++     *
++     * @param amount new absorption amount from 0
++     * @throws IllegalArgumentException thrown if health is {@literal < 0} or
++     * non-finite.
++     */
++    void setAbsorptionAmount(double amount);
++
+     /**
+      * Gets the maximum health this entity has.
+      *
+-- 
+2.18.0.windows.1
+
