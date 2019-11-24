@@ -3,7 +3,7 @@
 
     <groupId>de.minebench.origami</groupId>
     <artifactId>origami-parent</artifactId>
-    <version>1.13.2-R0.1-SNAPSHOT</version>
+    <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Origami (Parent)</name>
 
