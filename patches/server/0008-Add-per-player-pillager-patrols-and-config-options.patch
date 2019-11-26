@@ -1,0 +1,116 @@
+From a18643e040c3bf1567faecee20a34d2d4302f26f Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Tue, 26 Nov 2019 17:59:37 +0100
+Subject: [PATCH] Add per player pillager patrols and config options
+
+---
+ .../de/minebench/origami/OrigamiConfig.java   | 20 ++++++++++
+ .../net/minecraft/server/EntityPlayer.java    |  1 +
+ .../minecraft/server/MobSpawnerPatrol.java    | 40 ++++++++++++++-----
+ 3 files changed, 52 insertions(+), 9 deletions(-)
+
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index 15ed7000..5e69f898 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -153,6 +153,26 @@ public final class OrigamiConfig {
+             this.config.addDefault(path, Double.valueOf(dfl));
+             return this.config.getDouble(path, dfl);
+         }
++
++        public boolean pillagerPatrolPerPlayer = false;
++        private void pillagerPatrolPerPlayer() {
++            pillagerPatrolPerPlayer = getBoolean("pillager.patrol.per-player", pillagerPatrolPerPlayer);
++        }
++
++        public int pillagerPatrolStartDay = 5;
++        private void pillagerPatrolSpawnDay() {
++            pillagerPatrolStartDay = getInt("pillager.patrol.start-day", pillagerPatrolStartDay);
++        }
++
++        public int pillagerPatrolSpawnChance = 5;
++        private void pillagerPatrolSpawnChance() {
++            pillagerPatrolSpawnChance = getInt("pillager.patrol.spawn-chance", pillagerPatrolSpawnChance);
++        }
++
++        public int pillagerPatrolSpawnDelay = 12000;
++        private void pillagerPatrolSpawnDelay() {
++            pillagerPatrolSpawnDelay = getInt("pillager.patrol.spawn-delay", pillagerPatrolSpawnDelay);
++        }
+     }
+ 
+     public static boolean teleportingOfVehiclesWithPassenger = true;
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index c747b5de..faa321f7 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -85,6 +85,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     public final int[] mobCounts = new int[ENUMCREATURETYPE_TOTAL_ENUMS]; // Paper
+     public final com.destroystokyo.paper.util.PooledHashSets.PooledObjectLinkedOpenHashSet<EntityPlayer> cachedSingleMobDistanceMap;
+     // Paper end
++    public int patrolSpawnDelay; // Origami - Per player patrol spawns
+ 
+     // CraftBukkit start
+     public String displayName;
+diff --git a/src/main/java/net/minecraft/server/MobSpawnerPatrol.java b/src/main/java/net/minecraft/server/MobSpawnerPatrol.java
+index 44c70e04..50a2d8d2 100644
+--- a/src/main/java/net/minecraft/server/MobSpawnerPatrol.java
++++ b/src/main/java/net/minecraft/server/MobSpawnerPatrol.java
+@@ -15,23 +15,45 @@ public class MobSpawnerPatrol {
+         } else {
+             Random random = worldserver.random;
+ 
+-            --this.a;
+-            if (this.a > 0) {
++            // Origami start - Moved up for per player spawning and configuration
++            int j = worldserver.getPlayers().size();
++            if (j < 1) {
+                 return 0;
++            }
++
++            EntityPlayer entityhuman = worldserver.getPlayers().get(random.nextInt(j));
++            if (entityhuman.isSpectator()) {
++                return 0;
++            }
++            int patrolSpawnDelay;
++            if (worldserver.origamiConfig.pillagerPatrolPerPlayer) {
++                --entityhuman.patrolSpawnDelay;
++                patrolSpawnDelay = entityhuman.patrolSpawnDelay;
+             } else {
+-                this.a += 12000 + random.nextInt(1200);
+-                long i = worldserver.getDayTime() / 24000L;
++                --this.a;
++                patrolSpawnDelay = this.a;
++            }
+ 
+-                if (i >= 5L && worldserver.J()) {
+-                    if (random.nextInt(5) != 0) {
++            if (patrolSpawnDelay > 0) {
++                return 0;
++            } else {
++                long days;
++                if (worldserver.origamiConfig.pillagerPatrolPerPlayer) {
++                    days = entityhuman.getStatisticManager().getStatisticValue(StatisticList.CUSTOM.b(StatisticList.PLAY_ONE_MINUTE)) / 24000L;
++                    entityhuman.patrolSpawnDelay += worldserver.origamiConfig.pillagerPatrolSpawnDelay + random.nextInt(1200);
++                } else {
++                    days = worldserver.getDayTime() / 24000L;
++                    this.a += worldserver.origamiConfig.pillagerPatrolSpawnDelay + random.nextInt(1200);
++                }
++
++                if (days >= worldserver.origamiConfig.pillagerPatrolStartDay && worldserver.J()) {
++                    if (random.nextInt(worldserver.origamiConfig.pillagerPatrolSpawnChance) != 0) {
++                        // Origami end
+                         return 0;
+                     } else {
+-                        int j = worldserver.getPlayers().size();
+-
+                         if (j < 1) {
+                             return 0;
+                         } else {
+-                            EntityHuman entityhuman = (EntityHuman) worldserver.getPlayers().get(random.nextInt(j));
+ 
+                             if (entityhuman.isSpectator()) {
+                                 return 0;
+-- 
+2.18.0.windows.1
+
