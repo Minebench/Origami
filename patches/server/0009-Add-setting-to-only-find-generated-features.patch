@@ -1,0 +1,53 @@
+From f278d869a7913aaa3b0e7409eb930c8b76705960 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Wed, 27 Nov 2019 01:27:40 +0100
+Subject: [PATCH] Add setting to only find generated features
+
+This might help with performance of structure and feature lookups
+(e.g. with explorer maps or ender eyes) when not pre-generating a
+map but might at the same time lead to structures not being found
+by the items more often than normal when used in less-generated area.
+Thanks @electronicboy for the improvements.
+---
+ src/main/java/de/minebench/origami/OrigamiConfig.java     | 5 +++++
+ .../java/net/minecraft/server/StructureGenerator.java     | 8 +++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index 5e69f898..63097cc0 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -173,6 +173,11 @@ public final class OrigamiConfig {
+         private void pillagerPatrolSpawnDelay() {
+             pillagerPatrolSpawnDelay = getInt("pillager.patrol.spawn-delay", pillagerPatrolSpawnDelay);
+         }
++
++        public boolean onlyFindGeneratedFeatures = false;
++        private void onlyGetGeneratedFeatures() {
++            onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
++        }
+     }
+ 
+     public static boolean teleportingOfVehiclesWithPassenger = true;
+diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
+index 7b2eace7..59a8759b 100644
+--- a/src/main/java/net/minecraft/server/StructureGenerator.java
++++ b/src/main/java/net/minecraft/server/StructureGenerator.java
+@@ -104,7 +104,13 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+                             if (flag1 || flag2) {
+                                 ChunkCoordIntPair chunkcoordintpair = this.a(chunkgenerator, seededrandom, j, k, i1, j1);
+                                 if (!world.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
+-                                StructureStart structurestart = world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS).a(this.b());
++                                // Origami start - option to only find generated features to not generate new chunks
++                                final IChunkAccess chunk = world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !world.origamiConfig.onlyFindGeneratedFeatures);
++                                if (chunk == null) {
++                                    continue;
++                                }
++                                StructureStart structurestart = chunk.a(this.b());
++                                // Origami end
+ 
+                                 if (structurestart != null && structurestart.e()) {
+                                     if (flag && structurestart.h()) {
+-- 
+2.18.0.windows.1
+
