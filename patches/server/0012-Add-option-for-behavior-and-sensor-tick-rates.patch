@@ -1,0 +1,128 @@
+From c4dac44ecdd7c6dbb0c4bc1cdb28696c7c14784b Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Mon, 2 Dec 2019 20:19:11 +0100
+Subject: [PATCH] Add option for behavior and sensor tick rates
+
+---
+ .../de/minebench/origami/OrigamiConfig.java   | 21 +++++++++++++++++++
+ .../java/net/minecraft/server/Behavior.java   | 14 ++++++++++++-
+ .../java/net/minecraft/server/Sensor.java     | 14 ++++++++++++-
+ 3 files changed, 47 insertions(+), 2 deletions(-)
+
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index 76de2d1c..4605c2a1 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -7,6 +7,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
+ import java.io.File;
+ import java.lang.reflect.Method;
+ import java.lang.reflect.Modifier;
++import java.util.HashMap;
++import java.util.Map;
+ import java.util.logging.Level;
+ 
+ public final class OrigamiConfig {
+@@ -186,6 +188,25 @@ public final class OrigamiConfig {
+                 Bukkit.getLogger().info("Async treasure map generation is enabled");
+             }
+         }
++
++        private Map<String, Integer> tickRates = new HashMap<>();
++        private void tickRates() {
++            this.config.addDefault("tick-rates.sensor.villager.secondaryplaces", 40);
++            this.config.addDefault("tick-rates.behavior.villager.positionvalidate", 60);
++            tickRates = new HashMap<>();
++            Bukkit.getLogger().info("Tick rates:");
++            for (String key : config.getConfigurationSection("tick-rates").getKeys(true)) {
++                int tickRate = config.getInt("tick-rates." + key);
++                tickRates.put(key.toLowerCase(), tickRate);
++                Bukkit.getLogger().info("  " + key + ": " + tickRate);
++            }
++            if (tickRates.isEmpty()) {
++                Bukkit.getLogger().info("  None configured");
++            }
++        }
++        public int getTickRate(String type, String typeName, String entityType, int def) {
++            return tickRates.getOrDefault(type + "." + entityType + "." + typeName, tickRates.getOrDefault(type + "." + typeName, def));
++        }
+     }
+ 
+     public static boolean teleportingOfVehiclesWithPassenger = true;
+diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
+index 788d1433..640dd0d5 100644
+--- a/src/main/java/net/minecraft/server/Behavior.java
++++ b/src/main/java/net/minecraft/server/Behavior.java
+@@ -10,6 +10,10 @@ public abstract class Behavior<E extends EntityLiving> {
+     private long c;
+     private final int d;
+     private final int e;
++    // Origami start - configurable behavior tick rate
++    private final String configKey;
++    private static final String RATE_TYPE = "behavior";
++    // Origami end
+ 
+     public Behavior(Map<MemoryModuleType<?>, MemoryStatus> map) {
+         this(map, 60);
+@@ -24,6 +28,14 @@ public abstract class Behavior<E extends EntityLiving> {
+         this.d = i;
+         this.e = j;
+         this.a = map;
++        // Origami start - configurable behavior tick rate
++        String key = getClass().getName().startsWith("net.minecraft.server.") ? getClass().getSimpleName() : getClass().getName();
++        key = key.toLowerCase();
++        if (key.startsWith(RATE_TYPE)) {
++            key = key.substring(RATE_TYPE.length());
++        }
++        this.configKey = key;
++        // Origami end
+     }
+ 
+     public Behavior.Status a() {
+@@ -33,7 +45,7 @@ public abstract class Behavior<E extends EntityLiving> {
+     public final boolean b(WorldServer worldserver, E e0, long i) {
+         if (this.a(e0) && this.a(worldserver, e0)) {
+             this.b = Behavior.Status.RUNNING;
+-            int j = this.d + worldserver.getRandom().nextInt(this.e + 1 - this.d);
++            int j =  worldserver.origamiConfig.getTickRate(RATE_TYPE, configKey, e0.getMinecraftKey().getKey(), this.d) + worldserver.getRandom().nextInt(this.e + 1 - this.d); // Origami - configurable behavior tick rates
+ 
+             this.c = i + (long) j;
+             this.a(worldserver, e0, i);
+diff --git a/src/main/java/net/minecraft/server/Sensor.java b/src/main/java/net/minecraft/server/Sensor.java
+index e3888dd9..cb92b248 100644
+--- a/src/main/java/net/minecraft/server/Sensor.java
++++ b/src/main/java/net/minecraft/server/Sensor.java
+@@ -8,10 +8,22 @@ public abstract class Sensor<E extends EntityLiving> {
+     private static final Random a = new Random();
+     private final int b;
+     private long c;
++    // Origami start - configurable sensor tick rate
++    private final String configKey;
++    private static final String RATE_TYPE = "sensor";
++    // Origami end
+ 
+     public Sensor(int i) {
+         this.b = i;
+         this.c = (long) Sensor.a.nextInt(i);
++        // Origami start - configurable sensor tick rate
++        String key = getClass().getName().startsWith("net.minecraft.server.") ? getClass().getSimpleName() : getClass().getName();
++        key = key.toLowerCase();
++        if (key.startsWith(RATE_TYPE)) {
++            key = key.substring(RATE_TYPE.length());
++        }
++        this.configKey = key;
++        // Origami end
+     }
+ 
+     public Sensor() {
+@@ -20,7 +32,7 @@ public abstract class Sensor<E extends EntityLiving> {
+ 
+     public final void b(WorldServer worldserver, E e0) {
+         if (--this.c <= 0L) {
+-            this.c = (long) this.b;
++            this.c = (long) worldserver.origamiConfig.getTickRate(RATE_TYPE, configKey, e0.getMinecraftKey().getKey(), this.b); // Origami - configurable sensor tick rates
+             this.a(worldserver, e0);
+         }
+ 
+-- 
+2.18.0.windows.1
+
