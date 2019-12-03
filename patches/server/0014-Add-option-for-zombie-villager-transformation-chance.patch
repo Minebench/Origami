@@ -1,0 +1,42 @@
+From b09cedd7070075595b3d9642273d62d0ac452f77 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Tue, 3 Dec 2019 03:12:36 +0100
+Subject: [PATCH] Add option for zombie villager transformation chance
+
+This also forces the same chance to apply in both normal and hard mode
+---
+ src/main/java/de/minebench/origami/OrigamiConfig.java | 4 ++++
+ src/main/java/net/minecraft/server/EntityZombie.java  | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index 4605c2a1..758a86d4 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -207,6 +207,10 @@ public final class OrigamiConfig {
+         public int getTickRate(String type, String typeName, String entityType, int def) {
+             return tickRates.getOrDefault(type + "." + entityType + "." + typeName, tickRates.getOrDefault(type + "." + typeName, def));
+         }
++        public double zombieVillagerTransformationChance = 0.5;
++        private void zombieVillagerTransformationChance() {
++            zombieVillagerTransformationChance = getDouble("zombie-villager-transformation-chance", zombieVillagerTransformationChance);
++        }
+     }
+ 
+     public static boolean teleportingOfVehiclesWithPassenger = true;
+diff --git a/src/main/java/net/minecraft/server/EntityZombie.java b/src/main/java/net/minecraft/server/EntityZombie.java
+index d747d36f..8d29b6bd 100644
+--- a/src/main/java/net/minecraft/server/EntityZombie.java
++++ b/src/main/java/net/minecraft/server/EntityZombie.java
+@@ -422,7 +422,7 @@ public class EntityZombie extends EntityMonster {
+     public void b(EntityLiving entityliving) {
+         super.b(entityliving);
+         if ((this.world.getDifficulty() == EnumDifficulty.NORMAL || this.world.getDifficulty() == EnumDifficulty.HARD) && entityliving instanceof EntityVillager) {
+-            if (this.world.getDifficulty() != EnumDifficulty.HARD && this.random.nextBoolean()) {
++            if (this.random.nextDouble() < this.world.origamiConfig.zombieVillagerTransformationChance) { // Origami - configurable Zombie Villager transformation chance
+                 return;
+             }
+ 
+-- 
+2.18.0.windows.1
+
