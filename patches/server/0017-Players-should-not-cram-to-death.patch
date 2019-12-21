@@ -1,0 +1,25 @@
+From 92a0ac49642483aac7b6fe1e1405c35399e6d560 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sat, 21 Dec 2019 18:11:57 +0100
+Subject: [PATCH] Players should not cram to death
+
+---
+ src/main/java/net/minecraft/server/EntityPlayer.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 162aa07e..0cf265a7 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -1107,7 +1107,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+     @Override
+     public boolean isInvulnerable(DamageSource damagesource) {
+-        return super.isInvulnerable(damagesource) || this.H() || this.abilities.isInvulnerable && damagesource == DamageSource.WITHER;
++        return super.isInvulnerable(damagesource) || this.H() || damagesource == DamageSource.CRAMMING || this.abilities.isInvulnerable && damagesource == DamageSource.WITHER; // Origami - players shouldn't cram to death
+     }
+ 
+     @Override
+-- 
+2.18.0.windows.1
+

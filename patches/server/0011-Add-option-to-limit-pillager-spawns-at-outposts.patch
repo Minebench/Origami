@@ -1,4 +1,4 @@
-From 595ad3eb03283299bbece2a2b84d74e6fd93a732 Mon Sep 17 00:00:00 2001
+From fc2d215c80256e942be998e88da44297a8f67c93 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Mon, 2 Dec 2019 17:55:50 +0100
 Subject: [PATCH] Add option to limit pillager spawns at outposts
