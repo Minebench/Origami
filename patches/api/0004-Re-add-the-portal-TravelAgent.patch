@@ -1,0 +1,345 @@
+From eb4539b87be8b8d60cb2152262aef083cb2769cc Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Sat, 21 Dec 2019 02:17:03 +0100
+Subject: [PATCH] Re-add the portal TravelAgent
+
+---
+ src/main/java/org/bukkit/TravelAgent.java     | 161 ++++++++++++++++++
+ .../event/entity/EntityPortalEvent.java       |  57 ++++++-
+ .../event/player/PlayerPortalEvent.java       |  61 ++++++-
+ 3 files changed, 276 insertions(+), 3 deletions(-)
+ create mode 100644 src/main/java/org/bukkit/TravelAgent.java
+
+diff --git a/src/main/java/org/bukkit/TravelAgent.java b/src/main/java/org/bukkit/TravelAgent.java
+new file mode 100644
+index 00000000..6ef4d248
+--- /dev/null
++++ b/src/main/java/org/bukkit/TravelAgent.java
+@@ -0,0 +1,161 @@
++package org.bukkit;
++
++import org.bukkit.entity.Entity;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
++
++/**
++ * The Travel Agent handles the creation and the research of Nether and End
++ * portals when Entities try to use one.
++ * <p>
++ * It is used in {@link org.bukkit.event.entity.EntityPortalEvent} and in
++ * {@link org.bukkit.event.player.PlayerPortalEvent} to help developers
++ * reproduce and/or modify Vanilla behaviour.
++ */
++public interface TravelAgent {
++
++    /**
++     * Set the Block radius to search in for available portals.
++     *
++     * @param radius the radius in which to search for a portal from the
++     *     location
++     * @return this travel agent
++     */
++    @NotNull
++    public TravelAgent setSearchRadius(int radius);
++
++    /**
++     * Gets the search radius value for finding an available portal.
++     *
++     * @return the currently set search radius
++     */
++    public int getSearchRadius();
++
++    /**
++     * Sets the maximum radius from the given location to create a portal.
++     *
++     * @param radius the radius in which to create a portal from the location
++     * @return this travel agent
++     */
++    @NotNull
++    public TravelAgent setCreationRadius(int radius);
++
++    /**
++     * Gets the maximum radius from the given location to create a portal.
++     *
++     * @return the currently set creation radius
++     */
++    public int getCreationRadius();
++
++    /**
++     * Returns whether the TravelAgent will attempt to create a destination
++     * portal or not.
++     *
++     * @return whether the TravelAgent should create a destination portal or
++     *     not
++     */
++    public boolean getCanCreatePortal();
++
++    /**
++     * Sets whether the TravelAgent should attempt to create a destination
++     * portal or not.
++     *
++     * @param create Sets whether the TravelAgent should create a destination
++     *     portal or not
++     */
++    public void setCanCreatePortal(boolean create);
++
++    /**
++     * Attempt to find a portal near the given location, if a portal is not
++     * found it will attempt to create one.
++     *
++     * @param location the location where the search for a portal should begin
++     * @return the location of a portal which has been found or returns the
++     *     location passed to the method if unsuccessful
++     * @see #createPortal(Location)
++     * @deprecated Use {@link #findPortal(Entity, Location)}
++     */
++    @NotNull
++    @Deprecated
++    default Location findOrCreate(@NotNull Location location) {
++        return location;
++    }
++
++    /**
++     * Attempt to find a portal near the given location, if a portal is not
++     * found it will attempt to create one.
++     *
++     * @param entity the entity that tries to find a portal
++     * @param location the location where the search for a portal should begin
++     * @return the location of a portal which has been found or returns the
++     *     location passed to the method if unsuccessful
++     * @see #createPortal(Entity, Location)
++     */
++    @NotNull
++    default Location findOrCreate(@Nullable Entity entity, @NotNull Location location) {
++        return findOrCreate(location);
++    }
++
++    /**
++     * Attempt to find a portal near the given location.
++     *
++     * @param location the desired location of the portal
++     * @return the location of the nearest portal to the location or returns
++     *     null if none could be found
++     * @deprecated Use {@link #findPortal(Entity, Location)}
++     */
++    @Nullable
++    @Deprecated
++    default Location findPortal(@NotNull Location location) {
++        return null;
++    }
++
++    /**
++     * Attempt to find a portal near the given location.
++     *
++     * @param entity the entity that tries to find a portal
++     * @param location the desired location of the portal
++     * @return the location of the nearest portal to the location or returns
++     *     null if none could be found
++     */
++    @Nullable
++    default Location findPortal(@Nullable Entity entity, @NotNull Location location) {
++        return findPortal(location);
++    }
++
++    /**
++     * Attempt to create a portal near the given location.
++     * <p>
++     * In the case of a Nether portal teleportation, this will attempt to
++     * create a Nether portal.
++     * <p>
++     * In the case of an Ender portal teleportation, this will (re-)create the
++     * obsidian platform and clean blocks above it.
++     *
++     * @param location the desired location of the portal
++     * @return true if a portal was successfully created
++     * @deprecated Use {@link #createPortal(Entity, Location)}
++     */
++    @Deprecated
++    default boolean createPortal(@NotNull Location location) {
++        return false;
++    }
++
++    /**
++     * Attempt to create a portal near the given location by a certain entity.
++     * <p>
++     * In the case of a Nether portal teleportation, this will attempt to
++     * create a Nether portal.
++     * <p>
++     * In the case of an Ender portal teleportation, this will (re-)create the
++     * obsidian platform and clean blocks above it.
++     *
++     * @param entity the entity that caused the creation of this portal
++     * @param location the desired location of the portal
++     * @return the location of the portal or null if none was created
++     */
++    @Nullable
++    default Location createPortal(@Nullable Entity entity, @NotNull Location location) {
++        return createPortal(location) ? location : null;
++    }
++}
+diff --git a/src/main/java/org/bukkit/event/entity/EntityPortalEvent.java b/src/main/java/org/bukkit/event/entity/EntityPortalEvent.java
+index 7fdfe3c5..f83383c1 100644
+--- a/src/main/java/org/bukkit/event/entity/EntityPortalEvent.java
++++ b/src/main/java/org/bukkit/event/entity/EntityPortalEvent.java
+@@ -1,6 +1,7 @@
+ package org.bukkit.event.entity;
+ 
+ import org.bukkit.Location;
++import org.bukkit.TravelAgent;
+ import org.bukkit.entity.Entity;
+ import org.bukkit.event.HandlerList;
+ import org.jetbrains.annotations.NotNull;
+@@ -14,9 +15,63 @@ import org.jetbrains.annotations.Nullable;
+  */
+ public class EntityPortalEvent extends EntityTeleportEvent {
+     private static final HandlerList handlers = new HandlerList();
++    protected boolean useTravelAgent = true;
++    protected TravelAgent travelAgent;
+ 
+-    public EntityPortalEvent(@NotNull final Entity entity, @NotNull final Location from, @Nullable final Location to) {
++    public EntityPortalEvent(@NotNull final Entity entity, @NotNull final Location from, @Nullable final Location to, @NotNull final TravelAgent pta) {
+         super(entity, from, to);
++        this.travelAgent = pta;
++    }
++
++    /**
++     * Sets whether or not the Travel Agent will be used.
++     * <p>
++     * If this is set to true, the TravelAgent will try to find a Portal at
++     * the {@link #getTo()} Location, and will try to create one if there is
++     * none.
++     * <p>
++     * If this is set to false, the {@link #getEntity()} will only be
++     * teleported to the {@link #getTo()} Location.
++     *
++     * @param useTravelAgent whether to use the Travel Agent
++     */
++    public void useTravelAgent(boolean useTravelAgent) {
++        this.useTravelAgent = useTravelAgent;
++    }
++
++    /**
++     * Gets whether or not the Travel Agent will be used.
++     * <p>
++     * If this is set to true, the TravelAgent will try to find a Portal at
++     * the {@link #getTo()} Location, and will try to create one if there is
++     * none.
++     * <p>
++     * If this is set to false, the {@link #getEntity()} will only be
++     * teleported to the {@link #getTo()} Location.
++     *
++     * @return whether to use the Travel Agent
++     */
++    public boolean useTravelAgent() {
++        return useTravelAgent;
++    }
++
++    /**
++     * Gets the Travel Agent used (or not) in this event.
++     *
++     * @return the Travel Agent used (or not) in this event
++     */
++    @NotNull
++    public TravelAgent getPortalTravelAgent() {
++        return this.travelAgent;
++    }
++
++    /**
++     * Sets the Travel Agent used (or not) in this event.
++     *
++     * @param travelAgent the Travel Agent used (or not) in this event
++     */
++    public void setPortalTravelAgent(@NotNull TravelAgent travelAgent) {
++        this.travelAgent = travelAgent;
+     }
+ 
+     @NotNull
+diff --git a/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java b/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java
+index 5b755078..44058eb9 100644
+--- a/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java
++++ b/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java
+@@ -1,6 +1,7 @@
+ package org.bukkit.event.player;
+ 
+ import org.bukkit.Location;
++import org.bukkit.TravelAgent;
+ import org.bukkit.entity.Player;
+ import org.bukkit.event.HandlerList;
+ import org.jetbrains.annotations.NotNull;
+@@ -14,15 +15,71 @@ import org.jetbrains.annotations.Nullable;
+  */
+ public class PlayerPortalEvent extends PlayerTeleportEvent {
+     private static final HandlerList handlers = new HandlerList();
++    protected boolean useTravelAgent = true;
++    protected TravelAgent travelAgent;
+ 
+-    public PlayerPortalEvent(@NotNull final Player player, @NotNull final Location from, @Nullable final Location to) {
++    public PlayerPortalEvent(@NotNull final Player player, @NotNull final Location from, @Nullable final Location to, @NotNull final TravelAgent pta) {
+         super(player, from, to);
++        travelAgent = pta;
+     }
+ 
+-    public PlayerPortalEvent(@NotNull Player player, @NotNull Location from, @Nullable Location to, @NotNull TeleportCause cause) {
++    public PlayerPortalEvent(@NotNull Player player, @NotNull Location from, @Nullable Location to, @NotNull TravelAgent pta, @NotNull TeleportCause cause) {
+         super(player, from, to, cause);
++        this.travelAgent = pta;
+     }
+ 
++    /**
++     * Sets whether or not the Travel Agent will be used.
++     * <p>
++     * If this is set to true, the TravelAgent will try to find a Portal at
++     * the {@link #getTo()} Location, and will try to create one if there is
++     * none.
++     * <p>
++     * If this is set to false, the {@link #getPlayer()} will only be
++     * teleported to the {@link #getTo()} Location.
++     *
++     * @param useTravelAgent whether to use the Travel Agent
++     */
++    public void useTravelAgent(boolean useTravelAgent) {
++        this.useTravelAgent = useTravelAgent;
++    }
++
++    /**
++     * Gets whether or not the Travel Agent will be used.
++     * <p>
++     * If this is set to true, the TravelAgent will try to find a Portal at
++     * the {@link #getTo()} Location, and will try to create one if there is
++     * none.
++     * <p>
++     * If this is set to false, the {@link #getPlayer()}} will only be
++     * teleported to the {@link #getTo()} Location.
++     *
++     * @return whether to use the Travel Agent
++     */
++    public boolean useTravelAgent() {
++        return useTravelAgent && travelAgent != null;
++    }
++
++    /**
++     * Gets the Travel Agent used (or not) in this event.
++     *
++     * @return the Travel Agent used (or not) in this event
++     */
++    @NotNull
++    public TravelAgent getPortalTravelAgent() {
++        return this.travelAgent;
++    }
++
++    /**
++     * Sets the Travel Agent used (or not) in this event.
++     *
++     * @param travelAgent the Travel Agent used (or not) in this event
++     */
++    public void setPortalTravelAgent(@NotNull TravelAgent travelAgent) {
++        this.travelAgent = travelAgent;
++    }
++
++
+     @NotNull
+     @Override
+     public HandlerList getHandlers() {
+-- 
+2.18.0.windows.1
+
