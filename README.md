@@ -11,12 +11,14 @@ Custom paper fork used by [Minebench.de](https://minebench.de). The fork is base
 [IRC](http://moep.tv/chat) | [Website](https://minebench.de/)
 
 ## License
-The PATCHES-LICENSE file describes the license for api & server patches, 
-found in `./patches/api` and `./patches/server`.
+The PATCHES-LICENSE file describes the license for api & server patches
+by Phoenix616 found in `./patches/api` and `./patches/server`. Other patches
+are either licensed under MIT or another one specified in the patch file itself.
 
 Everything else is licensed under the MIT license. 
-See https://github.com/Spottedleaf/Concrete, https://github.com/starlis/empirecraft
-and https://github.com/electronicboy/byof for the license of material used/modified by this project.
+See https://github.com/Spottedleaf/Concrete, https://github.com/pl3xgaming/Purpur,
+https://github.com/starlis/empirecraft and https://github.com/electronicboy/byof
+for the license of material used/modified by this project.
 
 ## Plugin developers
 In order to use Origami as a dependency just add the following repo and dependency to your pom:
