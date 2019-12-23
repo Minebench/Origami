@@ -1,4 +1,4 @@
-From 9477002ae02764964014e8c3b2f7d0674c421232 Mon Sep 17 00:00:00 2001
+From 49ed395f1a65d3f5dbe36d12c6b4d45085cfd74f Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 21 Dec 2019 02:17:02 +0100
 Subject: [PATCH] Re-add the portal TravelAgent
@@ -88,7 +88,7 @@ index e8def7f8..20358c3e 100644
                  blockposition = new BlockPosition(exit.getX(), exit.getY(), exit.getZ());
              }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index faa321f7..162aa07e 100644
+index faa321f7..f3289df9 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -851,13 +851,38 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -99,7 +99,7 @@ index faa321f7..162aa07e 100644
 +            // Origami start - re-add TravelAgent
 +            boolean useTravelAgent = dimensionmanager1.getDimensionID() < CraftWorld.CUSTOM_DIMENSION_OFFSET && dimensionmanager != DimensionManager.THE_END && dimensionmanager1 != DimensionManager.THE_END; // don't use agent for custom worlds or return from THE_END
 +
-+            org.bukkit.TravelAgent agent = (org.bukkit.TravelAgent) ((CraftWorld) exit.getWorld()).getHandle().getTravelAgent();
++            org.bukkit.TravelAgent agent = (org.bukkit.TravelAgent) ((CraftWorld) (exit == null ? enter.getWorld() : exit.getWorld())).getHandle().getTravelAgent();
 +            PlayerPortalEvent event = new PlayerPortalEvent(this.getBukkitEntity(), enter, exit, agent, cause);
 +            event.useTravelAgent(useTravelAgent);
 +            // Origami end
