@@ -9,13 +9,14 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 SOURCE=$([[ "$SOURCE" = /* ]] && echo "$SOURCE" || echo "$PWD/${SOURCE#./}")
 basedir=$(dirname "$SOURCE")
+gitcmd="git -c commit.gpgsign=false"
 . $basedir/scripts/init.sh
 
-paperstash() {
+origamistash() {
     STASHED=$(git stash)
 }
 
-paperunstash() {
+origamiunstash() {
     if [[ "$STASHED" != "No local changes to save" ]] ; then
         git stash pop
     fi
@@ -35,6 +36,59 @@ case "$1" in
         cd "$basedir"
         scripts/apply.sh "$basedir"
     )
+    ;;
+    "e" | "edit" )
+        case "$2" in
+            "s" | "server")
+            cd "$basedir/${FORK_NAME}-Server"
+            (
+                set -e
+                case "$3" in
+                    "c" | "continue")
+                    (
+                        $gitcmd add .
+                        $gitcmd commit --amend
+                        $gitcmd rebase --continue
+
+                        cd "$basedir"
+                        scripts/rebuildPatches.sh "$basedir"
+                    )
+                    ;;
+                    *)
+                        origamistash
+                        $gitcmd rebase -i upstream/upstream
+                        origamiunstash
+                    ;;
+                esac
+            )
+            ;;
+            "a" | "api")
+            cd "$basedir/${FORK_NAME}-API"
+            (
+                set -e
+                case "$3" in
+                    "c" | "continue")
+                    (
+                        $gitcmd add .
+                        $gitcmd commit --amend
+                        $gitcmd rebase --continue
+
+                        cd "$basedir"
+                        scripts/rebuildPatches.sh "$basedir"
+                    )
+                    ;;
+                    *)
+                        origamistash
+                        $gitcmd rebase -i upstream/upstream
+                        origamiunstash
+                    ;;
+                esac
+            )
+            ;;
+            *)
+                echo "You must edit either the api or server."
+            ;;
+        esac
     ;;
     "b" | "bu" | "build")
     (
@@ -86,8 +140,9 @@ case "$1" in
         echo " Normal commands:"
         echo "  * rb, rebuild  | Rebuild patches, can be called from anywhere."
         echo "  * p, patch     | Apply all patches to top of Paper without building it. Can be run from anywhere."
+        echo "  * e, edit      | Edit specific patches either in the [api] or [server]."
         echo "  * up, upstream | Build Paper upstream, pass arg up to update paper. Can be run from anywhere."
-        echo "  * b, build    | Build API and Server but no deploy. Can be ran anywhere."
+        echo "  * b, build     | Build API and Server but no deploy. Can be ran anywhere."
         echo "  * d, deploy    | Build and Deploy API jar and build Server. Can be ran anywhere."
         echo ""
         echo " These commands require the setup command before use:"
@@ -108,5 +163,5 @@ case "$1" in
     ;;
 esac
 
-unset -f paperstash
-unset -f paperunstash
+unset -f origamistash
+unset -f origamiunstash
