@@ -92,10 +92,16 @@ case "$1" in
     ;;
     "b" | "bu" | "build")
     (
-        basedir
+        cd "$basedir"
         mvn -N install
         cd ${FORK_NAME}-API
         mvn -e clean install && cd ../${FORK_NAME}-Server && mvn -e clean install
+    )
+    ;;
+    "crane" | "patcher")
+    (
+        cd "$basedir"
+        scripts/origamicrane.sh "$basedir"
     )
     ;;
     "d" | "de" | "deploy")
