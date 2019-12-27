@@ -1,16 +1,16 @@
-From 49ed395f1a65d3f5dbe36d12c6b4d45085cfd74f Mon Sep 17 00:00:00 2001
+From ca2ba3372f7c2b26221d7d7488ef47b36cc5b002 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 21 Dec 2019 02:17:02 +0100
 Subject: [PATCH] Re-add the portal TravelAgent
 
 ---
  .../net/minecraft/server/BlockPortal.java     |   6 +
- .../java/net/minecraft/server/Entity.java     |  35 +++++-
- .../net/minecraft/server/EntityPlayer.java    |  29 ++++-
+ .../java/net/minecraft/server/Entity.java     |  38 +++++-
+ .../net/minecraft/server/EntityPlayer.java    |  32 ++++-
  .../minecraft/server/PortalTravelAgent.java   |  58 +++++----
  .../net/minecraft/server/WorldServer.java     |   2 +-
  .../bukkit/craftbukkit/CraftTravelAgent.java  | 110 ++++++++++++++++++
- 6 files changed, 214 insertions(+), 26 deletions(-)
+ 6 files changed, 220 insertions(+), 26 deletions(-)
  create mode 100644 src/main/java/org/bukkit/craftbukkit/CraftTravelAgent.java
 
 diff --git a/src/main/java/net/minecraft/server/BlockPortal.java b/src/main/java/net/minecraft/server/BlockPortal.java
@@ -38,10 +38,10 @@ index 4eef7127..9358a89a 100644
              return true; // CraftBukkit
          }
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index e8def7f8..20358c3e 100644
+index e8def7f8..4714cc79 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -2635,13 +2635,42 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -2635,13 +2635,45 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  Location enter = this.getBukkitEntity().getLocation();
                  Location exit = new Location(worldserver1.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ());
  
@@ -65,6 +65,9 @@ index e8def7f8..20358c3e 100644
 -                exit = event.getTo();
 +                // Origami start - re-add TravelAgent
 +                if (event.useTravelAgent()) {
++                    if (!event.getTo().getWorld().getWorldBorder().isInside(event.getTo())) {
++                        return null;
++                    }
 +                    world.captureBlockStates = true;
 +                    exit = event.getPortalTravelAgent().findOrCreate(event.getEntity(), event.getTo());
 +                    world.captureBlockStates = false;
@@ -88,10 +91,10 @@ index e8def7f8..20358c3e 100644
                  blockposition = new BlockPosition(exit.getX(), exit.getY(), exit.getZ());
              }
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index faa321f7..f3289df9 100644
+index faa321f7..f3f081c8 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -851,13 +851,38 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -851,13 +851,41 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
              // CraftBukkit start
              Location enter = this.getBukkitEntity().getLocation();
              Location exit = (worldserver1 == null) ? null : new Location(worldserver1.getWorld(), d0, d1, d2, f1, f);
@@ -111,6 +114,9 @@ index faa321f7..f3289df9 100644
 -            exit = event.getTo();
 +            // Origami start - re-add TravelAgent
 +            if (event.useTravelAgent()) {
++                if (!event.getTo().getWorld().getWorldBorder().isInside(event.getTo())) {
++                    return null;
++                }
 +                world.captureBlockStates = true;
 +                exit = event.getPortalTravelAgent().findOrCreate(event.getPlayer(), event.getTo());
 +                world.captureBlockStates = false;
