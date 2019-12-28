@@ -18,5 +18,5 @@ echo ""
 echo ""
 echo ""
 echo "Build success!"
-echo "Copied final jar to $(cd "$basedir" && pwd -P)/OrigamiCrane.jar"
+echo "Copied final jar to $(cd "$basedir" && pwd -P)/origamicrane.jar"
 ) || exit 1
