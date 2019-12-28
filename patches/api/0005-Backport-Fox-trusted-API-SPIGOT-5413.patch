@@ -1,0 +1,59 @@
+From ebdd49090b4f4eff784fde2a962786649c76cfe1 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Sat, 28 Dec 2019 19:14:20 +0100
+Subject: [PATCH] Backport Fox trusted API (SPIGOT-5413)
+
+---
+ src/main/java/org/bukkit/entity/Fox.java | 36 ++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/entity/Fox.java b/src/main/java/org/bukkit/entity/Fox.java
+index 89f65032..9904993f 100644
+--- a/src/main/java/org/bukkit/entity/Fox.java
++++ b/src/main/java/org/bukkit/entity/Fox.java
+@@ -43,6 +43,42 @@ public interface Fox extends Animals, Sittable {
+      */
+     void setSleeping(boolean sleeping);
+ 
++    // Origami start - backport Fox trusted API SPIGOT-5413
++    /**
++     * Gets the first trusted player.
++     *
++     * @return the owning AnimalTamer, or null if not owned
++     */
++    @org.jetbrains.annotations.Nullable
++    public AnimalTamer getFirstTrustedPlayer();
++
++    /**
++     * Set the first trusted player.
++     * <p>
++     * The first trusted player may only be removed after the second.
++     *
++     * @param player the AnimalTamer to be trusted
++     */
++    public void setFirstTrustedPlayer(@org.jetbrains.annotations.Nullable AnimalTamer player);
++
++    /**
++     * Gets the second trusted player.
++     *
++     * @return the owning AnimalTamer, or null if not owned
++     */
++    @org.jetbrains.annotations.Nullable
++    public AnimalTamer getSecondTrustedPlayer();
++
++    /**
++     * Set the second trusted player.
++     * <p>
++     * The second trusted player may only be added after the first.
++     *
++     * @param player the AnimalTamer to be trusted
++     */
++    public void setSecondTrustedPlayer(@org.jetbrains.annotations.Nullable AnimalTamer player);
++    // Origami end
++
+     /**
+      * Represents the various different fox types there are.
+      */
+-- 
+2.18.0.windows.1
+
