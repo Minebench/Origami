@@ -1,4 +1,4 @@
-From 349cf2fb56bcdd626c8e742fd2f4af87beee54e2 Mon Sep 17 00:00:00 2001
+From fed38c2b257a85ec065de9da2c46f22631e89a57 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 19:07:21 +0100
 Subject: [PATCH] Add ability to find features with paper's async chunks

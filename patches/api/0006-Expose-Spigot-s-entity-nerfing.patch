@@ -1,0 +1,38 @@
+From 5f7d3bc8fa327a51fa216e24c0928193ee0bbb9a Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Sun, 29 Dec 2019 00:32:29 +0100
+Subject: [PATCH] Expose Spigot's entity nerfing
+
+---
+ src/main/java/org/bukkit/entity/Entity.java | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
+index 98b26cd9..1ce49b7f 100644
+--- a/src/main/java/org/bukkit/entity/Entity.java
++++ b/src/main/java/org/bukkit/entity/Entity.java
+@@ -670,4 +670,21 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+     @NotNull
+     org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason getEntitySpawnReason();
+     // Paper end
++
++    // Origami start - Expose mob nerfing (Spigot's fromMobSpawner)
++    /**
++     * gets whether this entity is nerfed. (Spigot's Spawner nerfing)
++     * Not to be confused with {@link Entity#fromMobSpawner}!
++     *
++     * @return Whether or not the entity is nerfed (should have no AI but still have physics/jump)
++     */
++    boolean isNerfed();
++
++    /**
++     * Sets whether this entity is nerfed (should have no AI but still have physics/jump).
++     *
++     * @param nerfed Whether or not the entity should be nerfed
++     */
++    void setNerfed(boolean nerfed);
++    // Origami end
+ }
+-- 
+2.18.0.windows.1
+
