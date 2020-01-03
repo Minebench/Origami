@@ -1,4 +1,4 @@
-From ca2ba3372f7c2b26221d7d7488ef47b36cc5b002 Mon Sep 17 00:00:00 2001
+From ea8c939383f3aafe0f665435de7cd5b1da797212 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 21 Dec 2019 02:17:02 +0100
 Subject: [PATCH] Re-add the portal TravelAgent
@@ -139,7 +139,7 @@ index faa321f7..f3f081c8 100644
                  return null;
              }
 diff --git a/src/main/java/net/minecraft/server/PortalTravelAgent.java b/src/main/java/net/minecraft/server/PortalTravelAgent.java
-index 2f0a8e4b..d4653cb4 100644
+index 2f0a8e4b..c54a53e6 100644
 --- a/src/main/java/net/minecraft/server/PortalTravelAgent.java
 +++ b/src/main/java/net/minecraft/server/PortalTravelAgent.java
 @@ -53,6 +53,13 @@ public class PortalTravelAgent {
@@ -204,7 +204,7 @@ index 2f0a8e4b..d4653cb4 100644
  
 -            for (j2 = k - 16; j2 <= k + 16; ++j2) {
 -                d2 = (double) j2 + 0.5D - entity.locZ;
-+            for (j2 = k - 16; creationRadius <= k + creationRadius; ++j2) { // Origami - re-add TravelAgent (creation radius)
++            for (j2 = k - creationRadius; j2 <= k + creationRadius; ++j2) { // Origami - re-add TravelAgent (creation radius)
 +                d2 = (double) j2 + 0.5D - z; // Origami - re-add TravelAgent
  
                  label257:
