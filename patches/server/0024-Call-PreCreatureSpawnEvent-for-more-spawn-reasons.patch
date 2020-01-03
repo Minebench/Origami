@@ -1,0 +1,33 @@
+From f0ce12f1c047add44da5f44b281eded21a0ada3d Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Fri, 3 Jan 2020 16:28:31 +0100
+Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
+
+---
+ src/main/java/net/minecraft/server/EntityTypes.java | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/EntityTypes.java b/src/main/java/net/minecraft/server/EntityTypes.java
+index 612b9b7e..6b5dbc25 100644
+--- a/src/main/java/net/minecraft/server/EntityTypes.java
++++ b/src/main/java/net/minecraft/server/EntityTypes.java
+@@ -166,6 +166,16 @@ public class EntityTypes<T extends Entity> {
+ 
+     @Nullable
+     public T spawnCreature(World world, @Nullable NBTTagCompound nbttagcompound, @Nullable IChatBaseComponent ichatbasecomponent, @Nullable EntityHuman entityhuman, BlockPosition blockposition, EnumMobSpawn enummobspawn, boolean flag, boolean flag1, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason) {
++        // Origami start - Call PreCreatureSpawnEvent for more spawn types
++        org.bukkit.entity.EntityType type = org.bukkit.entity.EntityType.fromName(EntityTypes.getName(this).getKey());
++        if (type != null) {
++            if (!new com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent(
++                    MCUtil.toLocation(world, blockposition), type, spawnReason
++            ).callEvent()) {
++                return null;
++            }
++        }
++        // Origami end
+         T t0 = this.b(world, nbttagcompound, ichatbasecomponent, entityhuman, blockposition, enummobspawn, flag, flag1);
+ 
+         return world.addEntity(t0, spawnReason) ? t0 : null; // Don't return an entity when CreatureSpawnEvent is canceled
+-- 
+2.18.0.windows.1
+
