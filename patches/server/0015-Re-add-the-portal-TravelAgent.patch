@@ -1,0 +1,299 @@
+From 04216bac5d5a1a942ec358b3a834727f7df47d97 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Sat, 21 Dec 2019 02:17:02 +0100
+Subject: [PATCH] Re-add the portal TravelAgent
+
+---
+ .../net/minecraft/server/BlockPortal.java     |  6 ++
+ .../java/net/minecraft/server/Entity.java     | 12 +++-
+ .../net/minecraft/server/EntityPlayer.java    | 25 ++++++--
+ .../minecraft/server/PortalTravelAgent.java   | 36 ++++++++---
+ .../bukkit/craftbukkit/CraftTravelAgent.java  | 62 +++++++++++++++++++
+ 5 files changed, 125 insertions(+), 16 deletions(-)
+ create mode 100644 src/main/java/org/bukkit/craftbukkit/CraftTravelAgent.java
+
+diff --git a/src/main/java/net/minecraft/server/BlockPortal.java b/src/main/java/net/minecraft/server/BlockPortal.java
+index 4eef7127..9358a89a 100644
+--- a/src/main/java/net/minecraft/server/BlockPortal.java
++++ b/src/main/java/net/minecraft/server/BlockPortal.java
+@@ -350,6 +350,7 @@ public class BlockPortal extends Block {
+                 return false;
+             }
+             // CraftBukkit end
++            /* Origami start - re-add TravelAgent (make blocks in PortalCreateEvent modifiable)
+             for (int i = 0; i < this.width; ++i) {
+                 BlockPosition blockposition = this.position.shift(this.c, i);
+ 
+@@ -357,6 +358,11 @@ public class BlockPortal extends Block {
+                     this.a.setTypeAndData(blockposition.up(j), (IBlockData) Blocks.NETHER_PORTAL.getBlockData().set(BlockPortal.AXIS, this.b), 18);
+                 }
+             }
++            */
++            for (org.bukkit.block.BlockState blockstate : blocks) {
++                blockstate.update(true);
++            }
++            // Origami end
+ 
+             return true; // CraftBukkit
+         }
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index e8def7f8..bab7d71d 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -26,6 +26,7 @@ import org.bukkit.Location;
+ import org.bukkit.Server;
+ import org.bukkit.block.BlockFace;
+ import org.bukkit.command.CommandSender;
++import org.bukkit.craftbukkit.CraftTravelAgent;
+ import org.bukkit.entity.Hanging;
+ import org.bukkit.entity.LivingEntity;
+ import org.bukkit.entity.Vehicle;
+@@ -2635,12 +2636,19 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+                 Location enter = this.getBukkitEntity().getLocation();
+                 Location exit = new Location(worldserver1.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ());
+ 
+-                EntityPortalEvent event = new EntityPortalEvent(this.getBukkitEntity(), enter, exit);
++                // Origami start - re-add TravelAgent
++                boolean useTravelAgent = dimensionmanager1.getDimensionID() < CraftWorld.CUSTOM_DIMENSION_OFFSET && dimensionmanager != DimensionManager.THE_END && dimensionmanager1 != DimensionManager.THE_END; // don't use agent for custom worlds or return from THE_END
++
++                org.bukkit.TravelAgent agent = new org.bukkit.craftbukkit.CraftTravelAgent(((CraftWorld) (exit == null ? enter.getWorld() : exit.getWorld())).getHandle().paperConfig.portalSearchRadius);
++                agent.setCanCreatePortal(false); // General entities cannot create portals
++
++                EntityPortalEvent event = new EntityPortalEvent(this.getBukkitEntity(), enter, exit, agent);
++                event.useTravelAgent(useTravelAgent);
++                // Origami end - re-add TravelAgent
+                 event.getEntity().getServer().getPluginManager().callEvent(event);
+                 if (event.isCancelled() || event.getTo() == null || event.getTo().getWorld() == null || !this.isAlive()) {
+                     return null;
+                 }
+-
+                 exit = event.getTo();
+                 worldserver1 = ((CraftWorld) exit.getWorld()).getHandle();
+                 blockposition = new BlockPosition(exit.getX(), exit.getY(), exit.getZ());
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index faa321f7..3f4348f0 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -851,7 +851,13 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+             // CraftBukkit start
+             Location enter = this.getBukkitEntity().getLocation();
+             Location exit = (worldserver1 == null) ? null : new Location(worldserver1.getWorld(), d0, d1, d2, f1, f);
+-            PlayerPortalEvent event = new PlayerPortalEvent(this.getBukkitEntity(), enter, exit, cause);
++            // Origami start - re-add TravelAgent
++            boolean useTravelAgent = dimensionmanager1.getDimensionID() < CraftWorld.CUSTOM_DIMENSION_OFFSET && dimensionmanager != DimensionManager.THE_END && dimensionmanager1 != DimensionManager.THE_END; // don't use agent for custom worlds or return from THE_END
++
++            org.bukkit.TravelAgent agent = new org.bukkit.craftbukkit.CraftTravelAgent(((CraftWorld) (exit == null ? enter.getWorld() : exit.getWorld())).getHandle().paperConfig.portalSearchRadius);
++            PlayerPortalEvent event = new PlayerPortalEvent(this.getBukkitEntity(), enter, exit, agent, cause);
++            event.useTravelAgent(useTravelAgent);
++            // Origami end
+             Bukkit.getServer().getPluginManager().callEvent(event);
+             if (event.isCancelled() || event.getTo() == null) {
+                 return null;
+@@ -894,7 +900,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+             this.dead = false;
+             // CraftBukkit end
+ 
+-            this.setPositionRotation(d0, d1, d2, f1, f);
++            //this.setPositionRotation(d0, d1, d2, f1, f); // Origami - don't set position twice...
+             worldserver.getMethodProfiler().exit();
+             worldserver.getMethodProfiler().enter("placing");
+             double d4 = Math.min(-2.9999872E7D, worldserver1.getWorldBorder().c() + 16.0D);
+@@ -937,9 +943,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+                 // CraftBukkit end
+                 this.setPositionRotation((double) i, (double) j, (double) k, f1, 0.0F);
+                 this.setMot(Vec3D.a);
+-            } else if (!worldserver1.getTravelAgent().a(this, f2)) {
+-                worldserver1.getTravelAgent().a((Entity) this);
+-                worldserver1.getTravelAgent().a(this, f2);
++                // Origami start - re-add TravelAgent
++            } else {
++            //} else if (!worldserver1.getTravelAgent().a(this, f2)) {
++                //worldserver1.getTravelAgent().a((Entity) this);
++                //worldserver1.getTravelAgent().a(this, f2);
++                if (event.useTravelAgent()
++                        && !worldserver1.getTravelAgent().findPortalAndTeleport(this, f2, event.getPortalTravelAgent().getSearchRadius())
++                        && event.getPortalTravelAgent().getCanCreatePortal()
++                        && worldserver1.getTravelAgent().createPortal(this, event.getPortalTravelAgent().getCreationRadius())) {
++                    worldserver1.getTravelAgent().findPortalAndTeleport(this, f2, event.getPortalTravelAgent().getSearchRadius());
++                }
++                // Origami end
+             }
+ 
+             worldserver.getMethodProfiler().exit();
+diff --git a/src/main/java/net/minecraft/server/PortalTravelAgent.java b/src/main/java/net/minecraft/server/PortalTravelAgent.java
+index 2f0a8e4b..6b8c1874 100644
+--- a/src/main/java/net/minecraft/server/PortalTravelAgent.java
++++ b/src/main/java/net/minecraft/server/PortalTravelAgent.java
+@@ -28,9 +28,15 @@ public class PortalTravelAgent {
+     }
+ 
+     public boolean a(Entity entity, float f) {
++        // Origami start - re-add TravelAgent (Allow for custom portal search radius)
++        return findPortalAndTeleport(entity, f, world.paperConfig.portalSearchRadius);
++    }
++
++    public boolean findPortalAndTeleport(Entity entity, float f, int portalSearchRadius) {
++        // Origami end
+         Vec3D vec3d = entity.getPortalOffset();
+         EnumDirection enumdirection = entity.getPortalDirection();
+-        ShapeDetector.Shape shapedetector_shape = this.a(new BlockPosition(entity), entity.getMot(), enumdirection, vec3d.x, vec3d.y, entity instanceof EntityHuman);
++        ShapeDetector.Shape shapedetector_shape = this.findPortal(new BlockPosition(entity), entity.getMot(), enumdirection, vec3d.x, vec3d.y, entity instanceof EntityHuman, portalSearchRadius); // Origami - re-add TravelAgent (Allow for custom portal search radius)
+ 
+         if (shapedetector_shape == null) {
+             return false;
+@@ -53,6 +59,13 @@ public class PortalTravelAgent {
+ 
+     @Nullable
+     public ShapeDetector.Shape a(BlockPosition blockposition, Vec3D vec3d, EnumDirection enumdirection, double d0, double d1, boolean flag) {
++        // Origami start - re-add TravelAgent (Allow for custom portal search radius)
++        return findPortal(blockposition, vec3d, enumdirection, d0, d1, flag, world.paperConfig.portalSearchRadius);
++    }
++
++    @Nullable
++    public ShapeDetector.Shape findPortal(BlockPosition blockposition, Vec3D vec3d, EnumDirection enumdirection, double d0, double d1, boolean flag, int portalSearchRadius) {
++        // Origami end
+         boolean flag1 = true;
+         boolean flag2 = true;
+         BlockPosition blockposition1 = null;
+@@ -70,11 +83,11 @@ public class PortalTravelAgent {
+             } else {
+                 double d2 = Double.MAX_VALUE;
+ 
+-                int portalSearchRadius = world.paperConfig.portalSearchRadius; // Paper
++                // int portalSearchRadius = world.paperConfig.portalSearchRadius; // Paper // Origami - re-add TravelAgent (Allow for custom portal search radius)
+                 for (int i = -portalSearchRadius; i <= portalSearchRadius; ++i) { // Paper
+                     BlockPosition blockposition2;
+ 
+-                    for (int j = -world.paperConfig.portalSearchRadius; j <= world.paperConfig.portalSearchRadius; ++j) { // Paper
++                    for (int j = -portalSearchRadius; j <= portalSearchRadius; ++j) { // Paper // Origami - u wot m8?
+                         for (BlockPosition blockposition3 = blockposition.b(i, this.world.getHeight() - 1 - blockposition.getY(), j); blockposition3.getY() >= 0; blockposition3 = blockposition2) {
+                             blockposition2 = blockposition3.down();
+                             if (this.world.getType(blockposition3).getBlock() == PortalTravelAgent.b) {
+@@ -122,6 +135,12 @@ public class PortalTravelAgent {
+     }
+ 
+     public boolean a(Entity entity) {
++        // Origami start - re-add TravelAgent (Allow for portal creation to be based on coordinates instead of entity and add custom creation radius)
++        return this.createPortal(entity, 16);
++    }
++
++    public boolean createPortal(Entity entity, int creationRadius) {
++        // Origami end
+         boolean flag = true;
+         double d0 = -1.0D;
+         int i = MathHelper.floor(entity.locX);
+@@ -150,10 +169,10 @@ public class PortalTravelAgent {
+         double d3;
+         double d4;
+ 
+-        for (i2 = i - 16; i2 <= i + 16; ++i2) {
++        for (i2 = i - creationRadius; i2 <= i + creationRadius; ++i2) { // Origami - re-add TravelAgent (creation radius)
+             d1 = (double) i2 + 0.5D - entity.locX;
+ 
+-            for (j2 = k - 16; j2 <= k + 16; ++j2) {
++            for (j2 = k - creationRadius; j2 <= k + creationRadius; ++j2) { // Origami - re-add TravelAgent (creation radius)
+                 d2 = (double) j2 + 0.5D - entity.locZ;
+ 
+                 label257:
+@@ -202,10 +221,10 @@ public class PortalTravelAgent {
+         }
+ 
+         if (d0 < 0.0D) {
+-            for (i2 = i - 16; i2 <= i + 16; ++i2) {
++            for (i2 = i - creationRadius; i2 <= i + creationRadius; ++i2) { // Origami - re-add TravelAgent (creation radius)
+                 d1 = (double) i2 + 0.5D - entity.locX;
+ 
+-                for (j2 = k - 16; j2 <= k + 16; ++j2) {
++                for (j2 = k - creationRadius; j2 <= k + creationRadius; ++j2) { // Origami - re-add TravelAgent (creation radius)
+                     d2 = (double) j2 + 0.5D - entity.locZ;
+ 
+                     label205:
+@@ -259,7 +278,7 @@ public class PortalTravelAgent {
+             l5 = -l5;
+         }
+ 
+-        org.bukkit.craftbukkit.util.BlockStateListPopulator blockList = new org.bukkit.craftbukkit.util.BlockStateListPopulator(this.world); // CraftBukkit - Use BlockStateListPopulator
++        org.bukkit.craftbukkit.util.BlockStateListPopulator blockList = new org.bukkit.craftbukkit.util.BlockStateListPopulator(this.world); // CraftBukkit - Use BlockStateListPopulator // Origami - re-add TravelAgent
+         if (d0 < 0.0D) {
+             i1 = MathHelper.clamp(i1, 70, this.world.getHeight() - 10);
+             j5 = i1;
+@@ -296,7 +315,6 @@ public class PortalTravelAgent {
+                 blockList.setTypeAndData(blockposition_mutableblockposition, iblockdata, 18); // CraftBukkit
+             }
+         }
+-
+         // CraftBukkit start
+         org.bukkit.World bworld = this.world.getWorld();
+         org.bukkit.event.world.PortalCreateEvent event = new org.bukkit.event.world.PortalCreateEvent((java.util.List<org.bukkit.block.BlockState>) (java.util.List) blockList.getList(), bworld, entity.getBukkitEntity(), org.bukkit.event.world.PortalCreateEvent.CreateReason.NETHER_PAIR);
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftTravelAgent.java b/src/main/java/org/bukkit/craftbukkit/CraftTravelAgent.java
+new file mode 100644
+index 00000000..a85afb31
+--- /dev/null
++++ b/src/main/java/org/bukkit/craftbukkit/CraftTravelAgent.java
+@@ -0,0 +1,62 @@
++package org.bukkit.craftbukkit;
++
++import org.bukkit.Location;
++import org.bukkit.TravelAgent;
++
++public class CraftTravelAgent implements TravelAgent {
++
++    private int searchRadius;
++    private int creationRadius = 16;
++    private boolean canCreatePortal = true;
++
++    public CraftTravelAgent(int searchRadius) {
++        this.searchRadius = searchRadius;
++    }
++
++    @Override
++    public Location findOrCreate(Location target) {
++        return target; // Stub method, never used by the server
++    }
++
++    @Override
++    public Location findPortal(Location location) {
++        return null; // Stub method, never used by the server
++    }
++
++    @Override
++    public boolean createPortal(Location location) {
++        return false; // Stub method, never used by the server
++    }
++
++    @Override
++    public TravelAgent setSearchRadius(int radius) {
++        this.searchRadius = radius;
++        return this;
++    }
++
++    @Override
++    public int getSearchRadius() {
++        return this.searchRadius;
++    }
++
++    @Override
++    public TravelAgent setCreationRadius(int radius) {
++        this.creationRadius = radius < 2 ? 0 : radius;
++        return this;
++    }
++
++    @Override
++    public int getCreationRadius() {
++        return this.creationRadius;
++    }
++
++    @Override
++    public boolean getCanCreatePortal() {
++        return this.canCreatePortal;
++    }
++
++    @Override
++    public void setCanCreatePortal(boolean create) {
++        this.canCreatePortal = create;
++    }
++}
+\ No newline at end of file
+-- 
+2.18.0.windows.1
+
