@@ -1,4 +1,4 @@
-From a8ba39da43dd278544d7241eb00fca7f03b24ef3 Mon Sep 17 00:00:00 2001
+From 19b118d8919e2a394cf6bbdd72a7b5229e95c15c Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 28 Dec 2019 19:14:18 +0100
 Subject: [PATCH] Backport Fox trusted API (SPIGOT-5413)

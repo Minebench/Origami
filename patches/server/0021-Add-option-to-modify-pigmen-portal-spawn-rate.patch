@@ -1,4 +1,4 @@
-From 5886ffe99bf0683adcc33e2a051e0399170123f5 Mon Sep 17 00:00:00 2001
+From 575fe1f52421897a4af8676e34f06640f28fd7fb Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add option to modify pigmen portal spawn rate
@@ -9,10 +9,10 @@ Subject: [PATCH] Add option to modify pigmen portal spawn rate
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 9b796689..b6b6a524 100644
+index f40c58ca..a222aacf 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -215,6 +215,10 @@ public final class OrigamiConfig {
+@@ -223,6 +223,10 @@ public final class OrigamiConfig {
          private void pigmenDontTargetUnlessHit() {
              pigmenDontTargetUnlessHit = getBoolean("pigmen.dont-target-unless-hit", pigmenDontTargetUnlessHit);
          }

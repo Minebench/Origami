@@ -1,16 +1,16 @@
-From c4dac44ecdd7c6dbb0c4bc1cdb28696c7c14784b Mon Sep 17 00:00:00 2001
+From 25f81092e6de11847436d2b50be044edd38dec3e Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
 
 ---
- .../de/minebench/origami/OrigamiConfig.java   | 21 +++++++++++++++++++
- .../java/net/minecraft/server/Behavior.java   | 14 ++++++++++++-
- .../java/net/minecraft/server/Sensor.java     | 14 ++++++++++++-
- 3 files changed, 47 insertions(+), 2 deletions(-)
+ .../de/minebench/origami/OrigamiConfig.java   | 23 +++++++++++++++++--
+ .../java/net/minecraft/server/Behavior.java   | 14 ++++++++++-
+ .../java/net/minecraft/server/Sensor.java     | 14 ++++++++++-
+ 3 files changed, 47 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 76de2d1c..4605c2a1 100644
+index 0c1254fe..ea02c11a 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -7,6 +7,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,11 +22,13 @@ index 76de2d1c..4605c2a1 100644
  import java.util.logging.Level;
  
  public final class OrigamiConfig {
-@@ -186,6 +188,25 @@ public final class OrigamiConfig {
-                 Bukkit.getLogger().info("Async treasure map generation is enabled");
+@@ -194,8 +196,25 @@ public final class OrigamiConfig {
+                 Bukkit.getLogger().info("Async dolphin feature search is enabled");
              }
          }
-+
+-
+-
++        
 +        private Map<String, Integer> tickRates = new HashMap<>();
 +        private void tickRates() {
 +            this.config.addDefault("tick-rates.sensor.villager.secondaryplaces", 40);

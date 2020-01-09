@@ -1,4 +1,4 @@
-From 512f745e8841e6efdf6719e58fe04e2a36999472 Mon Sep 17 00:00:00 2001
+From 6323e77f33a26799d247ff90ca58bd1596e9e4ed Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 3 Dec 2019 03:12:36 +0100
 Subject: [PATCH] Add option for zombie villager transformation chance
@@ -10,10 +10,10 @@ This also forces the same chance to apply in both normal and hard mode
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 4605c2a1..758a86d4 100644
+index ea02c11a..b7ab82f2 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -207,6 +207,10 @@ public final class OrigamiConfig {
+@@ -215,6 +215,10 @@ public final class OrigamiConfig {
          public int getTickRate(String type, String typeName, String entityType, int def) {
              return tickRates.getOrDefault(type + "." + entityType + "." + typeName, tickRates.getOrDefault(type + "." + typeName, def));
          }

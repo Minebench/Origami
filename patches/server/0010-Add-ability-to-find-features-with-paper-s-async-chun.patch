@@ -1,19 +1,21 @@
-From fed38c2b257a85ec065de9da2c46f22631e89a57 Mon Sep 17 00:00:00 2001
+From 9290bad1b5992df6dd9c91433d7fac02c7a84e29 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 19:07:21 +0100
 Subject: [PATCH] Add ability to find features with paper's async chunks
 
 This implements World#findNearestMapFeatureAsync method and adds a
 config option to use the async search when creating treasure maps
-instead of blocking the main thread with loading and generating chunks.
+or when dolphins search for ocean features instead of blocking
+the main thread with loading/generating chunks.
 
 This has the slight downside that the items might break if interacted
 with before the async search is finished. That should normally not occur,
 especially on pre-generated worlds.
 ---
- .../de/minebench/origami/OrigamiConfig.java   |  8 ++
+ .../de/minebench/origami/OrigamiConfig.java   | 18 ++++
  .../net/minecraft/server/ChunkGenerator.java  |  8 ++
  .../minecraft/server/ChunkProviderFlat.java   |  9 ++
+ .../net/minecraft/server/EntityDolphin.java   | 33 +++++++
  .../net/minecraft/server/ItemWorldMap.java    | 25 +++++-
  .../LootItemFunctionExplorationMap.java       | 19 +++-
  .../minecraft/server/StructureGenerator.java  | 88 +++++++++++++++++++
@@ -22,13 +24,13 @@ especially on pre-generated worlds.
  .../java/net/minecraft/server/WorldMap.java   | 12 +++
  .../net/minecraft/server/WorldServer.java     | 13 +++
  .../org/bukkit/craftbukkit/CraftWorld.java    | 12 +++
- 11 files changed, 223 insertions(+), 5 deletions(-)
+ 12 files changed, 266 insertions(+), 5 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 63097cc0..76de2d1c 100644
+index 63097cc0..0c1254fe 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -178,6 +178,14 @@ public final class OrigamiConfig {
+@@ -178,6 +178,24 @@ public final class OrigamiConfig {
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
          }
@@ -40,6 +42,16 @@ index 63097cc0..76de2d1c 100644
 +                Bukkit.getLogger().info("Async treasure map generation is enabled");
 +            }
 +        }
++
++        public boolean asyncDolphinFeatureSearch = false;
++        private void asyncDolphinFeatureSearch() {
++            asyncDolphinFeatureSearch = getBoolean("async-dolphin-feature-search", asyncDolphinFeatureSearch);
++            if (asyncDolphinFeatureSearch) {
++                Bukkit.getLogger().info("Async dolphin feature search is enabled");
++            }
++        }
++
++
      }
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
@@ -82,6 +94,57 @@ index 04834399..a7c03135 100644
      class a extends BiomeBase {
  
          protected a(WorldGenSurfaceComposite worldgensurfacecomposite, BiomeBase.Precipitation biomebase_precipitation, BiomeBase.Geography biomebase_geography, float f, float f1, float f2, float f3, int i, int j, String s) {
+diff --git a/src/main/java/net/minecraft/server/EntityDolphin.java b/src/main/java/net/minecraft/server/EntityDolphin.java
+index 063fb705..4c26e035 100644
+--- a/src/main/java/net/minecraft/server/EntityDolphin.java
++++ b/src/main/java/net/minecraft/server/EntityDolphin.java
+@@ -309,6 +309,7 @@ public class EntityDolphin extends EntityWaterAnimal {
+ 
+         private final EntityDolphin a;
+         private boolean b;
++        private boolean searching = false; // Origami - async feature search
+ 
+         b(EntityDolphin entitydolphin) {
+             this.a = entitydolphin;
+@@ -339,6 +340,38 @@ public class EntityDolphin extends EntityWaterAnimal {
+             World world = this.a.world;
+             BlockPosition blockposition = new BlockPosition(this.a);
+             String s = (double) world.random.nextFloat() >= 0.5D ? "Ocean_Ruin" : "Shipwreck";
++            // Origami start - async feature search
++            if (world.origamiConfig.asyncDolphinFeatureSearch) {
++                // Don't search if the are already searching, just handle it like we didn't find anything yet.
++                if (this.searching) {
++                    this.b = true;
++                    return;
++                }
++                this.searching = true;
++                // Basically just the vanilla logic copied to be using the async searcher.
++                world.findNearestMapFeatureAsync(s, blockposition, 50, false, blockposition1 -> {
++                    if (blockposition1 == null) {
++                        world.findNearestMapFeatureAsync(s.equals("Ocean_Ruin") ? "Shipwreck" : "Ocean_Ruin", blockposition, 50, false, blockposition2 -> {
++                            if (blockposition2 == null) {
++                                this.b = true;
++                                this.searching = false;
++                                return;
++                            }
++
++                            this.a.g(blockposition2);
++                            world.broadcastEntityEffect(this.a, (byte) 38);
++                            this.searching = false;
++                        });
++                    } else {
++                        this.a.g(blockposition1);
++                        world.broadcastEntityEffect(this.a, (byte) 38);
++                        this.searching = false;
++                    }
++                });
++                return;
++            }
++            // Origami end
++
+             BlockPosition blockposition1 = world.a(s, blockposition, 50, false);
+ 
+             if (blockposition1 == null) {
 diff --git a/src/main/java/net/minecraft/server/ItemWorldMap.java b/src/main/java/net/minecraft/server/ItemWorldMap.java
 index cf9efcf1..5e65f52a 100644
 --- a/src/main/java/net/minecraft/server/ItemWorldMap.java

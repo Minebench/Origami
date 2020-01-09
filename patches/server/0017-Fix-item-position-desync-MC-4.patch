@@ -1,4 +1,4 @@
-From 924255a335fd1d111947fa37f2659cedc9945355 Mon Sep 17 00:00:00 2001
+From 4ea4b6ecbe0156c70319980be72914715b3f9ddc Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sat, 21 Dec 2019 18:24:15 +0100
 Subject: [PATCH] Fix item position desync (MC-4)
@@ -10,10 +10,10 @@ Subject: [PATCH] Fix item position desync (MC-4)
  3 files changed, 13 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e8d6e6d7..070c984e 100644
+index 49836bf6..a66dd8ee 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -222,4 +222,9 @@ public final class OrigamiConfig {
+@@ -230,4 +230,9 @@ public final class OrigamiConfig {
          teleportingOfVehiclesWithPassenger = getBoolean("teleporting-of-vehicles-with-passenger-via-api", teleportingOfVehiclesWithPassenger);
      }
  

@@ -1,4 +1,4 @@
-From 05d9d696971629ea49ddd5a66a4005174720bcb5 Mon Sep 17 00:00:00 2001
+From 1ad1ed3b4baf5177f30dcc8fe3f18b51c9813cb5 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 3 Dec 2019 02:55:02 +0100
 Subject: [PATCH] Don't apply enchantments of books (Fixes MC-154873)
