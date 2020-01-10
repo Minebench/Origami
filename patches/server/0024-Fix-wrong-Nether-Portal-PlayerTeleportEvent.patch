@@ -1,4 +1,4 @@
-From 2ebd98f5c7c9512d08eafbba19a5603cff7b9bb0 Mon Sep 17 00:00:00 2001
+From 941e715641dcfb22a158b02dd10356f694dd5da1 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 10 Jan 2020 01:06:43 +0100
 Subject: [PATCH] Fix wrong Nether Portal PlayerTeleportEvent
@@ -10,34 +10,15 @@ multiple times, even once with the wrong world and with the UNKNOWN cause.
 Also fixes an issue with the target portal rotation not getting applied
 on teleporting.
 ---
- .../net/minecraft/server/EntityPlayer.java    | 113 +++++++++++++++---
+ .../net/minecraft/server/EntityPlayer.java    | 101 +++++++++++++++---
  .../minecraft/server/PlayerConnection.java    |   2 +-
- .../minecraft/server/PortalTravelAgent.java   |  30 ++---
- 3 files changed, 112 insertions(+), 33 deletions(-)
+ .../minecraft/server/PortalTravelAgent.java   |  30 +++---
+ 3 files changed, 106 insertions(+), 27 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index be56be5c..e88261e5 100644
+index be56be5c..a867515f 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -841,12 +841,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
-             } else if (dimensionmanager1 == DimensionManager.OVERWORLD && dimensionmanager == DimensionManager.THE_END) {
-                 BlockPosition blockposition = worldserver1.getDimensionSpawn();
- 
--                d0 = (double) blockposition.getX();
--                d1 = (double) blockposition.getY();
--                d2 = (double) blockposition.getZ();
--                f1 = 90.0F;
--                f = 0.0F;
--            }
-+                    d0 = (double) blockposition.getX();
-+                    d1 = (double) blockposition.getY();
-+                    d2 = (double) blockposition.getZ();
-+                    f1 = 90.0F;
-+                    f = 0.0F;
-+                }
- 
-             // CraftBukkit start
-             Location enter = this.getBukkitEntity().getLocation();
 @@ -868,6 +868,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
                  return null;
              }
