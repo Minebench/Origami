@@ -1,4 +1,4 @@
-From 0b4146cc1b4234b23a5ce14d8348bc7fa912bff7 Mon Sep 17 00:00:00 2001
+From 12a21e96e98dfa1eb69530cd25305875fd4527c4 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:56:23 +0100
 Subject: [PATCH] Allow teleporting of vehicles with a passenger
@@ -9,10 +9,10 @@ Subject: [PATCH] Allow teleporting of vehicles with a passenger
  2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index eaae30fb..15ed7000 100644
+index a7c065b3..2ecfd671 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -155,4 +155,9 @@ public final class OrigamiConfig {
+@@ -112,4 +112,9 @@ public final class OrigamiConfig {
          }
      }
  

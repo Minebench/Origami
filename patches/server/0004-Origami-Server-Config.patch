@@ -1,27 +1,26 @@
-From 352bf1f6c6279314a604cf228724faf12209302c Mon Sep 17 00:00:00 2001
+From 9d30735a17edbfc2dbb54400de2a55d718a58c2f Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:41:38 +0100
 Subject: [PATCH] Origami Server Config
 
 ---
- .../de/minebench/origami/OrigamiConfig.java   | 158 ++++++++++++++++++
+ .../de/minebench/origami/OrigamiConfig.java   | 115 ++++++++++++++++++
  .../net/minecraft/server/DedicatedServer.java |   1 +
  src/main/java/net/minecraft/server/World.java |   3 +
  .../org/bukkit/craftbukkit/CraftServer.java   |   2 +
- .../java/org/bukkit/craftbukkit/Main.java     |   8 +
- 5 files changed, 172 insertions(+)
+ .../java/org/bukkit/craftbukkit/Main.java     |   8 ++
+ 5 files changed, 129 insertions(+)
  create mode 100644 src/main/java/de/minebench/origami/OrigamiConfig.java
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 new file mode 100644
-index 00000000..eaae30fb
+index 00000000..a7c065b3
 --- /dev/null
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -0,0 +1,158 @@
+@@ -0,0 +1,115 @@
 +package de.minebench.origami;
 +
 +import org.bukkit.Bukkit;
-+import org.bukkit.configuration.ConfigurationSection;
 +import org.bukkit.configuration.file.YamlConfiguration;
 +
 +import java.io.File;
@@ -42,7 +41,7 @@ index 00000000..eaae30fb
 +
 +    public static void init(final File file) {
 +        OrigamiConfig.configFile = file;
-+        final YamlConfiguration config = new YamlConfiguration();
++        OrigamiConfig.config = new YamlConfiguration();
 +        config.options().header(CONFIG_HEADER);
 +        config.options().copyDefaults(true);
 +
@@ -61,14 +60,13 @@ index 00000000..eaae30fb
 +            }
 +        }
 +
-+        OrigamiConfig.load(config);
++        OrigamiConfig.load(OrigamiConfig.class, null);
 +    }
 +
-+    public static void load(final YamlConfiguration config) {
-+        OrigamiConfig.config = config;
++    public static void load(Class<?> clazz, Object instance) {
 +        OrigamiConfig.configVersion = OrigamiConfig.getInt("config-version-please-do-not-modify-me", CURRENT_CONFIG_VERSION);
 +
-+        for (final Method method : OrigamiConfig.class.getDeclaredMethods()) {
++        for (final Method method : clazz.getDeclaredMethods()) {
 +            if (method.getReturnType() != void.class || method.getParameterCount() != 0 ||
 +                    !Modifier.isPrivate(method.getModifiers()) || !Modifier.isStatic(method.getModifiers())) {
 +                continue;
@@ -76,7 +74,7 @@ index 00000000..eaae30fb
 +
 +            try {
 +                method.setAccessible(true);
-+                method.invoke(null, EMPTY);
++                method.invoke(instance, EMPTY);
 +            } catch (final Exception ex) {
 +                throw new RuntimeException(ex);
 +            }
@@ -108,7 +106,6 @@ index 00000000..eaae30fb
 +    public static final class WorldConfig {
 +
 +        public final String worldName;
-+        public ConfigurationSection config;
 +
 +        public WorldConfig(final String worldName) {
 +            this.worldName = worldName;
@@ -116,62 +113,22 @@ index 00000000..eaae30fb
 +        }
 +
 +        public void init() {
-+            ConfigurationSection worldsSection = OrigamiConfig.config.getConfigurationSection("worlds");
-+            if (worldsSection == null) {
-+                worldsSection = OrigamiConfig.config.createSection("worlds");
-+            }
-+            ConfigurationSection defaultSection = worldsSection.getConfigurationSection("default");
-+            if (defaultSection == null) {
-+                defaultSection = worldsSection.createSection("default");
-+                worldsSection.set("default", defaultSection);
-+            }
-+            OrigamiConfig.config.set("worlds", worldsSection);
-+            ConfigurationSection section = worldsSection.getConfigurationSection(this.worldName);
-+            if (section == null) {
-+                section = defaultSection;
-+            }
-+
-+            this.load(section);
-+        }
-+
-+        public void load(final ConfigurationSection config) {
-+            this.config = config;
-+
-+            for (final Method method : WorldConfig.class.getDeclaredMethods()) {
-+                if (method.getReturnType() != void.class || method.getParameterCount() != 0 ||
-+                        !Modifier.isPrivate(method.getModifiers()) || Modifier.isStatic(method.getModifiers())) {
-+                    continue;
-+                }
-+
-+                try {
-+                    method.setAccessible(true);
-+                    method.invoke(this, EMPTY);
-+                } catch (final Exception ex) {
-+                    throw new RuntimeException(ex);
-+                }
-+            }
-+
-+            /* We re-save to add new options */
-+            try {
-+                OrigamiConfig.config.save(OrigamiConfig.configFile);
-+            } catch (final Exception ex) {
-+                Bukkit.getLogger().log(Level.SEVERE, "Unable to save origami config", ex);
-+            }
++            load(WorldConfig.class, this);
 +        }
 +
 +        private boolean getBoolean(final String path, final boolean dfl) {
-+            this.config.addDefault(path, Boolean.valueOf(dfl));
-+            return this.config.getBoolean(path, dfl);
++            config.addDefault("worlds.default." + path, Boolean.valueOf(dfl));
++            return config.getBoolean("worlds." + worldName + "." + path, config.getBoolean("worlds.default." + path, dfl));
 +        }
 +
 +        private int getInt(final String path, final int dfl) {
-+            this.config.addDefault(path, Integer.valueOf(dfl));
-+            return this.config.getInt(path, dfl);
++            config.addDefault("worlds.default." + path, Integer.valueOf(dfl));
++            return config.getInt("worlds." + worldName + "." + path, config.getInt("worlds.default." + path, dfl));
 +        }
 +
 +        private double getDouble(final String path, final double dfl) {
-+            this.config.addDefault(path, Double.valueOf(dfl));
-+            return this.config.getDouble(path, dfl);
++            config.addDefault("worlds.default." + path, Double.valueOf(dfl));
++            return config.getDouble("worlds." + worldName + "." + path, config.getDouble("worlds.default." + path, dfl));
 +        }
 +    }
 +

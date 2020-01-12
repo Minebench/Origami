@@ -1,4 +1,4 @@
-From 9290bad1b5992df6dd9c91433d7fac02c7a84e29 Mon Sep 17 00:00:00 2001
+From 3fd26e035bd39cb62f2ed5becb3997d46a0613b0 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 19:07:21 +0100
 Subject: [PATCH] Add ability to find features with paper's async chunks
@@ -27,10 +27,10 @@ especially on pre-generated worlds.
  12 files changed, 266 insertions(+), 5 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 63097cc0..0c1254fe 100644
+index fd24b7f5..f095fd01 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -178,6 +178,24 @@ public final class OrigamiConfig {
+@@ -135,6 +135,24 @@ public final class OrigamiConfig {
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
          }

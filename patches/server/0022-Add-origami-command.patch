@@ -1,4 +1,4 @@
-From b76460f65dc3591d01740924969684ac2bbe7422 Mon Sep 17 00:00:00 2001
+From 248446f0ce1cfea63e924b1a5983394ae7243e02 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 15:52:09 +0100
 Subject: [PATCH] Add origami command
@@ -143,18 +143,18 @@ index 00000000..45f72f75
 +    }
 +}
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index a222aacf..63207b25 100644
+index 615c8009..f78271a6 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -44,6 +44,8 @@ public final class OrigamiConfig {
+@@ -43,6 +43,8 @@ public final class OrigamiConfig {
          }
  
-         OrigamiConfig.load(config);
+         OrigamiConfig.load(OrigamiConfig.class, null);
 +
 +        OrigamiCommand.register();
      }
  
-     public static void load(final YamlConfiguration config) {
+     public static void load(Class<?> clazz, Object instance) {
 -- 
 2.18.0.windows.1
 

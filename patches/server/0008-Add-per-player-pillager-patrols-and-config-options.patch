@@ -1,4 +1,4 @@
-From a18643e040c3bf1567faecee20a34d2d4302f26f Mon Sep 17 00:00:00 2001
+From ff5abed2b2180e5770cde2ddca96fbc317d9f0a1 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 26 Nov 2019 17:59:37 +0100
 Subject: [PATCH] Add per player pillager patrols and config options
@@ -10,12 +10,12 @@ Subject: [PATCH] Add per player pillager patrols and config options
  3 files changed, 52 insertions(+), 9 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 15ed7000..5e69f898 100644
+index 2ecfd671..4ce45b83 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -153,6 +153,26 @@ public final class OrigamiConfig {
-             this.config.addDefault(path, Double.valueOf(dfl));
-             return this.config.getDouble(path, dfl);
+@@ -110,6 +110,26 @@ public final class OrigamiConfig {
+             config.addDefault("worlds.default." + path, Double.valueOf(dfl));
+             return config.getDouble("worlds." + worldName + "." + path, config.getDouble("worlds.default." + path, dfl));
          }
 +
 +        public boolean pillagerPatrolPerPlayer = false;

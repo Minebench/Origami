@@ -1,4 +1,4 @@
-From e7eb9b21329c5003dd7fe961618c5a6373cef03f Mon Sep 17 00:00:00 2001
+From f41bfa34113fb338918c23841798e387767626dc Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sat, 21 Dec 2019 17:51:07 +0100
 Subject: [PATCH] Fix pig zombies (MC-56653)
@@ -9,10 +9,10 @@ Subject: [PATCH] Fix pig zombies (MC-56653)
  2 files changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index b7ab82f2..49836bf6 100644
+index e6551b0f..f17cfc1b 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -219,6 +219,10 @@ public final class OrigamiConfig {
+@@ -176,6 +176,10 @@ public final class OrigamiConfig {
          private void zombieVillagerTransformationChance() {
              zombieVillagerTransformationChance = getDouble("zombie-villager-transformation-chance", zombieVillagerTransformationChance);
          }

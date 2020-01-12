@@ -1,4 +1,4 @@
-From f278d869a7913aaa3b0e7409eb930c8b76705960 Mon Sep 17 00:00:00 2001
+From 848c1d392fecd6e7f87fc81bf4ff6c8fb4ec5fbf Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 01:27:40 +0100
 Subject: [PATCH] Add setting to only find generated features
@@ -14,10 +14,10 @@ Thanks @electronicboy for the improvements.
  2 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 5e69f898..63097cc0 100644
+index 4ce45b83..fd24b7f5 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -173,6 +173,11 @@ public final class OrigamiConfig {
+@@ -130,6 +130,11 @@ public final class OrigamiConfig {
          private void pillagerPatrolSpawnDelay() {
              pillagerPatrolSpawnDelay = getInt("pillager.patrol.spawn-delay", pillagerPatrolSpawnDelay);
          }

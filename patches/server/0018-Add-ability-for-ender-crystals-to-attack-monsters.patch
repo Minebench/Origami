@@ -1,4 +1,4 @@
-From 6273e1526d9ef01c779e38a351195f4eec0cd875 Mon Sep 17 00:00:00 2001
+From 8300ff167c11cc723687630c99622e6465c15ae2 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 22 Dec 2019 19:29:21 +0100
 Subject: [PATCH] Add ability for ender crystals to attack monsters
@@ -13,10 +13,10 @@ crystals attack phantoms
  4 files changed, 56 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index a66dd8ee..f40c58ca 100644
+index 203ff8e4..24771cb9 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -223,6 +223,12 @@ public final class OrigamiConfig {
+@@ -180,6 +180,12 @@ public final class OrigamiConfig {
          private void pigmenDontTargetUnlessHit() {
              pigmenDontTargetUnlessHit = getBoolean("pigmen.dont-target-unless-hit", pigmenDontTargetUnlessHit);
          }
