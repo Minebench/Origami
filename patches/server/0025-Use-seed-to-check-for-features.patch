@@ -1,0 +1,77 @@
+From 4ea552bbe0f917d9d8595c2fdd5c9137e06d2edd Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Mon, 13 Jan 2020 01:00:49 +0100
+Subject: [PATCH] Use seed to check for features
+
+This fixes PaperMC/Paper#2312 by using the same seed checking functionality
+that is used by the server when generating these features instead of loading
+all chunks around the location to check if they have the feature. The chunk
+is only loaded after the generator confirmed a feature should be there.
+
+The only downside of this is that it breaks once the seed or generator changes
+but this should usually not happen but a config option is available anyways.
+---
+ .../java/de/minebench/origami/OrigamiConfig.java    |  8 ++++++++
+ .../net/minecraft/server/StructureGenerator.java    | 13 +++++++++++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index bd6b4582..cb7268e6 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -135,6 +135,14 @@ public final class OrigamiConfig {
+             pillagerPatrolSpawnDelay = getInt("pillager.patrol.spawn-delay", pillagerPatrolSpawnDelay);
+         }
+ 
++        public boolean fastFeatureSearch = true;
++        private void fastFeatureSearch() {
++            fastFeatureSearch = getBoolean("fast-feature-search", fastFeatureSearch);
++            if (fastFeatureSearch) {
++                Bukkit.getLogger().info("Fast feature search is enabled");
++            }
++        }
++
+         public boolean onlyFindGeneratedFeatures = false;
+         private void onlyGetGeneratedFeatures() {
+             onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
+diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
+index 6f9bdfd3..85ba706a 100644
+--- a/src/main/java/net/minecraft/server/StructureGenerator.java
++++ b/src/main/java/net/minecraft/server/StructureGenerator.java
+@@ -104,6 +104,13 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+                             if (flag1 || flag2) {
+                                 ChunkCoordIntPair chunkcoordintpair = this.a(chunkgenerator, seededrandom, j, k, i1, j1);
+                                 if (!world.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
++                                // Origami start - fast feature search by seed
++                                if (world.origamiConfig.fastFeatureSearch) {
++                                    if (!shouldGenerate(chunkgenerator, new SeededRandom(), chunkcoordintpair.x, chunkcoordintpair.z)) {
++                                        continue;
++                                    }
++                                }
++                                // Origami end
+                                 // Origami start - option to only find generated features to not generate new chunks
+                                 final IChunkAccess chunk = world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !world.origamiConfig.onlyFindGeneratedFeatures);
+                                 if (chunk == null) {
+@@ -174,6 +181,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+                             if (flag1 || flag2) {
+                                 ChunkCoordIntPair chunkcoordintpair = this.a(chunkgenerator, seededrandom, j, k, i1, j1);
+                                 if (!world.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
++                                if (world.origamiConfig.fastFeatureSearch) {
++                                    if (!shouldGenerate(chunkgenerator, new SeededRandom(), chunkcoordintpair.x, chunkcoordintpair.z)) {
++                                        continue;
++                                    }
++                                }
+                                 chunksToCheck.add(chunkcoordintpair);
+                                 if (l == 0) {
+                                     break;
+@@ -254,6 +266,7 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+         return new ChunkCoordIntPair(i + k, j + l);
+     }
+ 
++    public boolean shouldGenerate(ChunkGenerator<?> chunkgenerator, Random random, int chunkX, int chunkZ) { return a(chunkgenerator, random, chunkX, chunkZ); } // Origami - OBFHELPER
+     public abstract boolean a(ChunkGenerator<?> chunkgenerator, Random random, int i, int j);
+ 
+     public abstract StructureGenerator.a a();
+-- 
+2.18.0.windows.1
+
