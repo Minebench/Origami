@@ -1,4 +1,4 @@
-From 9d30735a17edbfc2dbb54400de2a55d718a58c2f Mon Sep 17 00:00:00 2001
+From 4e125e0817c1453721daa026427f3ba222397d26 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:41:38 +0100
 Subject: [PATCH] Origami Server Config
@@ -14,7 +14,7 @@ Subject: [PATCH] Origami Server Config
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 new file mode 100644
-index 00000000..a7c065b3
+index 00000000..cf633866
 --- /dev/null
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -0,0 +1,115 @@
@@ -68,7 +68,7 @@ index 00000000..a7c065b3
 +
 +        for (final Method method : clazz.getDeclaredMethods()) {
 +            if (method.getReturnType() != void.class || method.getParameterCount() != 0 ||
-+                    !Modifier.isPrivate(method.getModifiers()) || !Modifier.isStatic(method.getModifiers())) {
++                    !Modifier.isPrivate(method.getModifiers()) || (instance == null && !Modifier.isStatic(method.getModifiers()))) {
 +                continue;
 +            }
 +
