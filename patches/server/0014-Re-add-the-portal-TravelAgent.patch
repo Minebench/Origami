@@ -1,15 +1,15 @@
-From d80493b48a20156e3cedb3101c2fee88009b2abd Mon Sep 17 00:00:00 2001
+From 9e76c824578cd62c5603d18cda2568ac7c5b0eb6 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 21 Dec 2019 02:17:02 +0100
 Subject: [PATCH] Re-add the portal TravelAgent
 
 ---
  .../net/minecraft/server/BlockPortal.java     |  6 ++
- .../java/net/minecraft/server/Entity.java     | 12 +++-
+ .../java/net/minecraft/server/Entity.java     | 50 +++++++++++++--
  .../net/minecraft/server/EntityPlayer.java    | 25 ++++++--
  .../minecraft/server/PortalTravelAgent.java   | 36 ++++++++---
  .../bukkit/craftbukkit/CraftTravelAgent.java  | 62 +++++++++++++++++++
- 5 files changed, 125 insertions(+), 16 deletions(-)
+ 5 files changed, 161 insertions(+), 18 deletions(-)
  create mode 100644 src/main/java/org/bukkit/craftbukkit/CraftTravelAgent.java
 
 diff --git a/src/main/java/net/minecraft/server/BlockPortal.java b/src/main/java/net/minecraft/server/BlockPortal.java
@@ -37,32 +37,87 @@ index 4eef7127..9358a89a 100644
              return true; // CraftBukkit
          }
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index e8def7f8..bab7d71d 100644
+index e8def7f8..4c8cdb4e 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -26,6 +26,7 @@ import org.bukkit.Location;
- import org.bukkit.Server;
- import org.bukkit.block.BlockFace;
- import org.bukkit.command.CommandSender;
-+import org.bukkit.craftbukkit.CraftTravelAgent;
- import org.bukkit.entity.Hanging;
- import org.bukkit.entity.LivingEntity;
- import org.bukkit.entity.Vehicle;
-@@ -2635,12 +2636,19 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -2567,6 +2567,25 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+         return teleportTo(dimensionmanager, null);
+     }
+ 
++    // Origami start - re-add TravelAgent
++    private EntityPortalEvent callEntityPortalEvent(World exitWorld, BlockPosition exitPosition, int searchRadius, boolean useTravelAgent) {
++        org.bukkit.entity.Entity bukkitEntity = this.getBukkitEntity();
++        Location enter = bukkitEntity.getLocation();
++        Location exit = new Location(exitWorld.getWorld(), exitPosition.getX(), exitPosition.getY(), exitPosition.getZ());
++
++        org.bukkit.TravelAgent agent = new org.bukkit.craftbukkit.CraftTravelAgent(searchRadius);
++        agent.setCanCreatePortal(false); // General entities cannot create portals
++
++        EntityPortalEvent event = new EntityPortalEvent(this.getBukkitEntity(), enter, exit, agent);
++        event.useTravelAgent(useTravelAgent);
++        event.getEntity().getServer().getPluginManager().callEvent(event);
++        if (event.isCancelled() || event.getTo() == null || event.getTo().getWorld() == null || !this.isAlive()) {
++            return null;
++        }
++        return event;
++    }
++    // Origami end
++
+     @Nullable
+     public Entity teleportTo(DimensionManager dimensionmanager, BlockPosition location) {
+         // CraftBukkit end
+@@ -2591,9 +2610,23 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+ 
+         if (blockposition == null) { // CraftBukkit
+             if (dimensionmanager1.getType() == DimensionManager.THE_END && dimensionmanager == DimensionManager.OVERWORLD) { // CraftBukkit
+-                blockposition = worldserver1.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, worldserver1.getSpawn());
++                // Origami start - re-add TravelAgent
++                EntityPortalEvent event = callEntityPortalEvent(worldserver1, worldserver1.getHighestBlockYAt(HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, worldserver1.getSpawn()), 0, false);
++                if (event == null) {
++                    return null;
++                }
++                worldserver1 = ((CraftWorld) event.getTo().getWorld()).getHandle();
++                blockposition = new BlockPosition(event.getTo().getX(), event.getTo().getY(), event.getTo().getZ());
++                // Origami end
+             } else if (dimensionmanager.getType() == DimensionManager.THE_END) { // CraftBukkit
+-                blockposition = worldserver1.getDimensionSpawn();
++                // Origami start - re-add TravelAgent
++                EntityPortalEvent event = callEntityPortalEvent(worldserver1, worldserver1.getDimensionSpawn() != null ? blockposition = worldserver1.getDimensionSpawn() : worldserver1.getSpawn(), 0, false);
++                if (event == null) {
++                    return null;
++                }
++                worldserver1 = ((CraftWorld) event.getTo().getWorld()).getHandle();
++                blockposition = new BlockPosition(event.getTo().getX(), event.getTo().getY(), event.getTo().getZ());
++                // Origami end
+             } else {
+                 double d0 = this.locX;
+                 double d1 = this.locZ;
+@@ -2617,7 +2650,15 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+                 Vec3D vec3d1 = this.getPortalOffset();
+ 
+                 blockposition = new BlockPosition(d0, this.locY, d1);
+-                ShapeDetector.Shape shapedetector_shape = worldserver1.getTravelAgent().a(blockposition, vec3d, this.getPortalDirection(), vec3d1.x, vec3d1.y, this instanceof EntityHuman);
++                // Origami start - re-add TravelAgent
++                EntityPortalEvent event = callEntityPortalEvent(worldserver1, blockposition, worldserver1.paperConfig.portalSearchRadius, dimensionmanager1.getDimensionID() < CraftWorld.CUSTOM_DIMENSION_OFFSET && dimensionmanager1 != DimensionManager.THE_END);
++                if (event == null) {
++                    return null;
++                }
++                worldserver1 = ((CraftWorld) event.getTo().getWorld()).getHandle();
++                blockposition = new BlockPosition(event.getTo().getX(), event.getTo().getY(), event.getTo().getZ());
++                ShapeDetector.Shape shapedetector_shape = worldserver1.getTravelAgent().findPortal(blockposition, vec3d, this.getPortalDirection(), vec3d1.x, vec3d1.y, this instanceof EntityHuman, event.getPortalTravelAgent().getSearchRadius());
++                // Origami end
+ 
+                 if (shapedetector_shape == null) {
+                     return null;
+@@ -2631,6 +2672,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+ 
+             // CraftBukkit start
+             // SPIGOT-5136 - don't fire event for CraftEntity.teleport
++            /* Origami - re-add TravelAgent
+             if (location == null) {
                  Location enter = this.getBukkitEntity().getLocation();
                  Location exit = new Location(worldserver1.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ());
- 
--                EntityPortalEvent event = new EntityPortalEvent(this.getBukkitEntity(), enter, exit);
-+                // Origami start - re-add TravelAgent
-+                boolean useTravelAgent = dimensionmanager1.getDimensionID() < CraftWorld.CUSTOM_DIMENSION_OFFSET && dimensionmanager != DimensionManager.THE_END && dimensionmanager1 != DimensionManager.THE_END; // don't use agent for custom worlds or return from THE_END
-+
-+                org.bukkit.TravelAgent agent = new org.bukkit.craftbukkit.CraftTravelAgent(((CraftWorld) (exit == null ? enter.getWorld() : exit.getWorld())).getHandle().paperConfig.portalSearchRadius);
-+                agent.setCanCreatePortal(false); // General entities cannot create portals
-+
-+                EntityPortalEvent event = new EntityPortalEvent(this.getBukkitEntity(), enter, exit, agent);
-+                event.useTravelAgent(useTravelAgent);
-+                // Origami end - re-add TravelAgent
-                 event.getEntity().getServer().getPluginManager().callEvent(event);
+@@ -2640,11 +2682,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  if (event.isCancelled() || event.getTo() == null || event.getTo().getWorld() == null || !this.isAlive()) {
                      return null;
                  }
@@ -70,6 +125,11 @@ index e8def7f8..bab7d71d 100644
                  exit = event.getTo();
                  worldserver1 = ((CraftWorld) exit.getWorld()).getHandle();
                  blockposition = new BlockPosition(exit.getX(), exit.getY(), exit.getZ());
+             }
++            */ // Origami - re-add TravelAgent
+ 
+             this.dimension = dimensionmanager;
+             this.decouple();
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 index faa321f7..3f4348f0 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
