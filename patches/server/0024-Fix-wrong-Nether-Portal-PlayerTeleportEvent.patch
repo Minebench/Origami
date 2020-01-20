@@ -1,4 +1,4 @@
-From 941e715641dcfb22a158b02dd10356f694dd5da1 Mon Sep 17 00:00:00 2001
+From 6531ad2698e2c49b397dc4022129f1e5637ff603 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 10 Jan 2020 01:06:43 +0100
 Subject: [PATCH] Fix wrong Nether Portal PlayerTeleportEvent
@@ -16,7 +16,7 @@ on teleporting.
  3 files changed, 106 insertions(+), 27 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index be56be5c..a867515f 100644
+index be56be5c..296d52d8 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -868,6 +868,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -103,7 +103,7 @@ index be56be5c..a867515f 100644
 +                if (event.useTravelAgent()) {
 +                    // Origami start - fix wrong Nether Portal PlayerTeleportEvent
 +                    // From PortalTravelAgent#findPortalAndTeleport
-+                    Vec3D vec3d = this.getPortalOffset();
++                    Vec3D vec3d = this.getPortalOffset() != null ? this.getPortalOffset() : new Vec3D(0, 0, 0);
 +                    EnumDirection enumdirection = this.getPortalDirection();
 +                    BlockPosition exitPosition = new BlockPosition(exit.getX(), exit.getY(), exit.getZ());
 +                    ShapeDetector.Shape shape = worldserver1.getTravelAgent().findPortal(
