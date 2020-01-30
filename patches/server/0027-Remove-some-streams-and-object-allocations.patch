@@ -1,0 +1,229 @@
+From ae57b703e1714bc26d8002825acc361df266ce31 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Thu, 30 Jan 2020 21:50:40 +0100
+Subject: [PATCH] Remove some streams and object allocations
+
+Partially based on a patch in Spottedleaf's Paper fork
+---
+ .../java/net/minecraft/server/ChunkMap.java   |  14 +--
+ .../net/minecraft/server/PairedQueue.java     |  19 +++-
+ .../server/PathfinderGoalSelector.java        | 100 +++++++++++-------
+ .../minecraft/server/PathfinderNormal.java    |   4 +-
+ 4 files changed, 85 insertions(+), 52 deletions(-)
+
+diff --git a/src/main/java/net/minecraft/server/ChunkMap.java b/src/main/java/net/minecraft/server/ChunkMap.java
+index 55f9f4e6..8069e494 100644
+--- a/src/main/java/net/minecraft/server/ChunkMap.java
++++ b/src/main/java/net/minecraft/server/ChunkMap.java
+@@ -13,9 +13,10 @@ public abstract class ChunkMap extends LightEngineGraph {
+ 
+     @Override
+     protected void a(long i, int j, boolean flag) {
+-        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i);
+-        int k = chunkcoordintpair.x;
+-        int l = chunkcoordintpair.z;
++        // Origami start - remove allocation of ChunkCoordIntPair
++        int k = ChunkCoordIntPair.getX(i);
++        int l = ChunkCoordIntPair.getZ(i);
++        // Origami end
+ 
+         for (int i1 = -1; i1 <= 1; ++i1) {
+             for (int j1 = -1; j1 <= 1; ++j1) {
+@@ -32,9 +33,10 @@ public abstract class ChunkMap extends LightEngineGraph {
+     @Override
+     protected int a(long i, long j, int k) {
+         int l = k;
+-        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(i);
+-        int i1 = chunkcoordintpair.x;
+-        int j1 = chunkcoordintpair.z;
++        // Origami start - remove allocation of ChunkCoordIntPair
++        int i1 = ChunkCoordIntPair.getX(i);
++        int j1 = ChunkCoordIntPair.getZ(i);
++        // Origami end
+ 
+         for (int k1 = -1; k1 <= 1; ++k1) {
+             for (int l1 = -1; l1 <= 1; ++l1) {
+diff --git a/src/main/java/net/minecraft/server/PairedQueue.java b/src/main/java/net/minecraft/server/PairedQueue.java
+index 85bb22e4..4e2a6591 100644
+--- a/src/main/java/net/minecraft/server/PairedQueue.java
++++ b/src/main/java/net/minecraft/server/PairedQueue.java
+@@ -23,9 +23,12 @@ public interface PairedQueue<T, F> {
+         private final List<Queue<Runnable>> a;
+ 
+         public a(int i) {
+-            this.a = (List) IntStream.range(0, i).mapToObj((j) -> {
+-                return Queues.newConcurrentLinkedQueue();
+-            }).collect(Collectors.toList());
++            // Origami start - remove streams
++            this.a = new java.util.ArrayList<>(i);
++            for (int j = 0; j < i; j++) {
++                this.a.add(Queues.newConcurrentLinkedQueue());
++            }
++            // Origami end
+         }
+ 
+         @Nullable
+@@ -57,7 +60,15 @@ public interface PairedQueue<T, F> {
+ 
+         @Override
+         public boolean b() {
+-            return this.a.stream().allMatch(Collection::isEmpty);
++            // Origami start - remove streams
++            for (int i = 0, size = this.a.size(); i < size; ++i) {
++                Queue<Runnable> queue = this.a.get(i);
++                if (!queue.isEmpty()) {
++                    return false;
++                }
++            }
++            return true;
++            // Origami end
+         }
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalSelector.java b/src/main/java/net/minecraft/server/PathfinderGoalSelector.java
+index 44bb18c5..7cf5b8c7 100644
+--- a/src/main/java/net/minecraft/server/PathfinderGoalSelector.java
++++ b/src/main/java/net/minecraft/server/PathfinderGoalSelector.java
+@@ -38,33 +38,38 @@ public class PathfinderGoalSelector {
+     }
+ 
+     public void a(PathfinderGoal pathfindergoal) {
+-        this.d.stream().filter((pathfindergoalwrapped) -> {
+-            return pathfindergoalwrapped.j() == pathfindergoal;
+-        }).filter(PathfinderGoalWrapped::g).forEach(PathfinderGoalWrapped::d);
+-        this.d.removeIf((pathfindergoalwrapped) -> {
+-            return pathfindergoalwrapped.j() == pathfindergoal;
+-        });
++        // Origami start - replace streams
++        for (java.util.Iterator<PathfinderGoalWrapped> it = this.d.iterator(); it.hasNext();) {
++            PathfinderGoalWrapped pathfinderGoalWrapped = it.next();
++            if (pathfinderGoalWrapped.j() == pathfindergoal) {
++                if (pathfinderGoalWrapped.g()) {
++                    pathfinderGoalWrapped.d();
++                }
++                it.remove();
++            }
++        }
++        // Origami end
+     }
+ 
+     public void doTick() {
+         this.e.enter("goalCleanup");
+-        this.c().filter((pathfindergoalwrapped) -> {
+-            boolean flag;
+-
+-            if (pathfindergoalwrapped.g()) {
+-                Stream stream = pathfindergoalwrapped.i().stream();
+-                EnumSet enumset = this.f;
+-
+-                this.f.getClass();
+-                if (!stream.anyMatch(enumset::contains) && pathfindergoalwrapped.b()) {
+-                    flag = false;
+-                    return flag;
++        // Origami start - remove streams
++        for (java.util.Iterator<PathfinderGoalWrapped> it = this.d.iterator(); it.hasNext();) {
++            PathfinderGoalWrapped pathfinderGoalWrapped = it.next();
++            if (pathfinderGoalWrapped.g()) {
++                boolean contains = false;
++                for (PathfinderGoal.Type type : pathfinderGoalWrapped.i()) {
++                    if (this.f.contains(type)) {
++                        contains = true;
++                        break;
++                    }
++                }
++                if (contains || !pathfinderGoalWrapped.b()) {
++                    pathfinderGoalWrapped.d();
+                 }
+             }
+-
+-            flag = true;
+-            return flag;
+-        }).forEach(PathfinderGoal::d);
++        }
++        // Origami end
+         this.c.forEach((pathfindergoal_type, pathfindergoalwrapped) -> {
+             if (!pathfindergoalwrapped.g()) {
+                 this.c.remove(pathfindergoal_type);
+@@ -73,30 +78,43 @@ public class PathfinderGoalSelector {
+         });
+         this.e.exit();
+         this.e.enter("goalUpdate");
+-        this.d.stream().filter((pathfindergoalwrapped) -> {
+-            return !pathfindergoalwrapped.g();
+-        }).filter((pathfindergoalwrapped) -> {
+-            Stream stream = pathfindergoalwrapped.i().stream();
+-            EnumSet enumset = this.f;
++        // Origami start - remove streams
++        UPDATE_LOOP:
++        for (java.util.Iterator<PathfinderGoalWrapped> it = this.d.iterator(); it.hasNext();) {
++            PathfinderGoalWrapped pathfinderGoalWrapped = it.next();
++            if (!pathfinderGoalWrapped.g()) {
++                for (PathfinderGoal.Type type : pathfinderGoalWrapped.i()) {
++                    if (this.f.contains(type)) {
++                        continue UPDATE_LOOP;
++                    }
++                }
+ 
+-            this.f.getClass();
+-            return stream.noneMatch(enumset::contains);
+-        }).filter((pathfindergoalwrapped) -> {
+-            return pathfindergoalwrapped.i().stream().allMatch((pathfindergoal_type) -> {
+-                return ((PathfinderGoalWrapped) this.c.getOrDefault(pathfindergoal_type, PathfinderGoalSelector.b)).a(pathfindergoalwrapped);
+-            });
+-        }).filter(PathfinderGoalWrapped::a).forEach((pathfindergoalwrapped) -> {
+-            pathfindergoalwrapped.i().forEach((pathfindergoal_type) -> {
+-                PathfinderGoalWrapped pathfindergoalwrapped1 = (PathfinderGoalWrapped) this.c.getOrDefault(pathfindergoal_type, PathfinderGoalSelector.b);
++                for (PathfinderGoal.Type type : pathfinderGoalWrapped.i()) {
++                    if (!this.c.getOrDefault(type, PathfinderGoalSelector.b).a(pathfinderGoalWrapped)) {
++                        continue UPDATE_LOOP;
++                    }
++                }
+ 
+-                pathfindergoalwrapped1.d();
+-                this.c.put(pathfindergoal_type, pathfindergoalwrapped);
+-            });
+-            pathfindergoalwrapped.c();
+-        });
++                if (pathfinderGoalWrapped.a()) {
++                    for (PathfinderGoal.Type type : pathfinderGoalWrapped.i()) {
++                        this.c.getOrDefault(type, PathfinderGoalSelector.b).d();
++                        this.c.put(type, pathfinderGoalWrapped);
++                    }
++                    pathfinderGoalWrapped.c();
++                }
++            }
++        }
++        // Origami end
+         this.e.exit();
+         this.e.enter("goalTick");
+-        this.c().forEach(PathfinderGoalWrapped::e);
++        // Origami start - remove streams
++        for (java.util.Iterator<PathfinderGoalWrapped> it = this.d.iterator(); it.hasNext();) {
++            PathfinderGoalWrapped pathfinderGoalWrapped = it.next();
++            if (pathfinderGoalWrapped.g()) {
++                pathfinderGoalWrapped.e();
++            }
++        }
++        // Origami end
+         this.e.exit();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/PathfinderNormal.java b/src/main/java/net/minecraft/server/PathfinderNormal.java
+index 45fd1350..4127dd50 100644
+--- a/src/main/java/net/minecraft/server/PathfinderNormal.java
++++ b/src/main/java/net/minecraft/server/PathfinderNormal.java
+@@ -421,8 +421,10 @@ public class PathfinderNormal extends PathfinderAbstract {
+         return pathtype;
+     }
+ 
++    private static final BlockPosition.MutableBlockPosition CACHED_BLOCKPOSITION = new BlockPosition.MutableBlockPosition(); // Origami - don't allocate a new BlockPosition each time
++
+     protected PathType b(IBlockAccess iblockaccess, int i, int j, int k) {
+-        BlockPosition blockposition = new BlockPosition(i, j, k);
++        BlockPosition blockposition = CACHED_BLOCKPOSITION.setValues(i, j, k); // Origami - don't allocate a new BlockPosition each time
+         IBlockData iblockdata = iblockaccess.getTypeIfLoaded(blockposition); // Paper
+         if (iblockdata == null) return PathType.BLOCKED; // Paper
+         Block block = iblockdata.getBlock();
+-- 
+2.18.0.windows.1
+
