@@ -1,17 +1,17 @@
-From 20f91ace9dde9beb48fe8e11e414f08d226020b7 Mon Sep 17 00:00:00 2001
+From d0fa35cd0a51b16f9be9c313bf8adaad68fbd1c1 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
 
 ---
- .../java/de/minebench/origami/OrigamiConfig.java | 16 ++++++++++++++++
- .../java/net/minecraft/server/BlockPortal.java   | 16 +++++++++++++++-
- src/main/java/net/minecraft/server/Entity.java   |  7 +++++++
- .../net/minecraft/server/EntityInsentient.java   |  2 +-
- 4 files changed, 39 insertions(+), 2 deletions(-)
+ .../de/minebench/origami/OrigamiConfig.java   | 16 ++++++++++++++++
+ .../net/minecraft/server/BlockPortal.java     | 19 ++++++++++++++++++-
+ .../java/net/minecraft/server/Entity.java     |  7 +++++++
+ .../minecraft/server/EntityInsentient.java    |  2 +-
+ 4 files changed, 42 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e3a8f220..78c5603f 100644
+index e3a8f220..7fa4890b 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -180,6 +180,22 @@ public final class OrigamiConfig {
@@ -19,13 +19,13 @@ index e3a8f220..78c5603f 100644
              pigmenDontTargetUnlessHit = getBoolean("pigmen.dont-target-unless-hit", pigmenDontTargetUnlessHit);
          }
 +        public int pigmenPortalSpawn = 2000;
-+        public double pigmenPortalSpawnBoost = 0.0;
++        public double pigmenPortalBoost = 0.0;
 +        public boolean pigmenFarmsWaterAi = false;
 +        public int pigmenFarmsRadius = 16;
 +        public int pigmenFarmsCount = 5;
 +        private void pigmenImprovements() {
 +            pigmenPortalSpawn = getInt("pigmen.portal-spawn", pigmenPortalSpawn);
-+            pigmenPortalSpawnBoost = getDouble("pigmen.portal-spawn-boost", pigmenPortalSpawnBoost);
++            pigmenPortalBoost = getDouble("pigmen.portal-boost", pigmenPortalBoost);
 +            pigmenFarmsWaterAi = getBoolean("pigmen.farms.water-ai", pigmenFarmsWaterAi);
 +            pigmenFarmsRadius = getInt("pigmen.farms.radius", pigmenFarmsRadius);
 +            pigmenFarmsCount = getInt("pigmen.farms.count", pigmenFarmsCount);
@@ -38,7 +38,7 @@ index e3a8f220..78c5603f 100644
          public float enderCrystalAttackDamage = 1.0F;
          private void crystalTurrets() {
 diff --git a/src/main/java/net/minecraft/server/BlockPortal.java b/src/main/java/net/minecraft/server/BlockPortal.java
-index 9358a89a..869a61d2 100644
+index 9358a89a..12ee1c50 100644
 --- a/src/main/java/net/minecraft/server/BlockPortal.java
 +++ b/src/main/java/net/minecraft/server/BlockPortal.java
 @@ -35,7 +35,7 @@ public class BlockPortal extends Block {
@@ -50,7 +50,7 @@ index 9358a89a..869a61d2 100644
              while (world.getType(blockposition).getBlock() == this) {
                  blockposition = blockposition.down();
              }
-@@ -46,6 +46,20 @@ public class BlockPortal extends Block {
+@@ -46,6 +46,13 @@ public class BlockPortal extends Block {
  
                  if (entity != null) {
                      entity.portalCooldown = entity.aX();
@@ -60,17 +60,27 @@ index 9358a89a..869a61d2 100644
 +                            entity.fromMobFarm = true;
 +                        }
 +                    }
-+                    if (world.origamiConfig.pigmenPortalSpawnBoost > 0) {
-+                        Vec3D velocity = new Vec3D(entity.getLookDirection().x, 0, entity.getLookDirection().z).a(world.origamiConfig.pigmenPortalSpawnBoost);
-+                        if (entity.getDirection().k() != iblockdata.get(BlockPortal.AXIS)) {
-+                            velocity = velocity.b(90f);
-+                        }
-+                        entity.move(EnumMoveType.SELF, velocity);
-+                    }
 +                    // Origami end
                  }
              }
          }
+@@ -95,6 +102,16 @@ public class BlockPortal extends Block {
+     @Override
+     public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
+         if (!entity.isPassenger() && !entity.isVehicle() && entity.canPortal()) {
++            // Origami start - Pig Zombie portal boost
++            if (entity instanceof EntityPigZombie && world.origamiConfig.pigmenPortalBoost > 0) {
++                Vec3D velocity = new Vec3D(entity.getLookDirection().x, 0, entity.getLookDirection().z).a(world.origamiConfig.pigmenPortalBoost);
++                if (entity.getDirection().k() != iblockdata.get(BlockPortal.AXIS)) {
++                    velocity = velocity.b(90f);
++                }
++                entity.move(EnumMoveType.SELF, velocity);
++                return;
++            }
++            // Origami end
+             // CraftBukkit start - Entity in portal
+             EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
+             world.getServer().getPluginManager().callEvent(event);
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
 index 4c8cdb4e..9dbcfbbd 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
