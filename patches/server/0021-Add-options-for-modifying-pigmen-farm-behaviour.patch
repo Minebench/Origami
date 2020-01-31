@@ -1,4 +1,4 @@
-From c555eb03c708c4d643c54dbfa31f996bc408c033 Mon Sep 17 00:00:00 2001
+From 20f91ace9dde9beb48fe8e11e414f08d226020b7 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
@@ -6,12 +6,12 @@ Subject: [PATCH] Add options for modifying pigmen farm behaviour
 ---
  .../java/de/minebench/origami/OrigamiConfig.java | 16 ++++++++++++++++
  .../java/net/minecraft/server/BlockPortal.java   | 16 +++++++++++++++-
- src/main/java/net/minecraft/server/Entity.java   |  1 +
+ src/main/java/net/minecraft/server/Entity.java   |  7 +++++++
  .../net/minecraft/server/EntityInsentient.java   |  2 +-
- 4 files changed, 33 insertions(+), 2 deletions(-)
+ 4 files changed, 39 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e3a8f220..80c3f41e 100644
+index e3a8f220..78c5603f 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -180,6 +180,22 @@ public final class OrigamiConfig {
@@ -19,13 +19,13 @@ index e3a8f220..80c3f41e 100644
              pigmenDontTargetUnlessHit = getBoolean("pigmen.dont-target-unless-hit", pigmenDontTargetUnlessHit);
          }
 +        public int pigmenPortalSpawn = 2000;
-+        public double pigmenFarmsSpawnBoost = 0.0;
++        public double pigmenPortalSpawnBoost = 0.0;
 +        public boolean pigmenFarmsWaterAi = false;
 +        public int pigmenFarmsRadius = 16;
 +        public int pigmenFarmsCount = 5;
 +        private void pigmenImprovements() {
 +            pigmenPortalSpawn = getInt("pigmen.portal-spawn", pigmenPortalSpawn);
-+            pigmenFarmsSpawnBoost = getDouble("pigmen.farms.spawn-boost", pigmenFarmsSpawnBoost);
++            pigmenPortalSpawnBoost = getDouble("pigmen.portal-spawn-boost", pigmenPortalSpawnBoost);
 +            pigmenFarmsWaterAi = getBoolean("pigmen.farms.water-ai", pigmenFarmsWaterAi);
 +            pigmenFarmsRadius = getInt("pigmen.farms.radius", pigmenFarmsRadius);
 +            pigmenFarmsCount = getInt("pigmen.farms.count", pigmenFarmsCount);
@@ -38,7 +38,7 @@ index e3a8f220..80c3f41e 100644
          public float enderCrystalAttackDamage = 1.0F;
          private void crystalTurrets() {
 diff --git a/src/main/java/net/minecraft/server/BlockPortal.java b/src/main/java/net/minecraft/server/BlockPortal.java
-index 9358a89a..4b685010 100644
+index 9358a89a..869a61d2 100644
 --- a/src/main/java/net/minecraft/server/BlockPortal.java
 +++ b/src/main/java/net/minecraft/server/BlockPortal.java
 @@ -35,7 +35,7 @@ public class BlockPortal extends Block {
@@ -58,21 +58,21 @@ index 9358a89a..4b685010 100644
 +                    if (world.origamiConfig.pigmenFarmsWaterAi && world.origamiConfig.pigmenFarmsCount > 0 && world.origamiConfig.pigmenFarmsRadius > 0) {
 +                        if (world.getEntitiesByClass(EntityPigZombie.class, new AxisAlignedBB(blockposition).grow(world.origamiConfig.pigmenFarmsRadius)).size() > world.origamiConfig.pigmenFarmsCount) {
 +                            entity.fromMobFarm = true;
-+                            if (world.origamiConfig.pigmenFarmsSpawnBoost > 0) {
-+                                Vec3D velocity = new Vec3D(entity.getLookDirection().x, 0, entity.getLookDirection().z).a(world.origamiConfig.pigmenFarmsSpawnBoost);
-+                                if (entity.getDirection().k() != iblockdata.get(BlockPortal.AXIS)) {
-+                                    velocity = velocity.b(90f);
-+                                }
-+                                entity.move(EnumMoveType.SELF, velocity);
-+                            }
 +                        }
++                    }
++                    if (world.origamiConfig.pigmenPortalSpawnBoost > 0) {
++                        Vec3D velocity = new Vec3D(entity.getLookDirection().x, 0, entity.getLookDirection().z).a(world.origamiConfig.pigmenPortalSpawnBoost);
++                        if (entity.getDirection().k() != iblockdata.get(BlockPortal.AXIS)) {
++                            velocity = velocity.b(90f);
++                        }
++                        entity.move(EnumMoveType.SELF, velocity);
 +                    }
 +                    // Origami end
                  }
              }
          }
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 4c8cdb4e..b8be6859 100644
+index 4c8cdb4e..9dbcfbbd 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -190,6 +190,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
@@ -83,6 +83,26 @@ index 4c8cdb4e..b8be6859 100644
      protected int numCollisions = 0; // Paper
      public void inactiveTick() { }
      // Spigot end
+@@ -1651,6 +1652,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+                 nbttagcompound.setBoolean("Paper.FromMobSpawner", true);
+             }
+             // Paper end
++            // Origami start
++            if (fromMobFarm) {
++                nbttagcompound.setBoolean("Origami.FromMobFarm", true);
++            }
++            // Origami end
+             return nbttagcompound;
+         } catch (Throwable throwable) {
+             CrashReport crashreport = CrashReport.a(throwable, "Saving entity NBT");
+@@ -1801,6 +1807,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+                 spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT;
+             }
+             // Paper end
++            fromMobFarm = nbttagcompound.getBoolean("Origami.FromMobFarm"); // Origami - Restore entity's from mob farm status
+ 
+         } catch (Throwable throwable) {
+             CrashReport crashreport = CrashReport.a(throwable, "Loading entity NBT");
 diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
 index d00e99cd..3b16f14a 100644
 --- a/src/main/java/net/minecraft/server/EntityInsentient.java
