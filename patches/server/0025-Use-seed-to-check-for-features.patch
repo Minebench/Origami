@@ -1,4 +1,4 @@
-From 4ea552bbe0f917d9d8595c2fdd5c9137e06d2edd Mon Sep 17 00:00:00 2001
+From afac9a9cf22c236362b9e0fdaa69eb42c464bcd7 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 13 Jan 2020 01:00:49 +0100
 Subject: [PATCH] Use seed to check for features
@@ -11,23 +11,28 @@ is only loaded after the generator confirmed a feature should be there.
 The only downside of this is that it breaks once the seed or generator changes
 but this should usually not happen but a config option is available anyways.
 ---
- .../java/de/minebench/origami/OrigamiConfig.java    |  8 ++++++++
- .../net/minecraft/server/StructureGenerator.java    | 13 +++++++++++++
- 2 files changed, 21 insertions(+)
+ .../java/de/minebench/origami/OrigamiConfig.java | 13 +++++++++++++
+ .../net/minecraft/server/StructureGenerator.java | 16 ++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index bd6b4582..cb7268e6 100644
+index b60eab47..24385589 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -135,6 +135,14 @@ public final class OrigamiConfig {
+@@ -135,6 +135,19 @@ public final class OrigamiConfig {
              pillagerPatrolSpawnDelay = getInt("pillager.patrol.spawn-delay", pillagerPatrolSpawnDelay);
          }
  
 +        public boolean fastFeatureSearch = true;
++        public boolean fastFeatureSearchDontLoad = true;
 +        private void fastFeatureSearch() {
 +            fastFeatureSearch = getBoolean("fast-feature-search", fastFeatureSearch);
++            fastFeatureSearchDontLoad = getBoolean("fast-feature-search-dont-load-chunk", fastFeatureSearchDontLoad);
 +            if (fastFeatureSearch) {
 +                Bukkit.getLogger().info("Fast feature search is enabled");
++                if (fastFeatureSearchDontLoad) {
++                    Bukkit.getLogger().info("Returning matching chunk rom fast search directly instead of loading it.");
++                }
 +            }
 +        }
 +
@@ -35,10 +40,10 @@ index bd6b4582..cb7268e6 100644
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
 diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
-index 6f9bdfd3..85ba706a 100644
+index 6f9bdfd3..fb0b8bbd 100644
 --- a/src/main/java/net/minecraft/server/StructureGenerator.java
 +++ b/src/main/java/net/minecraft/server/StructureGenerator.java
-@@ -104,6 +104,13 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+@@ -104,6 +104,16 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
                              if (flag1 || flag2) {
                                  ChunkCoordIntPair chunkcoordintpair = this.a(chunkgenerator, seededrandom, j, k, i1, j1);
                                  if (!world.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
@@ -47,12 +52,15 @@ index 6f9bdfd3..85ba706a 100644
 +                                    if (!shouldGenerate(chunkgenerator, new SeededRandom(), chunkcoordintpair.x, chunkcoordintpair.z)) {
 +                                        continue;
 +                                    }
++                                    if (world.origamiConfig.fastFeatureSearchDontLoad) {
++                                        return chunkcoordintpair.l();
++                                    }
 +                                }
 +                                // Origami end
                                  // Origami start - option to only find generated features to not generate new chunks
                                  final IChunkAccess chunk = world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !world.origamiConfig.onlyFindGeneratedFeatures);
                                  if (chunk == null) {
-@@ -174,6 +181,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+@@ -174,6 +184,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
                              if (flag1 || flag2) {
                                  ChunkCoordIntPair chunkcoordintpair = this.a(chunkgenerator, seededrandom, j, k, i1, j1);
                                  if (!world.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
@@ -64,7 +72,7 @@ index 6f9bdfd3..85ba706a 100644
                                  chunksToCheck.add(chunkcoordintpair);
                                  if (l == 0) {
                                      break;
-@@ -254,6 +266,7 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+@@ -254,6 +269,7 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
          return new ChunkCoordIntPair(i + k, j + l);
      }
  
