@@ -1,4 +1,4 @@
-From eea2d9abe889455f62d78465c30c65ecfc6d73b9 Mon Sep 17 00:00:00 2001
+From d712bc6d83e20807e0fa9e7b04fac95599fd1ce2 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 22 Dec 2019 19:29:21 +0100
 Subject: [PATCH] Add ability for ender crystals to attack monsters
@@ -42,7 +42,7 @@ index 816d301f1..766c487f2 100644
          return (new EntityDamageSourceIndirect("indirectMagic", entity, entity1)).setIgnoreArmor().setMagic();
      }
 diff --git a/src/main/java/net/minecraft/server/EntityEnderCrystal.java b/src/main/java/net/minecraft/server/EntityEnderCrystal.java
-index a57d0089d..041f13dad 100644
+index a57d0089d..b148d7376 100644
 --- a/src/main/java/net/minecraft/server/EntityEnderCrystal.java
 +++ b/src/main/java/net/minecraft/server/EntityEnderCrystal.java
 @@ -13,6 +13,11 @@ public class EntityEnderCrystal extends Entity {
@@ -93,7 +93,7 @@ index a57d0089d..041f13dad 100644
 +            creatureBeamTicks = 20;
 +            targetCreature = creature;
 +            setBeamTarget(new BlockPosition(targetCreature).shift(EnumDirection.DOWN));
-+            world.sendSoundEffect(null, this.locX, this.locY, this.locZ, SoundEffects.ENTITY_ENDERMAN_TELEPORT, SoundCategory.BLOCKS, 2f, 0.6f);
++            world.sendSoundEffect(null, this.locX(), this.locY(), this.locZ(), SoundEffects.ENTITY_ENDERMAN_TELEPORT, SoundCategory.BLOCKS, 2f, 0.6f);
 +            targetCreature.damageEntity(DamageSource.indirectMagic(this, this), world.origamiConfig.enderCrystalAttackDamage);
 +            return true;
 +        }
