@@ -1,13 +1,13 @@
-From 87765ca7209303a16f3105a46338f8435bc68083 Mon Sep 17 00:00:00 2001
+From 1fa52e012fc310112dbf66ea9fc57e709c8fe64b Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:31:18 +0100
 Subject: [PATCH] Check Origami repo for updates
 
 ---
- .../paper/PaperVersionFetcher.java            |  4 +-
- .../origami/OrigamiVersionFetcher.java        | 50 +++++++++++++++++++
+ .../paper/PaperVersionFetcher.java            |  4 +--
+ .../origami/OrigamiVersionFetcher.java        | 35 +++++++++++++++++++
  .../craftbukkit/util/CraftMagicNumbers.java   |  2 +-
- 3 files changed, 53 insertions(+), 3 deletions(-)
+ 3 files changed, 38 insertions(+), 3 deletions(-)
  create mode 100644 src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
@@ -34,39 +34,24 @@ index 49a38c660..77324bbb1 100644
              return null;
 diff --git a/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java b/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 new file mode 100644
-index 000000000..a6d8c4f6c
+index 000000000..6cd58564a
 --- /dev/null
 +++ b/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,35 @@
 +package de.minebench.origami;
 +
 +import com.destroystokyo.paper.PaperVersionFetcher;
-+import com.destroystokyo.paper.VersionHistoryManager;
-+import com.destroystokyo.paper.util.VersionFetcher;
-+import com.google.common.base.Charsets;
-+import com.google.common.io.Resources;
-+import com.google.gson.Gson;
-+import com.google.gson.JsonObject;
-+import com.google.gson.JsonSyntaxException;
 +
 +import javax.annotation.Nonnull;
-+import javax.annotation.Nullable;
-+import java.io.BufferedReader;
-+import java.io.IOException;
-+import java.io.InputStreamReader;
-+import java.net.HttpURLConnection;
-+import java.net.URL;
 +
 +public class OrigamiVersionFetcher extends PaperVersionFetcher {
-+    private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
-+    private static final String GITHUB_BRANCH_NAME = "1.14";
-+    private static @Nullable String mcVer;
 +
 +    @Nonnull
 +    @Override
 +    public String getVersionMessage(@Nonnull String serverVersion) {
 +        String[] parts = serverVersion.substring("git-Origami-".length()).split("[-\\s]");
-+        String updateMessage = getUpdateStatusMessage("Minebench/Origami", GITHUB_BRANCH_NAME, parts[0]);
++        String[] mcParts = parts.length > 2 ? parts[2].split("\\.") : new String[0];
++        String updateMessage = getUpdateStatusMessage("Minebench/Origami", mcParts.length > 0 ? mcParts[0] + "." + mcParts[1] : "master", parts[0]);
 +        String history = getHistory();
 +
 +        return history != null ? history + "\n" + updateMessage : updateMessage;
