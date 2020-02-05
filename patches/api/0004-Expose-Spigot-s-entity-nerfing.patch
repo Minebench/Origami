@@ -1,4 +1,4 @@
-From 5f7d3bc8fa327a51fa216e24c0928193ee0bbb9a Mon Sep 17 00:00:00 2001
+From 1080714bbfe6360383ba322e371d19543e153ab7 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:32:29 +0100
 Subject: [PATCH] Expose Spigot's entity nerfing
@@ -8,10 +8,10 @@ Subject: [PATCH] Expose Spigot's entity nerfing
  1 file changed, 17 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index 98b26cd9..1ce49b7f 100644
+index 5518ecd2..1c1c950e 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
-@@ -670,4 +670,21 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+@@ -656,4 +656,21 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
      @NotNull
      org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason getEntitySpawnReason();
      // Paper end

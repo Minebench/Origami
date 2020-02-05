@@ -1,4 +1,4 @@
-From d30031041688a4fa9c10ecc60628c34293106a82 Mon Sep 17 00:00:00 2001
+From 04fa8a562c060617df6302f63a2badf88abf5dfe Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 30 Jul 2019 01:49:07 +0100
 Subject: [PATCH] Add plugin aliases
@@ -104,10 +104,10 @@ index cb31a6d5..dc2cfd1a 100644
              version = map.get("version").toString();
          } catch (NullPointerException ex) {
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index d0e735bc..a1391b81 100644
+index 8d54d561..7a9c5220 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -121,6 +121,7 @@ public final class SimplePluginManager implements PluginManager {
+@@ -126,6 +126,7 @@ public final class SimplePluginManager implements PluginManager {
          }
  
          Map<String, File> plugins = new HashMap<String, File>();
@@ -115,7 +115,7 @@ index d0e735bc..a1391b81 100644
          Set<String> loadedPlugins = new HashSet<String>();
          Map<String, Collection<String>> dependencies = new HashMap<String, Collection<String>>();
          Map<String, Collection<String>> softDependencies = new HashMap<String, Collection<String>>();
-@@ -164,6 +165,40 @@ public final class SimplePluginManager implements PluginManager {
+@@ -169,6 +170,40 @@ public final class SimplePluginManager implements PluginManager {
                  ));
              }
  
@@ -156,7 +156,7 @@ index d0e735bc..a1391b81 100644
              Collection<String> softDependencySet = description.getSoftDepend();
              if (softDependencySet != null && !softDependencySet.isEmpty()) {
                  if (softDependencies.containsKey(description.getName())) {
-@@ -213,7 +248,7 @@ public final class SimplePluginManager implements PluginManager {
+@@ -228,7 +263,7 @@ public final class SimplePluginManager implements PluginManager {
                              dependencyIterator.remove();
  
                          // We have a dependency not found
@@ -165,7 +165,7 @@ index d0e735bc..a1391b81 100644
                              missingDependency = false;
                              pluginIterator.remove();
                              softDependencies.remove(plugin);
-@@ -238,7 +273,7 @@ public final class SimplePluginManager implements PluginManager {
+@@ -253,7 +288,7 @@ public final class SimplePluginManager implements PluginManager {
                          String softDependency = softDependencyIterator.next();
  
                          // Soft depend is no longer around
@@ -174,7 +174,7 @@ index d0e735bc..a1391b81 100644
                              softDependencyIterator.remove();
                          }
                      }
-@@ -341,6 +376,13 @@ public final class SimplePluginManager implements PluginManager {
+@@ -356,6 +391,13 @@ public final class SimplePluginManager implements PluginManager {
          if (result != null) {
              plugins.add(result);
              lookupNames.put(result.getDescription().getName().toLowerCase(java.util.Locale.ENGLISH), result); // Paper

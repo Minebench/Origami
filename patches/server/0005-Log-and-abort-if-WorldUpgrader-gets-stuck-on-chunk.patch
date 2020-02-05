@@ -1,4 +1,4 @@
-From d11a36586801a1725f4d48d8cdfcaaf913ddd657 Mon Sep 17 00:00:00 2001
+From 133bd58984ae3fbb6a0ce422821c8f62349003b2 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:51:07 +0100
 Subject: [PATCH] Log and abort if WorldUpgrader gets stuck on chunk
@@ -9,10 +9,10 @@ Subject: [PATCH] Log and abort if WorldUpgrader gets stuck on chunk
  2 files changed, 24 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 43080127..b47315e3 100644
+index 6336275ed..880c6ac3e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -281,6 +281,11 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -286,6 +286,11 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                  WorldUpgrader worldupgrader = new WorldUpgrader(s, this.getConvertable(), worlddata, this.eraseCache); // CraftBukkit
                  IChatBaseComponent ichatbasecomponent = null;
  
@@ -24,7 +24,7 @@ index 43080127..b47315e3 100644
                  while (!worldupgrader.b()) {
                      IChatBaseComponent ichatbasecomponent1 = worldupgrader.g();
  
-@@ -295,6 +300,23 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -300,6 +305,23 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                          int j = worldupgrader.e() + worldupgrader.f();
  
                          MinecraftServer.LOGGER.info("{}% completed ({} / {} chunks)...", MathHelper.d((float) j / (float) i * 100.0F), j, i);
@@ -49,7 +49,7 @@ index 43080127..b47315e3 100644
  
                      if (this.isStopped()) {
 diff --git a/src/main/java/net/minecraft/server/WorldUpgrader.java b/src/main/java/net/minecraft/server/WorldUpgrader.java
-index af2af1e6..c98d019f 100644
+index 3030c347e..39d4ad175 100644
 --- a/src/main/java/net/minecraft/server/WorldUpgrader.java
 +++ b/src/main/java/net/minecraft/server/WorldUpgrader.java
 @@ -39,6 +39,7 @@ public class WorldUpgrader {
@@ -60,7 +60,7 @@ index af2af1e6..c98d019f 100644
  
      public WorldUpgrader(String s, Convertable convertable, WorldData worlddata, boolean flag) {
          this.c = worlddata.getName();
-@@ -114,6 +115,7 @@ public class WorldUpgrader {
+@@ -115,6 +116,7 @@ public class WorldUpgrader {
  
                      if (listiterator.hasNext()) {
                          ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) listiterator.next();

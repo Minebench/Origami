@@ -1,4 +1,4 @@
-From 5399a7f4ac707f9b7a2bc4afa1f406786ca5b30c Mon Sep 17 00:00:00 2001
+From d3ceb351486805fa4f63b4c8b88a134e4bb4847a Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 3 Dec 2019 03:12:36 +0100
 Subject: [PATCH] Add option for zombie villager transformation chance
@@ -10,10 +10,10 @@ This also forces the same chance to apply in both normal and hard mode
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 56976dda..e6551b0f 100644
+index 79d3bb0bb..80c2ed166 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -172,6 +172,10 @@ public final class OrigamiConfig {
+@@ -156,6 +156,10 @@ public final class OrigamiConfig {
          public int getTickRate(String type, String typeName, String entityType, int def) {
              return tickRates.getOrDefault(type + "." + entityType + "." + typeName, tickRates.getOrDefault(type + "." + typeName, def));
          }
@@ -25,10 +25,10 @@ index 56976dda..e6551b0f 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/EntityZombie.java b/src/main/java/net/minecraft/server/EntityZombie.java
-index d747d36f..ffdf784e 100644
+index 8635d4f40..369cfc627 100644
 --- a/src/main/java/net/minecraft/server/EntityZombie.java
 +++ b/src/main/java/net/minecraft/server/EntityZombie.java
-@@ -422,7 +422,7 @@ public class EntityZombie extends EntityMonster {
+@@ -456,7 +456,7 @@ public class EntityZombie extends EntityMonster {
      public void b(EntityLiving entityliving) {
          super.b(entityliving);
          if ((this.world.getDifficulty() == EnumDifficulty.NORMAL || this.world.getDifficulty() == EnumDifficulty.HARD) && entityliving instanceof EntityVillager) {

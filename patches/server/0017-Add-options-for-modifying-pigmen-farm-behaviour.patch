@@ -1,4 +1,4 @@
-From 06cccb497ba8396069b15a0c52b0f40a0d06309f Mon Sep 17 00:00:00 2001
+From e7e106dc9d26d9e3806e25e90c970acc83e0ef9e Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
@@ -11,10 +11,10 @@ Subject: [PATCH] Add options for modifying pigmen farm behaviour
  4 files changed, 45 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e3a8f220..7fa4890b 100644
+index c3ed1b496..7ce2dced6 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -180,6 +180,22 @@ public final class OrigamiConfig {
+@@ -164,6 +164,22 @@ public final class OrigamiConfig {
          private void pigmenDontTargetUnlessHit() {
              pigmenDontTargetUnlessHit = getBoolean("pigmen.dont-target-unless-hit", pigmenDontTargetUnlessHit);
          }
@@ -38,25 +38,25 @@ index e3a8f220..7fa4890b 100644
          public float enderCrystalAttackDamage = 1.0F;
          private void crystalTurrets() {
 diff --git a/src/main/java/net/minecraft/server/BlockPortal.java b/src/main/java/net/minecraft/server/BlockPortal.java
-index 9358a89a..92d05632 100644
+index 2dc3ab4cf..758d32bb6 100644
 --- a/src/main/java/net/minecraft/server/BlockPortal.java
 +++ b/src/main/java/net/minecraft/server/BlockPortal.java
 @@ -35,7 +35,7 @@ public class BlockPortal extends Block {
  
      @Override
-     public void tick(IBlockData iblockdata, World world, BlockPosition blockposition, Random random) {
--        if (world.spigotConfig.enableZombiePigmenPortalSpawns && world.worldProvider.isOverworld() && world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && random.nextInt(2000) < world.getDifficulty().a()) { // Spigot
-+        if (world.spigotConfig.enableZombiePigmenPortalSpawns && world.worldProvider.isOverworld() && world.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && random.nextInt(world.origamiConfig.pigmenPortalSpawn) < world.getDifficulty().a()) { // Spigot // Origami - configurable portal spawn
-             while (world.getType(blockposition).getBlock() == this) {
+     public void tick(IBlockData iblockdata, WorldServer worldserver, BlockPosition blockposition, Random random) {
+-        if (worldserver.spigotConfig.enableZombiePigmenPortalSpawns && worldserver.worldProvider.isOverworld() && worldserver.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && random.nextInt(2000) < worldserver.getDifficulty().a()) { // Spigot
++        if (worldserver.spigotConfig.enableZombiePigmenPortalSpawns && worldserver.worldProvider.isOverworld() && worldserver.getGameRules().getBoolean(GameRules.DO_MOB_SPAWNING) && random.nextInt(worldserver.origamiConfig.pigmenPortalSpawn) < worldserver.getDifficulty().a()) { // Spigot // Origami - configurable portal spawn
+             while (worldserver.getType(blockposition).getBlock() == this) {
                  blockposition = blockposition.down();
              }
 @@ -46,6 +46,13 @@ public class BlockPortal extends Block {
  
                  if (entity != null) {
-                     entity.portalCooldown = entity.aX();
+                     entity.portalCooldown = entity.ba();
 +                    // Origami start - Pigmen farm improvements
-+                    if (world.origamiConfig.pigmenFarmsWaterAi && world.origamiConfig.pigmenFarmsCount > 0 && world.origamiConfig.pigmenFarmsRadius > 0) {
-+                        if (world.getEntitiesByClass(EntityPigZombie.class, new AxisAlignedBB(blockposition).grow(world.origamiConfig.pigmenFarmsRadius)).size() > world.origamiConfig.pigmenFarmsCount) {
++                    if (worldserver.origamiConfig.pigmenFarmsWaterAi && worldserver.origamiConfig.pigmenFarmsCount > 0 && worldserver.origamiConfig.pigmenFarmsRadius > 0) {
++                        if (worldserver.getEntitiesByClass(EntityPigZombie.class, new AxisAlignedBB(blockposition).grow(worldserver.origamiConfig.pigmenFarmsRadius)).size() > worldserver.origamiConfig.pigmenFarmsCount) {
 +                            entity.fromMobFarm = true;
 +                        }
 +                    }
@@ -64,14 +64,14 @@ index 9358a89a..92d05632 100644
                  }
              }
          }
-@@ -95,6 +102,19 @@ public class BlockPortal extends Block {
+@@ -90,6 +97,19 @@ public class BlockPortal extends Block {
      @Override
      public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
          if (!entity.isPassenger() && !entity.isVehicle() && entity.canPortal()) {
 +            // Origami start - Pig Zombie portal boost
 +            if (entity instanceof EntityPigZombie && world.origamiConfig.pigmenPortalBoost > 0) {
 +                Vec3D velocity = new Vec3D(entity.getLookDirection().x, 0, entity.getLookDirection().z);
-+                if (entity.getDirection().k() != iblockdata.get(BlockPortal.AXIS)) {
++                if (entity.getDirection().m() != iblockdata.get(BlockPortal.AXIS)) {
 +                    velocity = velocity.b(90f); // Rotate around y axis
 +                }
 +                velocity = velocity
@@ -85,10 +85,10 @@ index 9358a89a..92d05632 100644
              EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
              world.getServer().getPluginManager().callEvent(event);
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 4c8cdb4e..9dbcfbbd 100644
+index 3db5ac19a..1dda76276 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -190,6 +190,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -194,6 +194,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
      public long activatedTick = Integer.MIN_VALUE;
      public boolean fromMobSpawner;
      public boolean spawnedViaMobSpawner; // Paper - Yes this name is similar to above, upstream took the better one
@@ -96,7 +96,7 @@ index 4c8cdb4e..9dbcfbbd 100644
      protected int numCollisions = 0; // Paper
      public void inactiveTick() { }
      // Spigot end
-@@ -1651,6 +1652,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -1638,6 +1639,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  nbttagcompound.setBoolean("Paper.FromMobSpawner", true);
              }
              // Paper end
@@ -108,7 +108,7 @@ index 4c8cdb4e..9dbcfbbd 100644
              return nbttagcompound;
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.a(throwable, "Saving entity NBT");
-@@ -1801,6 +1807,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -1780,6 +1786,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT;
              }
              // Paper end
@@ -117,12 +117,12 @@ index 4c8cdb4e..9dbcfbbd 100644
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.a(throwable, "Loading entity NBT");
 diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
-index d00e99cd..3b16f14a 100644
+index e0355d3a3..f465b507b 100644
 --- a/src/main/java/net/minecraft/server/EntityInsentient.java
 +++ b/src/main/java/net/minecraft/server/EntityInsentient.java
-@@ -641,7 +641,7 @@ public abstract class EntityInsentient extends EntityLiving {
-         this.checkDespawn();
-         this.world.getMethodProfiler().exit();
+@@ -658,7 +658,7 @@ public abstract class EntityInsentient extends EntityLiving {
+     protected final void doTick() {
+         ++this.ticksFarFromPlayer;
          // Spigot Start
 -        if ( this.fromMobSpawner )
 +        if ( this.fromMobSpawner || this.fromMobFarm && this.inWater) // Origami - Mobfarm water ai

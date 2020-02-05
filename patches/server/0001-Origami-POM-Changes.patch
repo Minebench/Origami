@@ -1,15 +1,15 @@
-From aeeb286525d991c58ee169edd0d84a86a116afa1 Mon Sep 17 00:00:00 2001
+From 170e37c0108fc55f063f0d959019e867fe42ba39 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:35 +0100
 Subject: [PATCH] Origami POM Changes
 
 ---
- pom.xml                                       | 20 +++++++++----------
- .../bukkit/craftbukkit/util/Versioning.java   |  2 +-
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ pom.xml                                        | 18 +++++++++---------
+ .../bukkit/craftbukkit/util/Versioning.java    |  2 +-
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index beda5dc8..5b0ef0c7 100644
+index 55679af92..8ad7faef2 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -19,7 +19,7 @@ index beda5dc8..5b0ef0c7 100644
 -    <artifactId>paper</artifactId>
 +    <artifactId>origami</artifactId>
      <packaging>jar</packaging>
-     <version>1.14.4-R0.1-SNAPSHOT</version>
+     <version>1.15.2-R0.1-SNAPSHOT</version>
 -    <name>Paper</name>
 -    <url>https://papermc.io</url>
 +    <name>Origami-Server</name>
@@ -66,17 +66,8 @@ index beda5dc8..5b0ef0c7 100644
                      <scmDirectory>..</scmDirectory>
                  </configuration>
                  <executions>
-@@ -206,7 +206,7 @@
-             <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-shade-plugin</artifactId>
--                <version>3.1.1</version>
-+                <version>3.2.1</version>
-                 <executions>
-                     <execution>
-                         <phase>package</phase>
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 674096ca..f3cc2b9c 100644
+index 674096cab..f3cc2b9c3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {

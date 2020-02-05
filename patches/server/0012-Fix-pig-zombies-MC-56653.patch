@@ -1,18 +1,18 @@
-From f41bfa34113fb338918c23841798e387767626dc Mon Sep 17 00:00:00 2001
+From ac4c14c2a5ff9642ebd03c08fc689a3c20035f71 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sat, 21 Dec 2019 17:51:07 +0100
 Subject: [PATCH] Fix pig zombies (MC-56653)
 
 ---
- src/main/java/de/minebench/origami/OrigamiConfig.java  |  4 ++++
- .../java/net/minecraft/server/EntityPigZombie.java     | 10 +++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ src/main/java/de/minebench/origami/OrigamiConfig.java |  4 ++++
+ .../java/net/minecraft/server/EntityPigZombie.java    | 11 ++++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e6551b0f..f17cfc1b 100644
+index 80c2ed166..e3c36a768 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -176,6 +176,10 @@ public final class OrigamiConfig {
+@@ -160,6 +160,10 @@ public final class OrigamiConfig {
          private void zombieVillagerTransformationChance() {
              zombieVillagerTransformationChance = getDouble("zombie-villager-transformation-chance", zombieVillagerTransformationChance);
          }
@@ -24,28 +24,22 @@ index e6551b0f..f17cfc1b 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/EntityPigZombie.java b/src/main/java/net/minecraft/server/EntityPigZombie.java
-index 4f260f81..d093e9e1 100644
+index 9dd028b55..a1dee63be 100644
 --- a/src/main/java/net/minecraft/server/EntityPigZombie.java
 +++ b/src/main/java/net/minecraft/server/EntityPigZombie.java
-@@ -138,6 +138,7 @@ public class EntityPigZombie extends EntityZombie {
-             boolean result = super.damageEntity(damagesource, f);
- 
-             if (result && entity instanceof EntityHuman && !((EntityHuman) entity).isCreative() && this.hasLineOfSight(entity)) {
-+                if (world.origamiConfig.pigmenDontTargetUnlessHit) this.setLastDamager((EntityHuman) entity); // Origami - fix MC-56653
-                 this.a(entity);
-             }
- 
-@@ -156,7 +157,7 @@ public class EntityPigZombie extends EntityZombie {
+@@ -156,7 +156,9 @@ public class EntityPigZombie extends EntityZombie {
          this.angerLevel = event.getNewAnger();
          // CraftBukkit end
          this.soundDelay = this.random.nextInt(40);
--        if (entity instanceof EntityLiving) {
-+        if (!world.origamiConfig.pigmenDontTargetUnlessHit && entity instanceof EntityLiving) { // Origami - fix MC-56653
-             this.setLastDamager((EntityLiving) entity);
-         }
+-        this.setLastDamager(entityliving);
++        if (!world.origamiConfig.pigmenDontTargetUnlessHit) { // Origami - fix MC-56653
++            this.setLastDamager(entityliving);
++        }
+         return true;
+     }
  
-@@ -206,6 +207,13 @@ public class EntityPigZombie extends EntityZombie {
-         return this.ef();
+@@ -198,6 +200,13 @@ public class EntityPigZombie extends EntityZombie {
+         return this.eA();
      }
  
 +    // Origami start - fix MC-56653

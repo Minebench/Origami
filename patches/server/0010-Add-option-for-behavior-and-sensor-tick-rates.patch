@@ -1,16 +1,16 @@
-From 76e06bea78af7e981cca7ed6d92244447cf52e85 Mon Sep 17 00:00:00 2001
+From 929819a88b6cc49ff63c8ed0fcf7eb16eca8725a Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
 
 ---
- .../de/minebench/origami/OrigamiConfig.java   | 23 +++++++++++++++++--
- .../java/net/minecraft/server/Behavior.java   | 14 ++++++++++-
- .../java/net/minecraft/server/Sensor.java     | 14 ++++++++++-
- 3 files changed, 47 insertions(+), 4 deletions(-)
+ .../de/minebench/origami/OrigamiConfig.java   | 21 +++++++++++++++++++
+ .../java/net/minecraft/server/Behavior.java   | 14 ++++++++++++-
+ .../java/net/minecraft/server/Sensor.java     | 14 ++++++++++++-
+ 3 files changed, 47 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index f095fd01..56976dda 100644
+index e13058f2a..79d3bb0bb 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -6,6 +6,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,12 +22,10 @@ index f095fd01..56976dda 100644
  import java.util.logging.Level;
  
  public final class OrigamiConfig {
-@@ -151,8 +153,25 @@ public final class OrigamiConfig {
-                 Bukkit.getLogger().info("Async dolphin feature search is enabled");
-             }
+@@ -135,6 +137,25 @@ public final class OrigamiConfig {
+         private void onlyGetGeneratedFeatures() {
+             onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
          }
--
--
 +        
 +        private Map<String, Integer> tickRates = new HashMap<>();
 +        private void tickRates() {
@@ -51,7 +49,7 @@ index f095fd01..56976dda 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
-index 788d1433..640dd0d5 100644
+index 788d1433e..640dd0d5f 100644
 --- a/src/main/java/net/minecraft/server/Behavior.java
 +++ b/src/main/java/net/minecraft/server/Behavior.java
 @@ -10,6 +10,10 @@ public abstract class Behavior<E extends EntityLiving> {
@@ -90,7 +88,7 @@ index 788d1433..640dd0d5 100644
              this.c = i + (long) j;
              this.a(worldserver, e0, i);
 diff --git a/src/main/java/net/minecraft/server/Sensor.java b/src/main/java/net/minecraft/server/Sensor.java
-index e3888dd9..cb92b248 100644
+index e3888dd97..cb92b2485 100644
 --- a/src/main/java/net/minecraft/server/Sensor.java
 +++ b/src/main/java/net/minecraft/server/Sensor.java
 @@ -8,10 +8,22 @@ public abstract class Sensor<E extends EntityLiving> {

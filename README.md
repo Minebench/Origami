@@ -35,7 +35,7 @@ Origami-API maven dependency:
 <dependency>
     <groupId>de.minebench.origami</groupId>
     <artifactId>origami-api</artifactId>
-    <version>1.14.4-R0.1-SNAPSHOT</version>
+    <version>1.15.2-R0.1-SNAPSHOT</version>
     <scope>provided</scope>
  </dependency>
  ```

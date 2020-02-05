@@ -1,4 +1,4 @@
-From 8300ff167c11cc723687630c99622e6465c15ae2 Mon Sep 17 00:00:00 2001
+From eea2d9abe889455f62d78465c30c65ecfc6d73b9 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 22 Dec 2019 19:29:21 +0100
 Subject: [PATCH] Add ability for ender crystals to attack monsters
@@ -13,10 +13,10 @@ crystals attack phantoms
  4 files changed, 56 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 203ff8e4..24771cb9 100644
+index 5c71423fa..c3ed1b496 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -180,6 +180,12 @@ public final class OrigamiConfig {
+@@ -164,6 +164,12 @@ public final class OrigamiConfig {
          private void pigmenDontTargetUnlessHit() {
              pigmenDontTargetUnlessHit = getBoolean("pigmen.dont-target-unless-hit", pigmenDontTargetUnlessHit);
          }
@@ -30,10 +30,10 @@ index 203ff8e4..24771cb9 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/DamageSource.java b/src/main/java/net/minecraft/server/DamageSource.java
-index 730a15f3..b035de84 100644
+index 816d301f1..766c487f2 100644
 --- a/src/main/java/net/minecraft/server/DamageSource.java
 +++ b/src/main/java/net/minecraft/server/DamageSource.java
-@@ -77,6 +77,7 @@ public class DamageSource {
+@@ -81,6 +81,7 @@ public class DamageSource {
          return (new EntityDamageSourceIndirect("thrown", entity, entity1)).c();
      }
  
@@ -42,7 +42,7 @@ index 730a15f3..b035de84 100644
          return (new EntityDamageSourceIndirect("indirectMagic", entity, entity1)).setIgnoreArmor().setMagic();
      }
 diff --git a/src/main/java/net/minecraft/server/EntityEnderCrystal.java b/src/main/java/net/minecraft/server/EntityEnderCrystal.java
-index 801552fc..c3673381 100644
+index a57d0089d..041f13dad 100644
 --- a/src/main/java/net/minecraft/server/EntityEnderCrystal.java
 +++ b/src/main/java/net/minecraft/server/EntityEnderCrystal.java
 @@ -13,6 +13,11 @@ public class EntityEnderCrystal extends Entity {
@@ -57,7 +57,7 @@ index 801552fc..c3673381 100644
  
      public EntityEnderCrystal(EntityTypes<? extends EntityEnderCrystal> entitytypes, World world) {
          super(entitytypes, world);
-@@ -52,9 +57,52 @@ public class EntityEnderCrystal extends Entity {
+@@ -49,9 +54,52 @@ public class EntityEnderCrystal extends Entity {
                  }
                  // CraftBukkit end
              }
@@ -111,7 +111,7 @@ index 801552fc..c3673381 100644
      @Override
      protected void b(NBTTagCompound nbttagcompound) {
 diff --git a/src/main/java/net/minecraft/server/IEntityAccess.java b/src/main/java/net/minecraft/server/IEntityAccess.java
-index dca18afd..06ae7043 100644
+index 4157e50e4..a24397815 100644
 --- a/src/main/java/net/minecraft/server/IEntityAccess.java
 +++ b/src/main/java/net/minecraft/server/IEntityAccess.java
 @@ -34,6 +34,7 @@ public interface IEntityAccess {

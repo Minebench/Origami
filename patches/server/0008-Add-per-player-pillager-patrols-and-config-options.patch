@@ -1,4 +1,4 @@
-From ff5abed2b2180e5770cde2ddca96fbc317d9f0a1 Mon Sep 17 00:00:00 2001
+From ed1f49674f9b1020784aefe438fec36c6300d916 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 26 Nov 2019 17:59:37 +0100
 Subject: [PATCH] Add per player pillager patrols and config options
@@ -6,11 +6,11 @@ Subject: [PATCH] Add per player pillager patrols and config options
 ---
  .../de/minebench/origami/OrigamiConfig.java   | 20 ++++++++++
  .../net/minecraft/server/EntityPlayer.java    |  1 +
- .../minecraft/server/MobSpawnerPatrol.java    | 40 ++++++++++++++-----
- 3 files changed, 52 insertions(+), 9 deletions(-)
+ .../minecraft/server/MobSpawnerPatrol.java    | 39 ++++++++++++++-----
+ 3 files changed, 51 insertions(+), 9 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 2ecfd671..4ce45b83 100644
+index 59e861e6c..7ed599d48 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -110,6 +110,26 @@ public final class OrigamiConfig {
@@ -41,7 +41,7 @@ index 2ecfd671..4ce45b83 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index c747b5de..faa321f7 100644
+index 15230a834..4661e4d85 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -85,6 +85,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
@@ -53,10 +53,10 @@ index c747b5de..faa321f7 100644
      // CraftBukkit start
      public String displayName;
 diff --git a/src/main/java/net/minecraft/server/MobSpawnerPatrol.java b/src/main/java/net/minecraft/server/MobSpawnerPatrol.java
-index 44c70e04..50a2d8d2 100644
+index a0f582807..f2688506a 100644
 --- a/src/main/java/net/minecraft/server/MobSpawnerPatrol.java
 +++ b/src/main/java/net/minecraft/server/MobSpawnerPatrol.java
-@@ -15,23 +15,45 @@ public class MobSpawnerPatrol {
+@@ -17,23 +17,44 @@ public class MobSpawnerPatrol {
          } else {
              Random random = worldserver.random;
  
@@ -65,7 +65,7 @@ index 44c70e04..50a2d8d2 100644
 +            // Origami start - Moved up for per player spawning and configuration
 +            int j = worldserver.getPlayers().size();
 +            if (j < 1) {
-                 return 0;
++                return 0;
 +            }
 +
 +            EntityPlayer entityhuman = worldserver.getPlayers().get(random.nextInt(j));
@@ -76,18 +76,15 @@ index 44c70e04..50a2d8d2 100644
 +            if (worldserver.origamiConfig.pillagerPatrolPerPlayer) {
 +                --entityhuman.patrolSpawnDelay;
 +                patrolSpawnDelay = entityhuman.patrolSpawnDelay;
-             } else {
--                this.a += 12000 + random.nextInt(1200);
--                long i = worldserver.getDayTime() / 24000L;
++            } else {
 +                --this.a;
 +                patrolSpawnDelay = this.a;
 +            }
- 
--                if (i >= 5L && worldserver.J()) {
--                    if (random.nextInt(5) != 0) {
 +            if (patrolSpawnDelay > 0) {
-+                return 0;
-+            } else {
+                 return 0;
+             } else {
+-                this.a += 12000 + random.nextInt(1200);
+-                long i = worldserver.getDayTime() / 24000L;
 +                long days;
 +                if (worldserver.origamiConfig.pillagerPatrolPerPlayer) {
 +                    days = entityhuman.getStatisticManager().getStatisticValue(StatisticList.CUSTOM.b(StatisticList.PLAY_ONE_MINUTE)) / 24000L;
@@ -96,8 +93,10 @@ index 44c70e04..50a2d8d2 100644
 +                    days = worldserver.getDayTime() / 24000L;
 +                    this.a += worldserver.origamiConfig.pillagerPatrolSpawnDelay + random.nextInt(1200);
 +                }
-+
-+                if (days >= worldserver.origamiConfig.pillagerPatrolStartDay && worldserver.J()) {
+ 
+-                if (i >= 5L && worldserver.isDay()) {
+-                    if (random.nextInt(5) != 0) {
++                if (days >= worldserver.origamiConfig.pillagerPatrolStartDay && worldserver.isDay()) {
 +                    if (random.nextInt(worldserver.origamiConfig.pillagerPatrolSpawnChance) != 0) {
 +                        // Origami end
                          return 0;

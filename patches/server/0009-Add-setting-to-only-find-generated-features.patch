@@ -1,4 +1,4 @@
-From 848c1d392fecd6e7f87fc81bf4ff6c8fb4ec5fbf Mon Sep 17 00:00:00 2001
+From 1f5368541058f0add406e7f5c25e74c9b074b175 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 01:27:40 +0100
 Subject: [PATCH] Add setting to only find generated features
@@ -14,7 +14,7 @@ Thanks @electronicboy for the improvements.
  2 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 4ce45b83..fd24b7f5 100644
+index 7ed599d48..e13058f2a 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -130,6 +130,11 @@ public final class OrigamiConfig {
@@ -30,13 +30,13 @@ index 4ce45b83..fd24b7f5 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
-index 7b2eace7..59a8759b 100644
+index acfe732af..b4eb1f592 100644
 --- a/src/main/java/net/minecraft/server/StructureGenerator.java
 +++ b/src/main/java/net/minecraft/server/StructureGenerator.java
-@@ -104,7 +104,13 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
-                             if (flag1 || flag2) {
-                                 ChunkCoordIntPair chunkcoordintpair = this.a(chunkgenerator, seededrandom, j, k, i1, j1);
-                                 if (!world.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
+@@ -118,7 +118,13 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+                                     }
+                                 }
+                                 // Paper end
 -                                StructureStart structurestart = world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS).a(this.b());
 +                                // Origami start - option to only find generated features to not generate new chunks
 +                                final IChunkAccess chunk = world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !world.origamiConfig.onlyFindGeneratedFeatures);
