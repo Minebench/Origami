@@ -1,4 +1,4 @@
-From 9e3d47bc9692ff4b7e1d70646a8ec7274d58aaff Mon Sep 17 00:00:00 2001
+From debd6a3b2de12761e8972dc58a28f7278295a9ff Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 21 Dec 2019 02:17:03 +0100
 Subject: [PATCH] Re-add the portal TravelAgent
@@ -6,8 +6,8 @@ Subject: [PATCH] Re-add the portal TravelAgent
 ---
  src/main/java/org/bukkit/TravelAgent.java     | 123 ++++++++++++++++++
  .../event/entity/EntityPortalEvent.java       |  95 ++++++++++++++
- .../event/player/PlayerPortalEvent.java       |  97 ++++++++++++++
- 3 files changed, 315 insertions(+)
+ .../event/player/PlayerPortalEvent.java       | 101 ++++++++++++++
+ 3 files changed, 319 insertions(+)
  create mode 100644 src/main/java/org/bukkit/TravelAgent.java
 
 diff --git a/src/main/java/org/bukkit/TravelAgent.java b/src/main/java/org/bukkit/TravelAgent.java
@@ -253,7 +253,7 @@ index 67fb9d93..710a85ef 100644
      @Override
      public HandlerList getHandlers() {
 diff --git a/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java b/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java
-index a6f91166..828bb92d 100644
+index a6f91166..656bfbab 100644
 --- a/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java
 +++ b/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java
 @@ -17,6 +17,43 @@ public class PlayerPortalEvent extends PlayerTeleportEvent {
@@ -300,7 +300,7 @@ index a6f91166..828bb92d 100644
  
      public PlayerPortalEvent(@NotNull final Player player, @NotNull final Location from, @Nullable final Location to) {
          super(player, from, to);
-@@ -105,6 +142,66 @@ public class PlayerPortalEvent extends PlayerTeleportEvent {
+@@ -105,6 +142,70 @@ public class PlayerPortalEvent extends PlayerTeleportEvent {
      public int getCreationRadius() {
          return creationRadius;
      }
@@ -320,7 +320,9 @@ index a6f91166..828bb92d 100644
 +     */
 +    @Deprecated
 +    public void useTravelAgent(boolean useTravelAgent) {
-+        throw new UnsupportedOperationException("TravelAgent API is no longer fully supported!");
++        Exception e = new UnsupportedOperationException("TravelAgent API is no longer fully supported!");
++        e.fillInStackTrace();
++        org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, e.getMessage(), e);
 +    }
 +
 +    /**
@@ -361,7 +363,9 @@ index a6f91166..828bb92d 100644
 +     */
 +    @Deprecated
 +    public void setPortalTravelAgent(@NotNull org.bukkit.TravelAgent travelAgent) {
-+        throw new UnsupportedOperationException("TravelAgent API is no longer fully supported!");
++        Exception e = new UnsupportedOperationException("TravelAgent API is no longer fully supported!");
++        e.fillInStackTrace();
++        org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, e.getMessage(), e);
 +    }
 +    // Origami end
  
