@@ -1,13 +1,13 @@
-From ce19bdd1ffa1223a9c44b845a90ef4f384e5c321 Mon Sep 17 00:00:00 2001
+From ee725e43cc410413ded1b11b66e6e4a0568acea7 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 30 Jul 2019 01:49:07 +0100
 Subject: [PATCH] Add plugin aliases
 
 ---
- .../command/defaults/PluginsCommand.java      | 12 +++++
- .../bukkit/plugin/PluginDescriptionFile.java  | 39 ++++++++++++++++
- .../bukkit/plugin/SimplePluginManager.java    | 46 ++++++++++++++++++-
- 3 files changed, 95 insertions(+), 2 deletions(-)
+ .../command/defaults/PluginsCommand.java      | 12 +++
+ .../bukkit/plugin/PluginDescriptionFile.java  | 39 +++++++++
+ .../bukkit/plugin/SimplePluginManager.java    | 85 +++++++++++++++++--
+ 3 files changed, 130 insertions(+), 6 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/command/defaults/PluginsCommand.java b/src/main/java/org/bukkit/command/defaults/PluginsCommand.java
 index 6cfd9f3c..baa8fd31 100644
@@ -104,7 +104,7 @@ index cb31a6d5..dc2cfd1a 100644
              version = map.get("version").toString();
          } catch (NullPointerException ex) {
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index 8d54d561..a5598890 100644
+index 8d54d561..64811693 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 @@ -126,6 +126,7 @@ public final class SimplePluginManager implements PluginManager {
@@ -156,7 +156,43 @@ index 8d54d561..a5598890 100644
              Collection<String> softDependencySet = description.getSoftDepend();
              if (softDependencySet != null && !softDependencySet.isEmpty()) {
                  if (softDependencies.containsKey(description.getName())) {
-@@ -228,7 +263,7 @@ public final class SimplePluginManager implements PluginManager {
+@@ -180,6 +215,11 @@ public final class SimplePluginManager implements PluginManager {
+ 
+                 for (String depend : softDependencySet) {
+                     dependencyGraph.putEdge(description.getName(), depend);
++                    // Origami start - add plugin aliases
++                    for (String alias : description.getAliases()) {
++                        dependencyGraph.putEdge(alias, depend);
++                    }
++                    // Origami end
+                 }
+             }
+ 
+@@ -189,6 +229,11 @@ public final class SimplePluginManager implements PluginManager {
+ 
+                 for (String depend : dependencySet) {
+                     dependencyGraph.putEdge(description.getName(), depend);
++                    // Origami start - add plugin aliases
++                    for (String alias : description.getAliases()) {
++                        dependencyGraph.putEdge(alias, depend);
++                    }
++                    // Origami end
+                 }
+             }
+ 
+@@ -205,6 +250,11 @@ public final class SimplePluginManager implements PluginManager {
+                     }
+ 
+                     dependencyGraph.putEdge(loadBeforeTarget, description.getName());
++                    // Origami start - add plugin aliases
++                    for (String alias : description.getAliases()) {
++                        dependencyGraph.putEdge(loadBeforeTarget, alias);
++                    }
++                    // Origami end
+                 }
+             }
+         }
+@@ -228,7 +278,7 @@ public final class SimplePluginManager implements PluginManager {
                              dependencyIterator.remove();
  
                          // We have a dependency not found
@@ -165,7 +201,7 @@ index 8d54d561..a5598890 100644
                              missingDependency = false;
                              pluginIterator.remove();
                              softDependencies.remove(plugin);
-@@ -253,7 +288,7 @@ public final class SimplePluginManager implements PluginManager {
+@@ -253,7 +303,7 @@ public final class SimplePluginManager implements PluginManager {
                          String softDependency = softDependencyIterator.next();
  
                          // Soft depend is no longer around
@@ -174,7 +210,45 @@ index 8d54d561..a5598890 100644
                              softDependencyIterator.remove();
                          }
                      }
-@@ -356,6 +391,13 @@ public final class SimplePluginManager implements PluginManager {
+@@ -269,8 +319,16 @@ public final class SimplePluginManager implements PluginManager {
+                     missingDependency = false;
+ 
+                     try {
+-                        result.add(loadPlugin(file));
+-                        loadedPlugins.add(plugin);
++                        // Origami start - add plugin aliases
++                        Plugin loadedPlugin = loadPlugin(file);
++                        if (loadedPlugin != null) {
++                            result.add(loadedPlugin);
++                            loadedPlugins.add(loadedPlugin.getName());
++                            loadedPlugins.addAll(loadedPlugin.getDescription().getAliases());
++                        } else {
++                            server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'");
++                        }
++                        // Origami end
+                         continue;
+                     } catch (InvalidPluginException ex) {
+                         server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+@@ -294,8 +352,16 @@ public final class SimplePluginManager implements PluginManager {
+                         pluginIterator.remove();
+ 
+                         try {
+-                            result.add(loadPlugin(file));
+-                            loadedPlugins.add(plugin);
++                            // Origami start - add plugin aliases
++                            Plugin loadedPlugin = loadPlugin(file);
++                            if (loadedPlugin != null) {
++                                result.add(loadedPlugin);
++                                loadedPlugins.add(loadedPlugin.getName());
++                                loadedPlugins.addAll(loadedPlugin.getDescription().getAliases());
++                            } else {
++                                server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'");
++                            }
++                            // Origami end
+                             break;
+                         } catch (InvalidPluginException ex) {
+                             server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
+@@ -356,6 +422,13 @@ public final class SimplePluginManager implements PluginManager {
          if (result != null) {
              plugins.add(result);
              lookupNames.put(result.getDescription().getName().toLowerCase(java.util.Locale.ENGLISH), result); // Paper
@@ -189,5 +263,5 @@ index 8d54d561..a5598890 100644
  
          return result;
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 
