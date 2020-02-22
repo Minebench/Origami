@@ -1,4 +1,4 @@
-From 04fa8a562c060617df6302f63a2badf88abf5dfe Mon Sep 17 00:00:00 2001
+From ce19bdd1ffa1223a9c44b845a90ef4f384e5c321 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 30 Jul 2019 01:49:07 +0100
 Subject: [PATCH] Add plugin aliases
@@ -104,7 +104,7 @@ index cb31a6d5..dc2cfd1a 100644
              version = map.get("version").toString();
          } catch (NullPointerException ex) {
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index 8d54d561..7a9c5220 100644
+index 8d54d561..a5598890 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 @@ -126,6 +126,7 @@ public final class SimplePluginManager implements PluginManager {
@@ -180,8 +180,8 @@ index 8d54d561..7a9c5220 100644
              lookupNames.put(result.getDescription().getName().toLowerCase(java.util.Locale.ENGLISH), result); // Paper
 +            // Origami start - add plugin aliases
 +            for (String alias : result.getDescription().getAliases()) {
-+                if (!lookupNames.containsKey(alias)) {
-+                    lookupNames.put(alias, result);
++                if (!lookupNames.containsKey(alias.toLowerCase(java.util.Locale.ENGLISH))) {
++                    lookupNames.put(alias.toLowerCase(java.util.Locale.ENGLISH), result);
 +                }
 +            }
 +            // Origami end
