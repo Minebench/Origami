@@ -37,8 +37,23 @@ function savePatches {
     cleanupPatches $basedir/patches/$2/
     echo "  Patches saved for $what to patches/$2"
 }
-
-savePatches ${FORK_NAME}-API api
-savePatches ${FORK_NAME}-Server server
+case "$1" in
+    "a" | "api")
+    (
+        savePatches ${FORK_NAME}-API api
+    )
+    ;;
+    "s" | "server")
+    (
+        savePatches ${FORK_NAME}-Server server
+    )
+    ;;
+    *)
+    (
+        savePatches ${FORK_NAME}-API api
+        savePatches ${FORK_NAME}-Server server
+    )
+    ;;
+esac
 
 $basedir/scripts/push.sh

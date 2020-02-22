@@ -51,7 +51,7 @@ case "$1" in
                         $gitcmd rebase --continue
 
                         cd "$basedir"
-                        scripts/rebuildPatches.sh "$basedir"
+                        scripts/rebuildPatches.sh server
                     )
                     ;;
                     *)
@@ -74,7 +74,7 @@ case "$1" in
                         $gitcmd rebase --continue
 
                         cd "$basedir"
-                        scripts/rebuildPatches.sh "$basedir"
+                        scripts/rebuildPatches.sh api
                     )
                     ;;
                     *)
