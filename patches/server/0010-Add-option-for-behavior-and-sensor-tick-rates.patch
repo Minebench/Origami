@@ -1,19 +1,25 @@
-From 929819a88b6cc49ff63c8ed0fcf7eb16eca8725a Mon Sep 17 00:00:00 2001
+From d33f83b4161bfc2b4599f7fe7d8e941b24db516e Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
 
 ---
- .../de/minebench/origami/OrigamiConfig.java   | 21 +++++++++++++++++++
- .../java/net/minecraft/server/Behavior.java   | 14 ++++++++++++-
- .../java/net/minecraft/server/Sensor.java     | 14 ++++++++++++-
- 3 files changed, 47 insertions(+), 2 deletions(-)
+ .../de/minebench/origami/OrigamiConfig.java   | 26 +++++++++++++++++++
+ .../java/net/minecraft/server/Behavior.java   | 14 +++++++++-
+ .../java/net/minecraft/server/Sensor.java     | 14 +++++++++-
+ 3 files changed, 52 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e13058f2a..79d3bb0bb 100644
+index e13058f2a..713c36afd 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -6,6 +6,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
+@@ -1,11 +1,14 @@
+ package de.minebench.origami;
+ 
+ import org.bukkit.Bukkit;
++import org.bukkit.configuration.ConfigurationSection;
+ import org.bukkit.configuration.file.YamlConfiguration;
+ 
  import java.io.File;
  import java.lang.reflect.Method;
  import java.lang.reflect.Modifier;
@@ -22,19 +28,23 @@ index e13058f2a..79d3bb0bb 100644
  import java.util.logging.Level;
  
  public final class OrigamiConfig {
-@@ -135,6 +137,25 @@ public final class OrigamiConfig {
+@@ -135,6 +138,29 @@ public final class OrigamiConfig {
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
          }
 +        
 +        private Map<String, Integer> tickRates = new HashMap<>();
 +        private void tickRates() {
-+            config.addDefault("tick-rates.sensor.villager.secondaryplaces", 40);
-+            config.addDefault("tick-rates.behavior.villager.positionvalidate", 60);
++            config.addDefault("worlds.default.tick-rates.sensor.villager.secondaryplaces", 40);
++            config.addDefault("worlds.default.tick-rates.behavior.villager.positionvalidate", 60);
 +            tickRates = new HashMap<>();
 +            Bukkit.getLogger().info("Tick rates:");
-+            for (String key : config.getConfigurationSection("tick-rates").getKeys(true)) {
-+                int tickRate = config.getInt("tick-rates." + key);
++            ConfigurationSection tickRatesSection = config.getConfigurationSection("worlds." + worldName + ".tick-rates");
++            if (tickRatesSection == null) {
++                config.getConfigurationSection("worlds.default.tick-rates");
++            }
++            for (String key : tickRatesSection.getKeys(true)) {
++                int tickRate = tickRatesSection.getInt(key);
 +                tickRates.put(key.toLowerCase(), tickRate);
 +                Bukkit.getLogger().info("  " + key + ": " + tickRate);
 +            }
@@ -124,5 +134,5 @@ index e3888dd97..cb92b2485 100644
          }
  
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 

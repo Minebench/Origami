@@ -1,4 +1,4 @@
-From cea24ec75a90cd9e8197eb85f66660fc6c4442a0 Mon Sep 17 00:00:00 2001
+From cc49a5b68fa6b4da71ed9641cdf31ec1bc232a85 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 13 Jan 2020 01:00:49 +0100
 Subject: [PATCH] Don't load chunk with seed based feature search
@@ -9,10 +9,10 @@ Subject: [PATCH] Don't load chunk with seed based feature search
  2 files changed, 13 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index f5a51050d..fefb3a5a2 100644
+index 29ad07ad4..b162d2c77 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -135,6 +135,14 @@ public final class OrigamiConfig {
+@@ -136,6 +136,14 @@ public final class OrigamiConfig {
              pillagerPatrolSpawnDelay = getInt("pillager.patrol.spawn-delay", pillagerPatrolSpawnDelay);
          }
  
@@ -44,5 +44,5 @@ index b4eb1f592..bcce50217 100644
                                  // Paper end
                                  // Origami start - option to only find generated features to not generate new chunks
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 
