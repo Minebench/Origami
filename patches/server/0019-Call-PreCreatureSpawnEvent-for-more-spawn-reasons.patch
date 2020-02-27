@@ -1,12 +1,12 @@
-From 30699c778d580a0126b8a50a10aec96df7b95ad8 Mon Sep 17 00:00:00 2001
+From d45f5d8c80e547faa0164cff217ac18d5e87852d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 16:28:31 +0100
 Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
 
 ---
- .../java/net/minecraft/server/EntityTypes.java     | 10 ++++++++++
- .../java/net/minecraft/server/EntityVillager.java  | 14 ++++++++++++++
- 2 files changed, 24 insertions(+)
+ .../java/net/minecraft/server/EntityTypes.java   | 10 ++++++++++
+ .../net/minecraft/server/EntityVillager.java     | 16 ++++++++++++++++
+ 2 files changed, 26 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityTypes.java b/src/main/java/net/minecraft/server/EntityTypes.java
 index 4100e367a..299298e54 100644
@@ -30,10 +30,18 @@ index 4100e367a..299298e54 100644
  
          return world.addEntity(t0, spawnReason) ? t0 : null; // Don't return an entity when CreatureSpawnEvent is canceled
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index 6e0020ae0..34f99a2cb 100644
+index 6e0020ae0..dd9557490 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
-@@ -896,6 +896,20 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -850,6 +850,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+         }
+     }
+ 
++    private void setGolemLastSeen(long time) { b(time); } // Origami - OBFHELPER
+     private void b(long i) {
+         this.bo.setMemory(MemoryModuleType.GOLEM_LAST_SEEN_TIME, i); // CraftBukkit - decompile error
+     }
+@@ -896,6 +897,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
                  }
  
                  BlockPosition blockposition2 = blockposition.a(d0, d2, d1);
@@ -45,6 +53,7 @@ index 6e0020ae0..34f99a2cb 100644
 +                    );
 +                    if (!event.callEvent()) {
 +                        if (event.shouldAbortSpawn()) {
++                            this.setGolemLastSeen(world.getTime());
 +                            return null;
 +                        }
 +                        break;
@@ -55,5 +64,5 @@ index 6e0020ae0..34f99a2cb 100644
  
                  if (entityirongolem != null) {
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 
