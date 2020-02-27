@@ -1,4 +1,4 @@
-From d33f83b4161bfc2b4599f7fe7d8e941b24db516e Mon Sep 17 00:00:00 2001
+From 4833d0466b8c94c501b0ff997fa0c915c2fd8944 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
@@ -10,7 +10,7 @@ Subject: [PATCH] Add option for behavior and sensor tick rates
  3 files changed, 52 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e13058f2a..713c36afd 100644
+index e13058f2a..3488e33e3 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -1,11 +1,14 @@
@@ -41,7 +41,7 @@ index e13058f2a..713c36afd 100644
 +            Bukkit.getLogger().info("Tick rates:");
 +            ConfigurationSection tickRatesSection = config.getConfigurationSection("worlds." + worldName + ".tick-rates");
 +            if (tickRatesSection == null) {
-+                config.getConfigurationSection("worlds.default.tick-rates");
++                tickRatesSection = config.getConfigurationSection("worlds.default.tick-rates");
 +            }
 +            for (String key : tickRatesSection.getKeys(true)) {
 +                int tickRate = tickRatesSection.getInt(key);
