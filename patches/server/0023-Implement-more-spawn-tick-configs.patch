@@ -1,4 +1,4 @@
-From b302daf9a8d5265d2c4684269b6b7ca8fc63f6eb Mon Sep 17 00:00:00 2001
+From 8733ad529b9113980d59bdb66912493bd11d3c30 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Mar 2020 18:50:43 +0100
 Subject: [PATCH] Implement more spawn tick configs
@@ -39,7 +39,7 @@ index 5306a1215..35e16cfc0 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index 0de82202e..27c5354eb 100644
+index 76c7f4a50..2d177fa31 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 @@ -623,6 +623,11 @@ public class ChunkProviderServer extends IChunkProvider {
@@ -54,7 +54,7 @@ index 0de82202e..27c5354eb 100644
  
              this.world.getMethodProfiler().enter("naturalSpawnCount");
              this.world.timings.countNaturalMobs.startTiming(); // Paper - timings
-@@ -685,22 +690,27 @@ public class ChunkProviderServer extends IChunkProvider {
+@@ -684,22 +689,27 @@ public class ChunkProviderServer extends IChunkProvider {
  
                                  // CraftBukkit start - Use per-world spawn limits
                                  int limit = enumcreaturetype.b();
