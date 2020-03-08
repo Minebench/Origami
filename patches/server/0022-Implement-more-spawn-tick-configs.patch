@@ -1,4 +1,4 @@
-From 8733ad529b9113980d59bdb66912493bd11d3c30 Mon Sep 17 00:00:00 2001
+From c396654a2e8d2c1727c6fe753484ca738a7aa4a4 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Mar 2020 18:50:43 +0100
 Subject: [PATCH] Implement more spawn tick configs

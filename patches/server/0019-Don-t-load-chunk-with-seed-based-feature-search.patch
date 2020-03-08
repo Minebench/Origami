@@ -1,4 +1,4 @@
-From cc49a5b68fa6b4da71ed9641cdf31ec1bc232a85 Mon Sep 17 00:00:00 2001
+From 8d5cf13897e295e7387c075abf9967e8088daeb8 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 13 Jan 2020 01:00:49 +0100
 Subject: [PATCH] Don't load chunk with seed based feature search
@@ -9,7 +9,7 @@ Subject: [PATCH] Don't load chunk with seed based feature search
  2 files changed, 13 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 29ad07ad4..b162d2c77 100644
+index 467e5208a..5306a1215 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -136,6 +136,14 @@ public final class OrigamiConfig {

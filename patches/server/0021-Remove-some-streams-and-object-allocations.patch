@@ -1,4 +1,4 @@
-From e0677a24a0d6c88a1cd916200320f77a94a47077 Mon Sep 17 00:00:00 2001
+From 399c4424823e693c9fc17c37aa33991438edd08b Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
@@ -227,5 +227,5 @@ index 4240ca81c..36fef7f70 100644
          if (iblockdata == null) return PathType.BLOCKED; // Paper
          Block block = iblockdata.getBlock();
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 
