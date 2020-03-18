@@ -1,16 +1,168 @@
-From 88e5595d89f4dbbfddfdbaaab7ef473b61a35b1e Mon Sep 17 00:00:00 2001
+From 1b9616704120ffd879f4f96eb32cab332418d6ea Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
 
 Partially based on a patch in Spottedleaf's Paper fork
 ---
+ .../java/net/minecraft/server/Behavior.java   |   4 +
+ .../minecraft/server/BehaviorController.java  |  56 ++++++----
  .../java/net/minecraft/server/ChunkMap.java   |  14 ++-
  .../net/minecraft/server/PairedQueue.java     |  19 +++-
  .../server/PathfinderGoalSelector.java        | 104 ++++++++++--------
  .../minecraft/server/PathfinderNormal.java    |   4 +-
- 4 files changed, 87 insertions(+), 54 deletions(-)
+ 6 files changed, 126 insertions(+), 75 deletions(-)
 
+diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
+index 640dd0d5f..5bd814eef 100644
+--- a/src/main/java/net/minecraft/server/Behavior.java
++++ b/src/main/java/net/minecraft/server/Behavior.java
+@@ -38,10 +38,12 @@ public abstract class Behavior<E extends EntityLiving> {
+         // Origami end
+     }
+ 
++    public Behavior.Status getStatus() { return a();} // Origami - OBFHELPER
+     public Behavior.Status a() {
+         return this.b;
+     }
+ 
++    public final void attemptStart(WorldServer worldserver, E entity, long time) { b(worldserver, entity, time); } // Origami - OBFHELPER
+     public final boolean b(WorldServer worldserver, E e0, long i) {
+         if (this.a(e0) && this.a(worldserver, e0)) {
+             this.b = Behavior.Status.RUNNING;
+@@ -57,6 +59,7 @@ public abstract class Behavior<E extends EntityLiving> {
+ 
+     protected void a(WorldServer worldserver, E e0, long i) {}
+ 
++    public final void runOrStop(WorldServer worldserver, E entity, long time) { c(worldserver, entity, time); } // Origami - OBFHELPER
+     public final void c(WorldServer worldserver, E e0, long i) {
+         if (!this.a(i) && this.g(worldserver, e0, i)) {
+             this.d(worldserver, e0, i);
+@@ -68,6 +71,7 @@ public abstract class Behavior<E extends EntityLiving> {
+ 
+     protected void d(WorldServer worldserver, E e0, long i) {}
+ 
++    public final void stop(WorldServer worldserver, E entity, long time) { e(worldserver, entity, time); } // Origami - OBFHELPER
+     public final void e(WorldServer worldserver, E e0, long i) {
+         this.b = Behavior.Status.STOPPED;
+         this.f(worldserver, e0, i);
+diff --git a/src/main/java/net/minecraft/server/BehaviorController.java b/src/main/java/net/minecraft/server/BehaviorController.java
+index a1883eba6..938690153 100644
+--- a/src/main/java/net/minecraft/server/BehaviorController.java
++++ b/src/main/java/net/minecraft/server/BehaviorController.java
+@@ -23,11 +23,11 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
+ 
+     private final Map<MemoryModuleType<?>, Optional<?>> memories = Maps.newHashMap();
+     private final Map<SensorType<? extends Sensor<? super E>>, Sensor<? super E>> sensors = Maps.newLinkedHashMap();
+-    private final Map<Integer, Map<Activity, Set<Behavior<? super E>>>> c = Maps.newTreeMap();
++    private final Map<Integer, Map<Activity, Set<Behavior<? super E>>>> c = Maps.newTreeMap(); private final Map<Integer, Map<Activity, Set<Behavior<? super E>>>> getGoals() { return c; }; // Origami - OBFHELPER
+     private Schedule schedule;
+     private final Map<Activity, Set<Pair<MemoryModuleType<?>, MemoryStatus>>> e;
+     private Set<Activity> f;
+-    private final Set<Activity> g;
++    private final Set<Activity> g; private final Set<Activity> getActiveActivities() { return g; } // Origami - OBFHELPER
+     private Activity h;
+     private long i;
+ 
+@@ -69,7 +69,7 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
+     }
+ 
+     private <T, U> void a(MemoryModuleType<U> memorymoduletype, Dynamic<T> dynamic) {
+-        this.setMemory(memorymoduletype, ((Function) memorymoduletype.getSerializer().orElseThrow(RuntimeException::new)).apply(dynamic));
++        this.setMemory(memorymoduletype, memorymoduletype.getSerializer().orElseThrow(RuntimeException::new).apply(dynamic)); // Origami - decompile fixes
+     }
+ 
+     public <U> void removeMemory(MemoryModuleType<U> memorymoduletype) {
+@@ -113,6 +113,20 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
+         this.f = set;
+     }
+ 
++    // Origami start - remove streams
++    private void applyToRunningBehaviour(java.util.function.Consumer<Behavior<? super E>> consumer) {
++        for (Map<Activity, Set<Behavior<? super E>>> value : this.getGoals().values()) {
++            for (Set<Behavior<? super E>> behaviors : value.values()) {
++                for (Behavior<? super E> behavior : behaviors) {
++                    if (behavior.getStatus() == Behavior.Status.RUNNING) {
++                        consumer.accept(behavior);
++                    }
++                }
++            }
++        }
++    }
++    // Origami end
++
+     @Deprecated
+     public Stream<Behavior<? super E>> d() {
+         return this.c.values().stream().flatMap((map) -> {
+@@ -170,7 +184,7 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
+ 
+         this.memories.forEach((memorymoduletype, optional) -> {
+             optional.ifPresent((object) -> {
+-                Optional optional1 = (Optional) behaviorcontroller.memories.put(memorymoduletype, Optional.of(object));
++                behaviorcontroller.memories.put(memorymoduletype, Optional.of(object)); // Origami - Decompile fixes
+             });
+         });
+         return behaviorcontroller;
+@@ -185,14 +199,12 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
+     public void b(WorldServer worldserver, E e0) {
+         long i = e0.world.getTime();
+ 
+-        this.d().forEach((behavior) -> {
+-            behavior.e(worldserver, e0, i);
+-        });
++        applyToRunningBehaviour(behavior -> behavior.stop(worldserver, e0, i)); // Origami - remove streams
+     }
+ 
+     @Override
+     public <T> T a(DynamicOps<T> dynamicops) {
+-        T t0 = dynamicops.createMap((Map) this.memories.entrySet().stream().filter((entry) -> {
++        T t0 = dynamicops.createMap(this.memories.entrySet().stream().filter((entry) -> { // Origami - decompile fixes
+             return ((MemoryModuleType) entry.getKey()).getSerializer().isPresent() && ((Optional) entry.getValue()).isPresent();
+         }).map((entry) -> {
+             return Pair.of(dynamicops.createString(IRegistry.MEMORY_MODULE_TYPE.getKey(entry.getKey()).toString()), ((MinecraftSerializable) ((Optional) entry.getValue()).get()).a(dynamicops));
+@@ -210,27 +222,29 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
+     private void d(WorldServer worldserver, E e0) {
+         long i = worldserver.getTime();
+ 
+-        this.c.values().stream().flatMap((map) -> {
+-            return map.entrySet().stream();
+-        }).filter((entry) -> {
+-            return this.g.contains(entry.getKey());
+-        }).map(Entry::getValue).flatMap(Collection::stream).filter((behavior) -> {
+-            return behavior.a() == Behavior.Status.STOPPED;
+-        }).forEach((behavior) -> {
+-            behavior.b(worldserver, e0, i);
+-        });
++        // Origami start - remove streams
++        for (Map<Activity, Set<Behavior<? super E>>> value : this.getGoals().values()) {
++            for (Entry<Activity, Set<Behavior<? super E>>> entry : value.entrySet()) {
++                if (this.getActiveActivities().contains(entry.getKey())) {
++                    for (Behavior<? super E> behavior : entry.getValue()) {
++                        if (behavior.getStatus() == Behavior.Status.STOPPED) {
++                            behavior.attemptStart(worldserver, e0, i);
++                        }
++                    }
++                }
++            }
++        }
++        // Origami end
+     }
+ 
+     private void e(WorldServer worldserver, E e0) {
+         long i = worldserver.getTime();
+ 
+-        this.d().forEach((behavior) -> {
+-            behavior.c(worldserver, e0, i);
+-        });
++        applyToRunningBehaviour(behavior -> behavior.runOrStop(worldserver, e0, i)); // Origami - remove streams
+     }
+ 
+     private boolean d(Activity activity) {
+-        return ((Set) this.e.get(activity)).stream().allMatch((pair) -> {
++        return this.e.get(activity).stream().allMatch((pair) -> { // Origami - decompile fixes
+             MemoryModuleType<?> memorymoduletype = (MemoryModuleType) pair.getFirst();
+             MemoryStatus memorystatus = (MemoryStatus) pair.getSecond();
+ 
 diff --git a/src/main/java/net/minecraft/server/ChunkMap.java b/src/main/java/net/minecraft/server/ChunkMap.java
 index 55f9f4e6e..8069e494f 100644
 --- a/src/main/java/net/minecraft/server/ChunkMap.java
