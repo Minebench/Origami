@@ -1,4 +1,4 @@
-From 0574f11f3d74c82fed77ee4637971c35e4582cbe Mon Sep 17 00:00:00 2001
+From 5c4d95059f1bd11a3820b3d51014367db1cac240 Mon Sep 17 00:00:00 2001
 From: froobynooby <froobynooby@froobworld.com>
 Date: Thu, 20 Feb 2020 15:50:49 +0930
 Subject: [PATCH] Reduce entity tracker updates on move
@@ -45,19 +45,21 @@ servers with large player counts
  3 files changed, 70 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index 7d408542e..2ae44b230 100644
+index 7ca67a4aa..876af8cbf 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-@@ -658,4 +658,9 @@ public class PaperWorldConfig {
-     private void nerfNetherPortalPigmen() {
-         nerfNetherPortalPigmen = getBoolean("game-mechanics.nerf-pigmen-from-nether-portals", nerfNetherPortalPigmen);
+@@ -659,6 +659,11 @@ public class PaperWorldConfig {
+         log("Hopper Move Item Events: " + (disableHopperMoveEvents ? "disabled" : "enabled"));
      }
-+
+ 
 +    public double trackerUpdateDistance = 1;
 +    private void trackeruUpdateDistance() {
 +        trackerUpdateDistance = getDouble("tracker-update-distance", trackerUpdateDistance);
 +    }
- }
++
+     public boolean nerfNetherPortalPigmen = false;
+     private void nerfNetherPortalPigmen() {
+         nerfNetherPortalPigmen = getBoolean("game-mechanics.nerf-pigmen-from-nether-portals", nerfNetherPortalPigmen);
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
 index 1e3cf0c3e..17b02a2ee 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java

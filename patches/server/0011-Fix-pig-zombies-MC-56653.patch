@@ -1,21 +1,22 @@
-From 122891bce809f3f35266fdec41731ef90adf9a86 Mon Sep 17 00:00:00 2001
+From ee5b65c410f56673ddc126f70c81340f5fa99440 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sat, 21 Dec 2019 17:51:07 +0100
 Subject: [PATCH] Fix pig zombies (MC-56653)
 
 ---
- src/main/java/de/minebench/origami/OrigamiConfig.java |  4 ++++
+ src/main/java/de/minebench/origami/OrigamiConfig.java |  5 +++++
  .../java/net/minecraft/server/EntityPigZombie.java    | 11 ++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index dbb24695b..c5c49b959 100644
+index 3488e33e3..6d8112eef 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -165,6 +165,10 @@ public final class OrigamiConfig {
-         private void zombieVillagerTransformationChance() {
-             zombieVillagerTransformationChance = getDouble("zombie-villager-transformation-chance", zombieVillagerTransformationChance);
+@@ -161,6 +161,11 @@ public final class OrigamiConfig {
+         public int getTickRate(String type, String typeName, String entityType, int def) {
+             return tickRates.getOrDefault(type + "." + entityType + "." + typeName, tickRates.getOrDefault(type + "." + typeName, def));
          }
++
 +        public boolean pigmenDontTargetUnlessHit = false;
 +        private void pigmenDontTargetUnlessHit() {
 +            pigmenDontTargetUnlessHit = getBoolean("pigmen.dont-target-unless-hit", pigmenDontTargetUnlessHit);
