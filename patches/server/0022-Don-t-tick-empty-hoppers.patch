@@ -1,0 +1,168 @@
+From 350b19fc3f31548d1979454df0a9f037715b3872 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Tue, 24 Mar 2020 17:40:50 +0100
+Subject: [PATCH] Don't tick empty hoppers
+
+This avoids ticking hoppers that are only used to transport items in a
+chain.
+---
+ .../java/net/minecraft/server/EntityItem.java | 10 +++++++
+ .../server/EntityMinecartContainer.java       | 24 +++++++++++++--
+ .../minecraft/server/TileEntityHopper.java    | 29 +++++++++++++++++--
+ 3 files changed, 58 insertions(+), 5 deletions(-)
+
+diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
+index 2926fbb95..391aac845 100644
+--- a/src/main/java/net/minecraft/server/EntityItem.java
++++ b/src/main/java/net/minecraft/server/EntityItem.java
+@@ -129,6 +129,16 @@ public class EntityItem extends Entity {
+                 }
+             }
+ 
++            // Origami start - don't tick empty hoppers
++            if (locY() >= 1 && (this.age < 10 || this.age > this.getDespawnRate() - 10
++                    || (int) locX() != (int) lastX || (int) locZ() != (int) lastZ || (int) locY() != (int) lastY)) {
++                TileEntity tileBelow = world.getTileEntity(new BlockPosition(locX(), locY() - 1, locZ()));
++                if (tileBelow instanceof TileEntityHopper) {
++                    ((TileEntityHopper) tileBelow).shouldTick = true;
++                }
++            }
++            // Origami end
++
+             if (!this.world.isClientSide && this.age >= this.getDespawnRate()) { // Spigot // Paper
+                 // CraftBukkit start - fire ItemDespawnEvent
+                 if (org.bukkit.craftbukkit.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
+diff --git a/src/main/java/net/minecraft/server/EntityMinecartContainer.java b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
+index 60efd439a..9c5aa358d 100644
+--- a/src/main/java/net/minecraft/server/EntityMinecartContainer.java
++++ b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
+@@ -130,7 +130,6 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
+         if (!itemstack.isEmpty() && itemstack.getCount() > this.getMaxStackSize()) {
+             itemstack.setCount(this.getMaxStackSize());
+         }
+-
+     }
+ 
+     @Override
+@@ -144,7 +143,28 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
+     }
+ 
+     @Override
+-    public void update() {}
++    public void update() {
++        // Origami start - don't tick empty hoppers
++        checkHopperBelow();
++    }
++
++    @Override
++    public void tick() {
++        super.tick();
++        if (locY() >= 1 && ((int) locX() != (int) lastX || (int) locZ() != (int) lastZ || (int) locY() != (int) lastY)) {
++            checkHopperBelow();
++        }
++    }
++
++    private void checkHopperBelow() {
++        if (!this.isEmpty()) {
++            TileEntity tileBelow = world.getTileEntity(new BlockPosition(locX(), locY() - 1, locZ()));
++            if (tileBelow instanceof TileEntityHopper) {
++                ((TileEntityHopper) tileBelow).shouldTick = true;
++            }
++        }
++    }
++    // Origami end
+ 
+     @Override
+     public boolean a(EntityHuman entityhuman) {
+diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
+index a71702b4d..5a0313374 100644
+--- a/src/main/java/net/minecraft/server/TileEntityHopper.java
++++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
+@@ -21,6 +21,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+     private NonNullList<ItemStack> items;
+     private int j;
+     private long k;
++    public boolean shouldTick = true; // Origami - don't tick empty hoppers
+ 
+     // CraftBukkit start - add fields and methods
+     public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+@@ -98,7 +99,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+         if (itemstack.getCount() > this.getMaxStackSize()) {
+             itemstack.setCount(this.getMaxStackSize());
+         }
+-
++        shouldTick = true; // Origami - don't tick empty hoppers
+     }
+ 
+     @Override
+@@ -108,7 +109,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+ 
+     @Override
+     public void tick() {
+-        if (this.world != null && !this.world.isClientSide) {
++        if (this.world != null && !this.world.isClientSide && shouldTick) { // Origami - don't tick empty hoppers
+             --this.j;
+             this.k = this.world.getTime();
+             if (!this.l()) {
+@@ -126,6 +127,14 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+         }
+     }
+ 
++    // Origami start - don't tick empty hoppers
++    @Override
++    public void update() {
++        shouldTick = true;
++        super.update();
++    }
++    // Origami end
++
+     private boolean a(Supplier<Boolean> supplier) {
+         if (this.world != null && !this.world.isClientSide) {
+             if (!this.l() && (Boolean) this.getBlock().get(BlockHopper.ENABLED)) {
+@@ -133,6 +142,10 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+ 
+                 if (!this.isEmpty()) {
+                     flag = this.j();
++                    // Origami - don't tick empty hoppers
++                } else {
++                    shouldTick = false;
++                    // Origami end
+                 }
+ 
+                 if (!this.h()) {
+@@ -413,6 +426,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+         IInventory iinventory = b(ihopper);
+ 
+         if (iinventory != null) {
++            if (ihopper instanceof TileEntityHopper) ((TileEntityHopper) ihopper).shouldTick = true; // Origami - don't tick empty hoppers
+             EnumDirection enumdirection = EnumDirection.DOWN;
+ 
+             // Origami start - remove streams
+@@ -528,7 +542,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+                 itemstack = a(iinventory, iinventory1, itemstack, k, enumdirection);
+             }
+         }
+-
++        if (iinventory1 instanceof TileEntityHopper) ((TileEntityHopper) iinventory1).shouldTick = true; // Origami - don't tick empty hoppers
+         return itemstack;
+     }
+ 
+@@ -689,6 +703,15 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+             BlockPosition blockposition = this.getPosition();
+ 
+             if (VoxelShapes.c(VoxelShapes.a(entity.getBoundingBox().d((double) (-blockposition.getX()), (double) (-blockposition.getY()), (double) (-blockposition.getZ()))), this.P_(), OperatorBoolean.AND)) {
++                // Origami start - don't tick empty hoppers
++                if (!this.shouldTick) {
++                    if (this.getBlock().get(BlockHopper.ENABLED)) {
++                        // Force the hopper to update if it is enabled and didn't tick/decrease cooldown before
++                        setCooldown(0);
++                    }
++                    this.shouldTick = true;
++                }
++                // Origami end
+                 this.a(() -> {
+                     return a((IInventory) this, (EntityItem) entity);
+                 });
+-- 
+2.25.1.windows.1
+
