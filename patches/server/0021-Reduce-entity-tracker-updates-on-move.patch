@@ -1,4 +1,4 @@
-From 5c4d95059f1bd11a3820b3d51014367db1cac240 Mon Sep 17 00:00:00 2001
+From 4f85843ca8a165ef202f9e085362de22c56eae58 Mon Sep 17 00:00:00 2001
 From: froobynooby <froobynooby@froobworld.com>
 Date: Thu, 20 Feb 2020 15:50:49 +0930
 Subject: [PATCH] Reduce entity tracker updates on move
@@ -76,7 +76,7 @@ index 1e3cf0c3e..17b02a2ee 100644
      // CraftBukkit start
      public String displayName;
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index 57bea926a..d971a4426 100644
+index 5bc644977..062710c6d 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
 @@ -133,6 +133,39 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
@@ -127,7 +127,7 @@ index 57bea926a..d971a4426 100644
      }
  
      public void updatePlayerMobTypeMap(Entity entity) {
-@@ -1334,8 +1368,19 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1348,8 +1382,19 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
      }
  
      public void movePlayer(EntityPlayer entityplayer) {
@@ -148,7 +148,7 @@ index 57bea926a..d971a4426 100644
          while (objectiterator.hasNext()) {
              PlayerChunkMap.EntityTracker playerchunkmap_entitytracker = (PlayerChunkMap.EntityTracker) objectiterator.next();
  
-@@ -1345,6 +1390,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1359,6 +1404,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                  playerchunkmap_entitytracker.updatePlayer(entityplayer);
              }
          }
@@ -156,7 +156,7 @@ index 57bea926a..d971a4426 100644
  
          int i = MathHelper.floor(entityplayer.locX()) >> 4;
          int j = MathHelper.floor(entityplayer.locZ()) >> 4;
-@@ -1486,12 +1532,21 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1500,12 +1546,21 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
  
                  playerchunkmap_entitytracker.clear(entityplayer);
              }
@@ -178,7 +178,7 @@ index 57bea926a..d971a4426 100644
          }
          entity.tracker = null; // Paper - We're no longer tracked
      }
-@@ -1532,7 +1587,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1546,7 +1601,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
              }
              world.timings.tracker2.stopTiming(); // Paper
          }
@@ -187,7 +187,7 @@ index 57bea926a..d971a4426 100644
  
      }
  
-@@ -1581,6 +1636,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1595,6 +1650,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
                  }
              }
          }
@@ -195,7 +195,7 @@ index 57bea926a..d971a4426 100644
  
          Iterator iterator;
          Entity entity1;
-@@ -1677,6 +1733,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1691,6 +1747,7 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
              org.spigotmc.AsyncCatcher.catchOp("player tracker clear"); // Spigot
              if (this.trackedPlayers.remove(entityplayer)) {
                  this.trackerEntry.a(entityplayer);
@@ -203,7 +203,7 @@ index 57bea926a..d971a4426 100644
              }
  
          }
-@@ -1713,9 +1770,11 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1727,9 +1784,11 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
  
                      if (flag1 && this.trackedPlayerMap.putIfAbsent(entityplayer, true) == null) { // Paper
                          this.trackerEntry.b(entityplayer);

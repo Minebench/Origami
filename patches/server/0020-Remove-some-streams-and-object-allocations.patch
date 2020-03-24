@@ -1,4 +1,4 @@
-From 1b9616704120ffd879f4f96eb32cab332418d6ea Mon Sep 17 00:00:00 2001
+From 0cbe0ad56ed92618cc5bd406947ebfd53847178a Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
@@ -11,7 +11,11 @@ Partially based on a patch in Spottedleaf's Paper fork
  .../net/minecraft/server/PairedQueue.java     |  19 +++-
  .../server/PathfinderGoalSelector.java        | 104 ++++++++++--------
  .../minecraft/server/PathfinderNormal.java    |   4 +-
- 6 files changed, 126 insertions(+), 75 deletions(-)
+ .../net/minecraft/server/PlayerChunkMap.java  |  18 ++-
+ .../java/net/minecraft/server/PlayerMap.java  |   2 +-
+ .../minecraft/server/TileEntityHopper.java    |  45 ++++++--
+ .../minecraft/server/TileEntityLootable.java  |   9 +-
+ 10 files changed, 185 insertions(+), 90 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
 index 640dd0d5f..5bd814eef 100644
@@ -378,6 +382,146 @@ index 4240ca81c..36fef7f70 100644
          IBlockData iblockdata = iblockaccess.getTypeIfLoaded(blockposition); // Paper
          if (iblockdata == null) return PathType.BLOCKED; // Paper
          Block block = iblockdata.getBlock();
+diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+index 57bea926a..5bc644977 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
++++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+@@ -1275,7 +1275,20 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+         // Spigot end
+         long i = chunkcoordintpair.pair();
+ 
+-        return !this.chunkDistanceManager.d(i) ? true : this.playerMap.a(i).noneMatch((entityplayer) -> {
++        // Origami start - remove stream
++        if (!this.chunkDistanceManager.d(i)) {
++            return true;
++        }
++
++        for (EntityPlayer entityPlayer : this.playerMap.a.keySet()) {
++            if (playerIsInRange(entityPlayer, chunkcoordintpair, reducedRange)) {
++                return false;
++            }
++        }
++        return true;
++    }
++    //    return !this.chunkDistanceManager.d(i) ? true : this.playerMap.a(i).noneMatch((entityplayer) -> {
++    private boolean playerIsInRange(EntityPlayer entityplayer, ChunkCoordIntPair chunkcoordintpair, boolean reducedRange) {
+             // Paper start -
+             com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent event;
+             double blockRange = 16384.0D;
+@@ -1287,7 +1300,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+ 
+             return (!entityplayer.isSpectator() && a(chunkcoordintpair, (Entity) entityplayer) < blockRange); // Spigot
+             // Paper end
+-        });
++        //});
++        // Origami end
+     }
+ 
+     private boolean b(EntityPlayer entityplayer) {
+diff --git a/src/main/java/net/minecraft/server/PlayerMap.java b/src/main/java/net/minecraft/server/PlayerMap.java
+index f386c4e99..442ef443b 100644
+--- a/src/main/java/net/minecraft/server/PlayerMap.java
++++ b/src/main/java/net/minecraft/server/PlayerMap.java
+@@ -6,7 +6,7 @@ import java.util.stream.Stream;
+ 
+ public final class PlayerMap {
+ 
+-    private final Object2BooleanMap<EntityPlayer> a = new Object2BooleanOpenHashMap();
++    public final Object2BooleanMap<EntityPlayer> a = new Object2BooleanOpenHashMap(); // Origami - make public
+ 
+     public PlayerMap() {}
+ 
+diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
+index 4afd33a49..a71702b4d 100644
+--- a/src/main/java/net/minecraft/server/TileEntityHopper.java
++++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
+@@ -377,21 +377,36 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+     }
+ 
+     private static IntStream a(IInventory iinventory, EnumDirection enumdirection) {
+-        return iinventory instanceof IWorldInventory ? IntStream.of(((IWorldInventory) iinventory).getSlotsForFace(enumdirection)) : IntStream.range(0, iinventory.getSize());
++        // Origami start - remove streams
++        return IntStream.of(getSlots(iinventory, enumdirection));
++    }
++
++    private static int[] getSlots(IInventory iinventory, EnumDirection enumdirection) {
++        return iinventory instanceof IWorldInventory ? ((IWorldInventory) iinventory).getSlotsForFace(enumdirection) : IntStream.range(0, iinventory.getSize()).toArray();
++        // Origami end
+     }
+ 
+     private boolean b(IInventory iinventory, EnumDirection enumdirection) {
+-        return a(iinventory, enumdirection).allMatch((i) -> {
++        // Origami start - remove streams
++        for (int i : getSlots(iinventory, enumdirection)) {
+             ItemStack itemstack = iinventory.getItem(i);
+-
+-            return itemstack.getCount() >= itemstack.getMaxStackSize();
+-        });
++            if (itemstack.getCount() < itemstack.getMaxStackSize()) {
++                return false;
++            }
++        }
++        return true;
++        // Origami end
+     }
+ 
+     private static boolean c(IInventory iinventory, EnumDirection enumdirection) {
+-        return a(iinventory, enumdirection).allMatch((i) -> {
+-            return iinventory.getItem(i).isEmpty();
+-        });
++        // Origami start - remove streams
++        for (int i : getSlots(iinventory, enumdirection)) {
++            if (!iinventory.getItem(i).isEmpty()) {
++                return false;
++            }
++        }
++        return true;
++        // Origami end
+     }
+ 
+     public static boolean a(IHopper ihopper) {
+@@ -400,10 +415,18 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+         if (iinventory != null) {
+             EnumDirection enumdirection = EnumDirection.DOWN;
+ 
+-            return c(iinventory, enumdirection) ? false : a(iinventory, enumdirection).anyMatch((i) -> {
++            // Origami start - remove streams
++            if (c(iinventory, enumdirection)) {
++                return false;
++            }
++            for (int i : getSlots(iinventory, enumdirection)) {
+                 skipPullModeEventFire = skipHopperEvents; // Paper
+-                return a(ihopper, iinventory, i, enumdirection);
+-            });
++                if (a(ihopper, iinventory, i, enumdirection)) {
++                    return true;
++                }
++            }
++            return false;
++            // Origami end
+         } else {
+             Iterator iterator = c(ihopper).iterator();
+ 
+diff --git a/src/main/java/net/minecraft/server/TileEntityLootable.java b/src/main/java/net/minecraft/server/TileEntityLootable.java
+index d4cbce324..fa01e8ed8 100644
+--- a/src/main/java/net/minecraft/server/TileEntityLootable.java
++++ b/src/main/java/net/minecraft/server/TileEntityLootable.java
+@@ -72,7 +72,14 @@ public abstract class TileEntityLootable extends TileEntityContainer {
+     @Override
+     public boolean isEmpty() {
+         this.d((EntityHuman) null);
+-        return this.f().stream().allMatch(ItemStack::isEmpty);
++        // Origami start - remove streams
++        for (ItemStack itemStack : this.f()) {
++            if (!itemStack.isEmpty()) {
++                return false;
++            }
++        }
++        return true;
++        // Origami end
+     }
+ 
+     @Override
 -- 
 2.25.1.windows.1
 
