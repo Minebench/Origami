@@ -1,4 +1,4 @@
-From 0bdbeb244d1557bff7dcd2de1d563f94ab3cb78c Mon Sep 17 00:00:00 2001
+From be9a25ff543a1fc77e864c4a3948e23268f57e43 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Don't tick empty hoppers
@@ -6,11 +6,11 @@ Subject: [PATCH] Don't tick empty hoppers
 This avoids ticking hoppers that are only used to transport items in a
 chain.
 ---
- .../de/minebench/origami/OrigamiConfig.java   |  5 ++++
- .../java/net/minecraft/server/EntityItem.java | 10 +++++++
- .../server/EntityMinecartContainer.java       | 24 +++++++++++++--
- .../minecraft/server/TileEntityHopper.java    | 29 +++++++++++++++++--
- 4 files changed, 63 insertions(+), 5 deletions(-)
+ .../de/minebench/origami/OrigamiConfig.java   |  5 +++
+ .../java/net/minecraft/server/EntityItem.java | 14 +++++++++
+ .../server/EntityMinecartContainer.java       | 24 ++++++++++++--
+ .../minecraft/server/TileEntityHopper.java    | 31 ++++++++++++++++---
+ 4 files changed, 68 insertions(+), 6 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 index 0389a2f2e..c21c963ac 100644
@@ -29,10 +29,10 @@ index 0389a2f2e..c21c963ac 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
-index 2926fbb95..4f1b73fe1 100644
+index 2926fbb95..1abc3d3cd 100644
 --- a/src/main/java/net/minecraft/server/EntityItem.java
 +++ b/src/main/java/net/minecraft/server/EntityItem.java
-@@ -129,6 +129,16 @@ public class EntityItem extends Entity {
+@@ -129,6 +129,20 @@ public class EntityItem extends Entity {
                  }
              }
  
@@ -41,6 +41,10 @@ index 2926fbb95..4f1b73fe1 100644
 +                    || (int) locX() != (int) lastX || (int) locZ() != (int) lastZ || (int) locY() != (int) lastY)) {
 +                TileEntity tileBelow = world.getTileEntity(new BlockPosition(locX(), locY() - 1, locZ()));
 +                if (tileBelow instanceof TileEntityHopper) {
++                    if (tileBelow.getBlock().get(BlockHopper.ENABLED)) {
++                        // Force the hopper to update if it is enabled and didn't tick/decrease cooldown before
++                        ((TileEntityHopper) tileBelow).setCooldown(0);
++                    }
 +                    ((TileEntityHopper) tileBelow).shouldTick = true;
 +                }
 +            }
@@ -92,7 +96,7 @@ index 60efd439a..c12cd3da2 100644
      @Override
      public boolean a(EntityHuman entityhuman) {
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index a71702b4d..143f7f1bd 100644
+index a71702b4d..73326569b 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
 @@ -21,6 +21,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
@@ -162,6 +166,15 @@ index a71702b4d..143f7f1bd 100644
 -
 +        if (iinventory1 instanceof TileEntityHopper) ((TileEntityHopper) iinventory1).shouldTick = true; // Origami - don't tick empty hoppers
          return itemstack;
+     }
+ 
+@@ -662,7 +676,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+         return (double) this.position.getZ() + 0.5D;
+     }
+ 
+-    private void setCooldown(int i) {
++    public void setCooldown(int i) { // Origami - make public
+         this.j = i;
      }
  
 @@ -689,6 +703,15 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
