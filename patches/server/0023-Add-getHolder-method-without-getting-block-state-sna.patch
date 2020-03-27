@@ -1,0 +1,30 @@
+From efae89255e50b84bb00d73aa749f2e1e4833aed2 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Fri, 27 Mar 2020 18:03:44 +0100
+Subject: [PATCH] Add getHolder method without getting block state snapshot
+
+---
+ .../org/bukkit/craftbukkit/inventory/CraftInventory.java   | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+index 705a5df4e..a4326029f 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+@@ -528,6 +528,13 @@ public class CraftInventory implements Inventory {
+         return inventory.getOwner();
+     }
+ 
++    // Origami start - getHolder without snapshot
++    @Override
++    public InventoryHolder getHolder(boolean useSnapshot) {
++        return inventory instanceof net.minecraft.server.TileEntity ? ((net.minecraft.server.TileEntity) inventory).getOwner(useSnapshot) : getHolder();
++    }
++    // Origami end
++
+     @Override
+     public int getMaxStackSize() {
+         return inventory.getMaxStackSize();
+-- 
+2.25.1.windows.1
+
