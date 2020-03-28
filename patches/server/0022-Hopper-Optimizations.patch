@@ -1,4 +1,4 @@
-From 978420cbeac813f86158603573611cec36b8cfb7 Mon Sep 17 00:00:00 2001
+From 57016d668a8cde269e418bbc8d9fd35425250371 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Hopper Optimizations
@@ -12,7 +12,8 @@ chain.
  .../server/EntityMinecartContainer.java       | 21 +++++++-
  .../minecraft/server/TileEntityContainer.java | 10 ++++
  .../minecraft/server/TileEntityHopper.java    | 48 ++++++++++++++++---
- 5 files changed, 84 insertions(+), 9 deletions(-)
+ .../block/CraftBlockEntityState.java          |  6 ++-
+ 6 files changed, 89 insertions(+), 10 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 index 0389a2f2e..2f71a2646 100644
@@ -245,6 +246,23 @@ index a71702b4d..9ca81ffab 100644
                  this.a(() -> {
                      return a((IInventory) this, (EntityItem) entity);
                  });
+diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java
+index 3e22d558e..f1f21d193 100644
+--- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java
++++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java
+@@ -26,7 +26,11 @@ public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState
+         // get tile entity from block:
+         CraftWorld world = (CraftWorld) this.getWorld();
+         this.tileEntity = tileEntityClass.cast(world.getHandle().getTileEntity(this.getPosition()));
+-        Preconditions.checkState(this.tileEntity != null, "Tile is null, asynchronous access? " + block);
++        // Origami start - optimize Hoppers - don't create string from block every time
++        if (this.tileEntity == null) {
++            throw new IllegalStateException("Tile is null, asynchronous access? " + block);
++        }
++        // Origami end
+ 
+         // Paper start
+         this.snapshotDisabled = DISABLE_SNAPSHOT;
 -- 
 2.25.1.windows.1
 
