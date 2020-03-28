@@ -1,18 +1,41 @@
-From efae89255e50b84bb00d73aa749f2e1e4833aed2 Mon Sep 17 00:00:00 2001
+From 2808ec724bd5a3035cb88d095e51ce5c976691ae Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 27 Mar 2020 18:03:44 +0100
 Subject: [PATCH] Add getHolder method without getting block state snapshot
 
 ---
- .../org/bukkit/craftbukkit/inventory/CraftInventory.java   | 7 +++++++
- 1 file changed, 7 insertions(+)
+ src/main/java/de/minebench/origami/OrigamiConfig.java    | 5 +++++
+ .../org/bukkit/craftbukkit/inventory/CraftInventory.java | 9 ++++++++-
+ .../craftbukkit/inventory/CraftInventoryBrewer.java      | 2 +-
+ .../craftbukkit/inventory/CraftInventoryFurnace.java     | 2 +-
+ .../craftbukkit/inventory/CraftInventoryLectern.java     | 2 +-
+ 5 files changed, 16 insertions(+), 4 deletions(-)
 
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index 2f71a2646..2f1af8bcc 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -217,4 +217,9 @@ public final class OrigamiConfig {
+         fixItemPositionDesync = getBoolean("fix-item-position-desync", fixItemPositionDesync);
+     }
+ 
++    public static boolean getHolderReturnsSnapshot = true;
++    private static void getHolderReturnsSnapshot() {
++        getHolderReturnsSnapshot = getBoolean("inventory-get-holder-returns-snapshot", getHolderReturnsSnapshot);
++    }
++
+ }
+\ No newline at end of file
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-index 705a5df4e..a4326029f 100644
+index 705a5df4e..45b8cc274 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-@@ -528,6 +528,13 @@ public class CraftInventory implements Inventory {
-         return inventory.getOwner();
+@@ -525,9 +525,16 @@ public class CraftInventory implements Inventory {
+ 
+     @Override
+     public InventoryHolder getHolder() {
+-        return inventory.getOwner();
++        return de.minebench.origami.OrigamiConfig.getHolderReturnsSnapshot ? inventory.getOwner() : getHolder(false); // Origami - getHolder without snapshot
      }
  
 +    // Origami start - getHolder without snapshot
@@ -25,6 +48,43 @@ index 705a5df4e..a4326029f 100644
      @Override
      public int getMaxStackSize() {
          return inventory.getMaxStackSize();
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryBrewer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryBrewer.java
+index 5fa833041..6489bbe8d 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryBrewer.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryBrewer.java
+@@ -22,7 +22,7 @@ public class CraftInventoryBrewer extends CraftInventory implements BrewerInvent
+ 
+     @Override
+     public BrewingStand getHolder() {
+-        return (BrewingStand) inventory.getOwner();
++        return (BrewingStand) super.getHolder(); // Origami - getHolder without snapshot
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryFurnace.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryFurnace.java
+index 043012545..76e1b5f67 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryFurnace.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryFurnace.java
+@@ -42,6 +42,6 @@ public class CraftInventoryFurnace extends CraftInventory implements FurnaceInve
+ 
+     @Override
+     public Furnace getHolder() {
+-        return (Furnace) inventory.getOwner();
++        return (Furnace) super.getHolder(); // Origami - getHolder without snapshot
+     }
+ }
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryLectern.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryLectern.java
+index f60ed85ef..63bc4546d 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryLectern.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryLectern.java
+@@ -12,6 +12,6 @@ public class CraftInventoryLectern extends CraftInventory implements LecternInve
+ 
+     @Override
+     public Lectern getHolder() {
+-        return (Lectern) inventory.getOwner();
++        return (Lectern) super.getHolder();  // Origami - getHolder without snapshot
+     }
+ }
 -- 
 2.25.1.windows.1
 
