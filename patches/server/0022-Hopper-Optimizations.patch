@@ -1,4 +1,4 @@
-From 57016d668a8cde269e418bbc8d9fd35425250371 Mon Sep 17 00:00:00 2001
+From 2997e6a51856b1ef1d5ba2d93e74fa8e776ded15 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Hopper Optimizations
@@ -6,14 +6,15 @@ Subject: [PATCH] Hopper Optimizations
 - Don't tick empty hoppers: This avoids ticking hoppers that are only used to transport items in a
 chain.
 - Add config option to increase the full hopper cooldown
+- Only set check cooldown if it's bigger than already set cooldown
 ---
  .../de/minebench/origami/OrigamiConfig.java   |  7 +++
  .../java/net/minecraft/server/EntityItem.java |  7 +++
  .../server/EntityMinecartContainer.java       | 21 +++++++-
  .../minecraft/server/TileEntityContainer.java | 10 ++++
- .../minecraft/server/TileEntityHopper.java    | 48 ++++++++++++++++---
+ .../minecraft/server/TileEntityHopper.java    | 50 ++++++++++++++++---
  .../block/CraftBlockEntityState.java          |  6 ++-
- 6 files changed, 89 insertions(+), 10 deletions(-)
+ 6 files changed, 90 insertions(+), 11 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 index 0389a2f2e..2f71a2646 100644
@@ -110,7 +111,7 @@ index ab6b86e4e..8313696a9 100644
 +    // Origami end
  }
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index a71702b4d..9ca81ffab 100644
+index a71702b4d..9c1c3ed91 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
 @@ -19,8 +19,9 @@ import org.bukkit.inventory.Inventory;
@@ -142,6 +143,15 @@ index a71702b4d..9ca81ffab 100644
              --this.j;
              this.k = this.world.getTime();
              if (!this.l()) {
+@@ -117,7 +118,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+                 boolean result = this.a(() -> {
+                     return a((IHopper) this);
+                 });
+-                if (!result && this.world.spigotConfig.hopperCheck > 1) {
++                if (!result && this.world.spigotConfig.hopperCheck > 1 && this.world.spigotConfig.hopperCheck > this.getCooldown()) { // Origami - only set check cooldown if it's bigger than already set one
+                     this.setCooldown(this.world.spigotConfig.hopperCheck);
+                 }
+                 // Spigot end
 @@ -126,6 +127,26 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
          }
      }
