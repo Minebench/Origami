@@ -98,6 +98,14 @@ case "$1" in
         mvn -e clean install && cd ../${FORK_NAME}-Server && mvn -e clean install
     )
     ;;
+    "devbuild")
+    (
+        cd "$basedir"
+        mvn -N install
+        cd ${FORK_NAME}-API
+        mvn -e clean install && cd ../${FORK_NAME}-Server && mvn -P dont-relocate -e clean install
+    )
+    ;;
     "crane" | "patcher")
     (
         cd "$basedir"
