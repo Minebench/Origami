@@ -1,4 +1,4 @@
-From 3c0afe66d4304914d7dd9f6689f76bb2f5b692a5 Mon Sep 17 00:00:00 2001
+From cc7bb13d282f17a68ed96535ee991f371f986c07 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 27 Mar 2020 18:03:45 +0100
 Subject: [PATCH] Add getHolder method without getting block state snapshot

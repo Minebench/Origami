@@ -1,4 +1,4 @@
-From debd6a3b2de12761e8972dc58a28f7278295a9ff Mon Sep 17 00:00:00 2001
+From fa7d0e8c2fb1b24e9b80c587ea56865728c61187 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 21 Dec 2019 02:17:03 +0100
 Subject: [PATCH] Re-add the portal TravelAgent
@@ -372,5 +372,5 @@ index a6f91166..656bfbab 100644
      @NotNull
      @Override
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 
