@@ -1,4 +1,4 @@
-From 2808ec724bd5a3035cb88d095e51ce5c976691ae Mon Sep 17 00:00:00 2001
+From 32bc6fe1e0f18a534c76d17bce23cc72f03dbc65 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 27 Mar 2020 18:03:44 +0100
 Subject: [PATCH] Add getHolder method without getting block state snapshot
@@ -27,7 +27,7 @@ index 2f71a2646..2f1af8bcc 100644
  }
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-index 705a5df4e..45b8cc274 100644
+index 705a5df4e..6f850c12f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 @@ -525,9 +525,16 @@ public class CraftInventory implements Inventory {
@@ -41,7 +41,7 @@ index 705a5df4e..45b8cc274 100644
 +    // Origami start - getHolder without snapshot
 +    @Override
 +    public InventoryHolder getHolder(boolean useSnapshot) {
-+        return inventory instanceof net.minecraft.server.TileEntity ? ((net.minecraft.server.TileEntity) inventory).getOwner(useSnapshot) : getHolder();
++        return inventory instanceof net.minecraft.server.TileEntity ? ((net.minecraft.server.TileEntity) inventory).getOwner(useSnapshot) : inventory.getOwner();
 +    }
 +    // Origami end
 +
