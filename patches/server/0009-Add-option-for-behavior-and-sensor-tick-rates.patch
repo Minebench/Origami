@@ -1,4 +1,4 @@
-From 4833d0466b8c94c501b0ff997fa0c915c2fd8944 Mon Sep 17 00:00:00 2001
+From cfb3998f33c66f2ff42cb4e554754ff8abff5321 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
@@ -10,7 +10,7 @@ Subject: [PATCH] Add option for behavior and sensor tick rates
  3 files changed, 52 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e13058f2a..3488e33e3 100644
+index bcaf74e79..ad6d5c145 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -1,11 +1,14 @@
@@ -28,7 +28,7 @@ index e13058f2a..3488e33e3 100644
  import java.util.logging.Level;
  
  public final class OrigamiConfig {
-@@ -135,6 +138,29 @@ public final class OrigamiConfig {
+@@ -115,6 +118,29 @@ public final class OrigamiConfig {
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
          }

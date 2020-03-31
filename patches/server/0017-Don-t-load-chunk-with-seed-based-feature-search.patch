@@ -1,4 +1,4 @@
-From af91bab0d51c5a1d0bcdebffeb414d077f5b6f8a Mon Sep 17 00:00:00 2001
+From 81a3bf3a226f44f0b58c0fcd10404b34ee46546b Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 13 Jan 2020 01:00:49 +0100
 Subject: [PATCH] Don't load chunk with seed based feature search
@@ -9,11 +9,11 @@ Subject: [PATCH] Don't load chunk with seed based feature search
  2 files changed, 13 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 20caf7507..0389a2f2e 100644
+index ad34239e8..9b9d54608 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -136,6 +136,14 @@ public final class OrigamiConfig {
-             pillagerPatrolSpawnDelay = getInt("pillager.patrol.spawn-delay", pillagerPatrolSpawnDelay);
+@@ -116,6 +116,14 @@ public final class OrigamiConfig {
+             return config.getDouble("worlds." + worldName + "." + path, config.getDouble("worlds.default." + path, dfl));
          }
  
 +        public boolean fastFeatureSearchDontLoad = true;

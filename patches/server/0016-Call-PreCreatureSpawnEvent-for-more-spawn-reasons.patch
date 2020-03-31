@@ -1,4 +1,4 @@
-From 75ccfcd7196020f5b3d3dbdfecae8f54ef0241d9 Mon Sep 17 00:00:00 2001
+From b688e4ab7455fb4299941cc590add8f90a0626a6 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 16:28:31 +0100
 Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons

@@ -1,4 +1,4 @@
-From d7fcb63138b1d90833b505a692337b2b3a0e8d95 Mon Sep 17 00:00:00 2001
+From d4baf545e143ff47c059acf8989a583b60dde5f3 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 15:52:09 +0100
 Subject: [PATCH] Add origami command
@@ -143,7 +143,7 @@ index 000000000..45f72f757
 +    }
 +}
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index db9f82734..20caf7507 100644
+index 53c9d964f..ad34239e8 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -44,6 +44,8 @@ public final class OrigamiConfig {

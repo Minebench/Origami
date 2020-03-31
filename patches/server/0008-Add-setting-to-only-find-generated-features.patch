@@ -1,4 +1,4 @@
-From 1f5368541058f0add406e7f5c25e74c9b074b175 Mon Sep 17 00:00:00 2001
+From a3a2303e50fe14cf434df52f7425f6936f1df540 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 01:27:40 +0100
 Subject: [PATCH] Add setting to only find generated features
@@ -14,12 +14,12 @@ Thanks @electronicboy for the improvements.
  2 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 7ed599d48..e13058f2a 100644
+index 59e861e6c..bcaf74e79 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -130,6 +130,11 @@ public final class OrigamiConfig {
-         private void pillagerPatrolSpawnDelay() {
-             pillagerPatrolSpawnDelay = getInt("pillager.patrol.spawn-delay", pillagerPatrolSpawnDelay);
+@@ -110,6 +110,11 @@ public final class OrigamiConfig {
+             config.addDefault("worlds.default." + path, Double.valueOf(dfl));
+             return config.getDouble("worlds." + worldName + "." + path, config.getDouble("worlds.default." + path, dfl));
          }
 +
 +        public boolean onlyFindGeneratedFeatures = false;
@@ -49,5 +49,5 @@ index acfe732af..b4eb1f592 100644
                                  if (structurestart != null && structurestart.e()) {
                                      if (flag && structurestart.h()) {
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 
