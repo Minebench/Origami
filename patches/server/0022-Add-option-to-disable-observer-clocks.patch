@@ -1,0 +1,42 @@
+From ac76bd54276632ca651ea9fc45378ecbd90c129d Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Tue, 31 Mar 2020 21:43:04 +0100
+Subject: [PATCH] Add option to disable observer clocks
+
+---
+ src/main/java/de/minebench/origami/OrigamiConfig.java | 5 +++++
+ src/main/java/net/minecraft/server/BlockObserver.java | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index 425297590..1ba8efa18 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -187,6 +187,11 @@ public final class OrigamiConfig {
+             tickEmptyHoppers = getBoolean("tick-empty-hoppers", tickEmptyHoppers);
+             fullHopperCooldown = getInt("ticks-per.full-hopper-cooldown", fullHopperCooldown);
+         }
++
++        public boolean disableObserverClocks = false;
++        private void observerClock() {
++            disableObserverClocks = getBoolean("disable-observer-clocks", disableObserverClocks);
++        }
+     }
+ 
+     public static boolean teleportingOfVehiclesWithPassenger = true;
+diff --git a/src/main/java/net/minecraft/server/BlockObserver.java b/src/main/java/net/minecraft/server/BlockObserver.java
+index 09b68eac7..d7fd8a8ad 100644
+--- a/src/main/java/net/minecraft/server/BlockObserver.java
++++ b/src/main/java/net/minecraft/server/BlockObserver.java
+@@ -52,7 +52,7 @@ public class BlockObserver extends BlockDirectional {
+ 
+     @Override
+     public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
+-        if (iblockdata.get(BlockObserver.FACING) == enumdirection && !(Boolean) iblockdata.get(BlockObserver.b)) {
++        if (iblockdata.get(BlockObserver.FACING) == enumdirection && !(Boolean) iblockdata.get(BlockObserver.b) && (!generatoraccess.getMinecraftWorld().origamiConfig.disableObserverClocks || !(iblockdata1.getBlock() instanceof BlockObserver))) { // Origami - disable Observer clocks
+             this.a(generatoraccess, blockposition);
+         }
+ 
+-- 
+2.25.1.windows.1
+
