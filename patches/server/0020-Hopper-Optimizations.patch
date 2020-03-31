@@ -1,4 +1,4 @@
-From 90565b2c356380729326e02daea31d6656fb4994 Mon Sep 17 00:00:00 2001
+From 98e4b93cc1742188f9b0b8a03498689d55c6020d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Hopper Optimizations
@@ -17,10 +17,10 @@ chain.
  6 files changed, 90 insertions(+), 11 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 9b9d54608..6ac1ee18b 100644
+index 17328cb80..ebaf6e820 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -178,6 +178,13 @@ public final class OrigamiConfig {
+@@ -180,6 +180,13 @@ public final class OrigamiConfig {
              enderCrystalAttackRadius = getDouble("ender-crystal.attack-radius", enderCrystalAttackRadius);
              enderCrystalAttackDamage = (float) getDouble("ender-crystal.attack-damage", enderCrystalAttackDamage);
          }

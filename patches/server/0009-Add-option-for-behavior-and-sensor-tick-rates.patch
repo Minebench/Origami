@@ -1,16 +1,16 @@
-From cfb3998f33c66f2ff42cb4e554754ff8abff5321 Mon Sep 17 00:00:00 2001
+From 4321cb8dca2df392fa6feea23210b9e740449008 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
 
 ---
- .../de/minebench/origami/OrigamiConfig.java   | 26 +++++++++++++++++++
+ .../de/minebench/origami/OrigamiConfig.java   | 28 +++++++++++++++++++
  .../java/net/minecraft/server/Behavior.java   | 14 +++++++++-
  .../java/net/minecraft/server/Sensor.java     | 14 +++++++++-
- 3 files changed, 52 insertions(+), 2 deletions(-)
+ 3 files changed, 54 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index bcaf74e79..ad6d5c145 100644
+index bcaf74e79..abea609bf 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -1,11 +1,14 @@
@@ -28,7 +28,7 @@ index bcaf74e79..ad6d5c145 100644
  import java.util.logging.Level;
  
  public final class OrigamiConfig {
-@@ -115,6 +118,29 @@ public final class OrigamiConfig {
+@@ -115,6 +118,31 @@ public final class OrigamiConfig {
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
          }
@@ -44,9 +44,11 @@ index bcaf74e79..ad6d5c145 100644
 +                tickRatesSection = config.getConfigurationSection("worlds.default.tick-rates");
 +            }
 +            for (String key : tickRatesSection.getKeys(true)) {
-+                int tickRate = tickRatesSection.getInt(key);
-+                tickRates.put(key.toLowerCase(), tickRate);
-+                Bukkit.getLogger().info("  " + key + ": " + tickRate);
++                if (tickRatesSection.isInt(key)) {
++                    int tickRate = tickRatesSection.getInt(key);
++                    tickRates.put(key.toLowerCase(), tickRate);
++                    Bukkit.getLogger().info("  " + key + ": " + tickRate);
++                }
 +            }
 +            if (tickRates.isEmpty()) {
 +                Bukkit.getLogger().info("  None configured");

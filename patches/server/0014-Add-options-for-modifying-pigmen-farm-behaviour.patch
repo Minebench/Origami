@@ -1,4 +1,4 @@
-From 94688247161da88b6525f5b22ddbc9aa797bc255 Mon Sep 17 00:00:00 2001
+From acfe401563a4e2edd33b7288adcc1f017657846d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
@@ -11,10 +11,10 @@ Subject: [PATCH] Add options for modifying pigmen farm behaviour
  4 files changed, 45 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index d76e89143..53c9d964f 100644
+index 7df93228f..98a223bf2 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -146,6 +146,22 @@ public final class OrigamiConfig {
+@@ -148,6 +148,22 @@ public final class OrigamiConfig {
          private void pigmenDontTargetUnlessHit() {
              pigmenDontTargetUnlessHit = getBoolean("pigmen.dont-target-unless-hit", pigmenDontTargetUnlessHit);
          }

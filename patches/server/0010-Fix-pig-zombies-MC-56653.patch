@@ -1,4 +1,4 @@
-From f6b243e8fcbbbf6585daaf25807be584d7ad2f50 Mon Sep 17 00:00:00 2001
+From 070cb26e681233130b81a6d0a0ee9b0be0650c82 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sat, 21 Dec 2019 17:51:07 +0100
 Subject: [PATCH] Fix pig zombies (MC-56653)
@@ -9,10 +9,10 @@ Subject: [PATCH] Fix pig zombies (MC-56653)
  2 files changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index ad6d5c145..46734655c 100644
+index abea609bf..77b794368 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -141,6 +141,11 @@ public final class OrigamiConfig {
+@@ -143,6 +143,11 @@ public final class OrigamiConfig {
          public int getTickRate(String type, String typeName, String entityType, int def) {
              return tickRates.getOrDefault(type + "." + entityType + "." + typeName, tickRates.getOrDefault(type + "." + typeName, def));
          }
