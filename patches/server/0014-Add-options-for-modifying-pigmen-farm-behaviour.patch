@@ -1,4 +1,4 @@
-From acfe401563a4e2edd33b7288adcc1f017657846d Mon Sep 17 00:00:00 2001
+From 20638a77d45ba92fe97f697760afe443e332872d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
@@ -85,7 +85,7 @@ index 09c7c1318..d6e586625 100644
              EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
              world.getServer().getPluginManager().callEvent(event);
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index eb706f863..d5e2c6c2b 100644
+index d098b224f..ffe811d20 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -196,6 +196,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
@@ -96,7 +96,7 @@ index eb706f863..d5e2c6c2b 100644
      protected int numCollisions = 0; // Paper
      public void inactiveTick() { }
      // Spigot end
-@@ -1644,6 +1645,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -1650,6 +1651,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  nbttagcompound.setBoolean("Paper.FromNetherPortal", true);
              }
              // Paper end
@@ -108,7 +108,7 @@ index eb706f863..d5e2c6c2b 100644
              return nbttagcompound;
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.a(throwable, "Saving entity NBT");
-@@ -1787,6 +1793,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -1793,6 +1799,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT;
              }
              // Paper end
