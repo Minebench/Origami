@@ -1,12 +1,12 @@
-From ac76bd54276632ca651ea9fc45378ecbd90c129d Mon Sep 17 00:00:00 2001
+From 6ccf65ffc5420923beaaf55d4dd62d40aa073ae0 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 31 Mar 2020 21:43:04 +0100
 Subject: [PATCH] Add option to disable observer clocks
 
 ---
  src/main/java/de/minebench/origami/OrigamiConfig.java | 5 +++++
- src/main/java/net/minecraft/server/BlockObserver.java | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ src/main/java/net/minecraft/server/BlockObserver.java | 3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 index 425297590..1ba8efa18 100644
@@ -25,15 +25,16 @@ index 425297590..1ba8efa18 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/BlockObserver.java b/src/main/java/net/minecraft/server/BlockObserver.java
-index 09b68eac7..d7fd8a8ad 100644
+index 09b68eac7..5e66673c9 100644
 --- a/src/main/java/net/minecraft/server/BlockObserver.java
 +++ b/src/main/java/net/minecraft/server/BlockObserver.java
-@@ -52,7 +52,7 @@ public class BlockObserver extends BlockDirectional {
+@@ -52,7 +52,8 @@ public class BlockObserver extends BlockDirectional {
  
      @Override
      public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {
 -        if (iblockdata.get(BlockObserver.FACING) == enumdirection && !(Boolean) iblockdata.get(BlockObserver.b)) {
-+        if (iblockdata.get(BlockObserver.FACING) == enumdirection && !(Boolean) iblockdata.get(BlockObserver.b) && (!generatoraccess.getMinecraftWorld().origamiConfig.disableObserverClocks || !(iblockdata1.getBlock() instanceof BlockObserver))) { // Origami - disable Observer clocks
++        if (iblockdata.get(BlockObserver.FACING) == enumdirection && !(Boolean) iblockdata.get(BlockObserver.b)
++                && (!generatoraccess.getMinecraftWorld().origamiConfig.disableObserverClocks || !(iblockdata1.getBlock() instanceof BlockObserver) || iblockdata1.get(BlockObserver.FACING).opposite() != enumdirection)) { // Origami - disable Observer clocks
              this.a(generatoraccess, blockposition);
          }
  
