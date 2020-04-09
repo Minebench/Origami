@@ -1,4 +1,4 @@
-From 2639a0bbfe1f7b95983591a9a85b54231ff97942 Mon Sep 17 00:00:00 2001
+From 66d7ead8b1666291e4867d2252e781e3c9ec481c Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:28:42 +0100
 Subject: [PATCH] Brand changes
@@ -23,10 +23,10 @@ index cf00f35a5..771827aff 100644
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 346664cee..6336275ed 100644
+index 936434110..b8db40e5c 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1484,7 +1484,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1499,7 +1499,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -36,7 +36,7 @@ index 346664cee..6336275ed 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index b7dfda265..e1ea8ef27 100644
+index b9a398bc5..f51e526f6 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -203,7 +203,7 @@ import javax.annotation.Nullable; // Paper
@@ -49,5 +49,5 @@ index b7dfda265..e1ea8ef27 100644
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 
