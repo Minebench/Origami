@@ -1,4 +1,4 @@
-From 133bd58984ae3fbb6a0ce422821c8f62349003b2 Mon Sep 17 00:00:00 2001
+From 4c04e6f5feebd85f1fc59bc8e0b89fe39e243be9 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:51:07 +0100
 Subject: [PATCH] Log and abort if WorldUpgrader gets stuck on chunk
@@ -9,10 +9,10 @@ Subject: [PATCH] Log and abort if WorldUpgrader gets stuck on chunk
  2 files changed, 24 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 6336275ed..880c6ac3e 100644
+index c7fbdf255..585e3acff 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -286,6 +286,11 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -291,6 +291,11 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                  WorldUpgrader worldupgrader = new WorldUpgrader(s, this.getConvertable(), worlddata, this.eraseCache); // CraftBukkit
                  IChatBaseComponent ichatbasecomponent = null;
  
@@ -24,7 +24,7 @@ index 6336275ed..880c6ac3e 100644
                  while (!worldupgrader.b()) {
                      IChatBaseComponent ichatbasecomponent1 = worldupgrader.g();
  
-@@ -300,6 +305,23 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -305,6 +310,23 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                          int j = worldupgrader.e() + worldupgrader.f();
  
                          MinecraftServer.LOGGER.info("{}% completed ({} / {} chunks)...", MathHelper.d((float) j / (float) i * 100.0F), j, i);
@@ -69,5 +69,5 @@ index 3030c347e..39d4ad175 100644
  
                          try {
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 

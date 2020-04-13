@@ -1,21 +1,19 @@
-From 705452be9412c2bc52db5db42456edc310fa12ce Mon Sep 17 00:00:00 2001
+From 5bd8d75a5d3b07b5ef50b0f5649c702bcda19002 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
 
 Partially based on a patch in Spottedleaf's Paper fork
 ---
- .../java/net/minecraft/server/Behavior.java   |   4 +
- .../minecraft/server/BehaviorController.java  |  56 ++++++----
- .../java/net/minecraft/server/ChunkMap.java   |  14 ++-
- .../net/minecraft/server/PairedQueue.java     |  19 +++-
- .../server/PathfinderGoalSelector.java        | 104 ++++++++++--------
- .../minecraft/server/PathfinderNormal.java    |   4 +-
- .../net/minecraft/server/PlayerChunkMap.java  |  18 ++-
- .../java/net/minecraft/server/PlayerMap.java  |   2 +-
- .../minecraft/server/TileEntityHopper.java    |  45 ++++++--
- .../minecraft/server/TileEntityLootable.java  |   9 +-
- 10 files changed, 185 insertions(+), 90 deletions(-)
+ .../java/net/minecraft/server/Behavior.java   |  4 ++
+ .../minecraft/server/BehaviorController.java  |  4 +-
+ .../java/net/minecraft/server/ChunkMap.java   | 14 +++---
+ .../minecraft/server/PathfinderNormal.java    |  4 +-
+ .../net/minecraft/server/PlayerChunkMap.java  | 18 +++++++-
+ .../java/net/minecraft/server/PlayerMap.java  |  2 +-
+ .../minecraft/server/TileEntityHopper.java    | 45 ++++++++++++++-----
+ .../minecraft/server/TileEntityLootable.java  |  9 +++-
+ 8 files changed, 76 insertions(+), 24 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
 index 640dd0d5f..5bd814eef 100644
@@ -51,7 +49,7 @@ index 640dd0d5f..5bd814eef 100644
          this.b = Behavior.Status.STOPPED;
          this.f(worldserver, e0, i);
 diff --git a/src/main/java/net/minecraft/server/BehaviorController.java b/src/main/java/net/minecraft/server/BehaviorController.java
-index a1883eba6..938690153 100644
+index c75581dd5..41136e2bb 100644
 --- a/src/main/java/net/minecraft/server/BehaviorController.java
 +++ b/src/main/java/net/minecraft/server/BehaviorController.java
 @@ -23,11 +23,11 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
@@ -67,105 +65,6 @@ index a1883eba6..938690153 100644
 +    private final Set<Activity> g; private final Set<Activity> getActiveActivities() { return g; } // Origami - OBFHELPER
      private Activity h;
      private long i;
- 
-@@ -69,7 +69,7 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
-     }
- 
-     private <T, U> void a(MemoryModuleType<U> memorymoduletype, Dynamic<T> dynamic) {
--        this.setMemory(memorymoduletype, ((Function) memorymoduletype.getSerializer().orElseThrow(RuntimeException::new)).apply(dynamic));
-+        this.setMemory(memorymoduletype, memorymoduletype.getSerializer().orElseThrow(RuntimeException::new).apply(dynamic)); // Origami - decompile fixes
-     }
- 
-     public <U> void removeMemory(MemoryModuleType<U> memorymoduletype) {
-@@ -113,6 +113,20 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
-         this.f = set;
-     }
- 
-+    // Origami start - remove streams
-+    private void applyToRunningBehaviour(java.util.function.Consumer<Behavior<? super E>> consumer) {
-+        for (Map<Activity, Set<Behavior<? super E>>> value : this.getGoals().values()) {
-+            for (Set<Behavior<? super E>> behaviors : value.values()) {
-+                for (Behavior<? super E> behavior : behaviors) {
-+                    if (behavior.getStatus() == Behavior.Status.RUNNING) {
-+                        consumer.accept(behavior);
-+                    }
-+                }
-+            }
-+        }
-+    }
-+    // Origami end
-+
-     @Deprecated
-     public Stream<Behavior<? super E>> d() {
-         return this.c.values().stream().flatMap((map) -> {
-@@ -170,7 +184,7 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
- 
-         this.memories.forEach((memorymoduletype, optional) -> {
-             optional.ifPresent((object) -> {
--                Optional optional1 = (Optional) behaviorcontroller.memories.put(memorymoduletype, Optional.of(object));
-+                behaviorcontroller.memories.put(memorymoduletype, Optional.of(object)); // Origami - Decompile fixes
-             });
-         });
-         return behaviorcontroller;
-@@ -185,14 +199,12 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
-     public void b(WorldServer worldserver, E e0) {
-         long i = e0.world.getTime();
- 
--        this.d().forEach((behavior) -> {
--            behavior.e(worldserver, e0, i);
--        });
-+        applyToRunningBehaviour(behavior -> behavior.stop(worldserver, e0, i)); // Origami - remove streams
-     }
- 
-     @Override
-     public <T> T a(DynamicOps<T> dynamicops) {
--        T t0 = dynamicops.createMap((Map) this.memories.entrySet().stream().filter((entry) -> {
-+        T t0 = dynamicops.createMap(this.memories.entrySet().stream().filter((entry) -> { // Origami - decompile fixes
-             return ((MemoryModuleType) entry.getKey()).getSerializer().isPresent() && ((Optional) entry.getValue()).isPresent();
-         }).map((entry) -> {
-             return Pair.of(dynamicops.createString(IRegistry.MEMORY_MODULE_TYPE.getKey(entry.getKey()).toString()), ((MinecraftSerializable) ((Optional) entry.getValue()).get()).a(dynamicops));
-@@ -210,27 +222,29 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
-     private void d(WorldServer worldserver, E e0) {
-         long i = worldserver.getTime();
- 
--        this.c.values().stream().flatMap((map) -> {
--            return map.entrySet().stream();
--        }).filter((entry) -> {
--            return this.g.contains(entry.getKey());
--        }).map(Entry::getValue).flatMap(Collection::stream).filter((behavior) -> {
--            return behavior.a() == Behavior.Status.STOPPED;
--        }).forEach((behavior) -> {
--            behavior.b(worldserver, e0, i);
--        });
-+        // Origami start - remove streams
-+        for (Map<Activity, Set<Behavior<? super E>>> value : this.getGoals().values()) {
-+            for (Entry<Activity, Set<Behavior<? super E>>> entry : value.entrySet()) {
-+                if (this.getActiveActivities().contains(entry.getKey())) {
-+                    for (Behavior<? super E> behavior : entry.getValue()) {
-+                        if (behavior.getStatus() == Behavior.Status.STOPPED) {
-+                            behavior.attemptStart(worldserver, e0, i);
-+                        }
-+                    }
-+                }
-+            }
-+        }
-+        // Origami end
-     }
- 
-     private void e(WorldServer worldserver, E e0) {
-         long i = worldserver.getTime();
- 
--        this.d().forEach((behavior) -> {
--            behavior.c(worldserver, e0, i);
--        });
-+        applyToRunningBehaviour(behavior -> behavior.runOrStop(worldserver, e0, i)); // Origami - remove streams
-     }
- 
-     private boolean d(Activity activity) {
--        return ((Set) this.e.get(activity)).stream().allMatch((pair) -> {
-+        return this.e.get(activity).stream().allMatch((pair) -> { // Origami - decompile fixes
-             MemoryModuleType<?> memorymoduletype = (MemoryModuleType) pair.getFirst();
-             MemoryStatus memorystatus = (MemoryStatus) pair.getSecond();
  
 diff --git a/src/main/java/net/minecraft/server/ChunkMap.java b/src/main/java/net/minecraft/server/ChunkMap.java
 index 55f9f4e6e..8069e494f 100644
@@ -199,173 +98,6 @@ index 55f9f4e6e..8069e494f 100644
  
          for (int k1 = -1; k1 <= 1; ++k1) {
              for (int l1 = -1; l1 <= 1; ++l1) {
-diff --git a/src/main/java/net/minecraft/server/PairedQueue.java b/src/main/java/net/minecraft/server/PairedQueue.java
-index 85bb22e4b..4e2a6591a 100644
---- a/src/main/java/net/minecraft/server/PairedQueue.java
-+++ b/src/main/java/net/minecraft/server/PairedQueue.java
-@@ -23,9 +23,12 @@ public interface PairedQueue<T, F> {
-         private final List<Queue<Runnable>> a;
- 
-         public a(int i) {
--            this.a = (List) IntStream.range(0, i).mapToObj((j) -> {
--                return Queues.newConcurrentLinkedQueue();
--            }).collect(Collectors.toList());
-+            // Origami start - remove streams
-+            this.a = new java.util.ArrayList<>(i);
-+            for (int j = 0; j < i; j++) {
-+                this.a.add(Queues.newConcurrentLinkedQueue());
-+            }
-+            // Origami end
-         }
- 
-         @Nullable
-@@ -57,7 +60,15 @@ public interface PairedQueue<T, F> {
- 
-         @Override
-         public boolean b() {
--            return this.a.stream().allMatch(Collection::isEmpty);
-+            // Origami start - remove streams
-+            for (int i = 0, size = this.a.size(); i < size; ++i) {
-+                Queue<Runnable> queue = this.a.get(i);
-+                if (!queue.isEmpty()) {
-+                    return false;
-+                }
-+            }
-+            return true;
-+            // Origami end
-         }
-     }
- 
-diff --git a/src/main/java/net/minecraft/server/PathfinderGoalSelector.java b/src/main/java/net/minecraft/server/PathfinderGoalSelector.java
-index 935136771..58e15989e 100644
---- a/src/main/java/net/minecraft/server/PathfinderGoalSelector.java
-+++ b/src/main/java/net/minecraft/server/PathfinderGoalSelector.java
-@@ -58,33 +58,38 @@ public class PathfinderGoalSelector {
-     // Paper end
- 
-     public void a(PathfinderGoal pathfindergoal) {
--        this.d.stream().filter((pathfindergoalwrapped) -> {
--            return pathfindergoalwrapped.j() == pathfindergoal;
--        }).filter(PathfinderGoalWrapped::g).forEach(PathfinderGoalWrapped::d);
--        this.d.removeIf((pathfindergoalwrapped) -> {
--            return pathfindergoalwrapped.j() == pathfindergoal;
--        });
-+        // Origami start - replace streams
-+        for (java.util.Iterator<PathfinderGoalWrapped> it = this.d.iterator(); it.hasNext();) {
-+            PathfinderGoalWrapped pathfinderGoalWrapped = it.next();
-+            if (pathfinderGoalWrapped.j() == pathfindergoal) {
-+                if (pathfinderGoalWrapped.g()) {
-+                    pathfinderGoalWrapped.d();
-+                }
-+                it.remove();
-+            }
-+        }
-+        // Origami end
-     }
- 
-     public void doTick() {
-         this.e.enter("goalCleanup");
--        this.c().filter((pathfindergoalwrapped) -> {
--            boolean flag;
--
--            if (pathfindergoalwrapped.g()) {
--                Stream stream = pathfindergoalwrapped.i().stream();
--                EnumSet enumset = this.f;
--
--                this.f.getClass();
--                if (!stream.anyMatch(enumset::contains) && pathfindergoalwrapped.b()) {
--                    flag = false;
--                    return flag;
-+        // Origami start - remove streams
-+        for (java.util.Iterator<PathfinderGoalWrapped> it = this.d.iterator(); it.hasNext();) {
-+            PathfinderGoalWrapped pathfinderGoalWrapped = it.next();
-+            if (pathfinderGoalWrapped.g()) {
-+                boolean contains = false;
-+                for (PathfinderGoal.Type type : pathfinderGoalWrapped.i()) {
-+                    if (this.f.contains(type)) {
-+                        contains = true;
-+                        break;
-+                    }
-+                }
-+                if (contains || !pathfinderGoalWrapped.b()) {
-+                    pathfinderGoalWrapped.d();
-                 }
-             }
--
--            flag = true;
--            return flag;
--        }).forEach(PathfinderGoal::d);
-+        }
-+        // Origami end
-         this.c.forEach((pathfindergoal_type, pathfindergoalwrapped) -> {
-             if (!pathfindergoalwrapped.g()) {
-                 this.c.remove(pathfindergoal_type);
-@@ -93,30 +98,43 @@ public class PathfinderGoalSelector {
-         });
-         this.e.exit();
-         this.e.enter("goalUpdate");
--        this.d.stream().filter((pathfindergoalwrapped) -> {
--            return !pathfindergoalwrapped.g();
--        }).filter((pathfindergoalwrapped) -> {
--            Stream stream = pathfindergoalwrapped.i().stream();
--            EnumSet enumset = this.f;
--
--            this.f.getClass();
--            return stream.noneMatch(enumset::contains);
--        }).filter((pathfindergoalwrapped) -> {
--            return pathfindergoalwrapped.i().stream().allMatch((pathfindergoal_type) -> {
--                return ((PathfinderGoalWrapped) this.c.getOrDefault(pathfindergoal_type, PathfinderGoalSelector.b)).a(pathfindergoalwrapped);
--            });
--        }).filter(PathfinderGoalWrapped::a).forEach((pathfindergoalwrapped) -> {
--            pathfindergoalwrapped.i().forEach((pathfindergoal_type) -> {
--                PathfinderGoalWrapped pathfindergoalwrapped1 = (PathfinderGoalWrapped) this.c.getOrDefault(pathfindergoal_type, PathfinderGoalSelector.b);
--
--                pathfindergoalwrapped1.d();
--                this.c.put(pathfindergoal_type, pathfindergoalwrapped);
--            });
--            pathfindergoalwrapped.c();
--        });
-+        // Origami start - remove streams
-+        UPDATE_LOOP:
-+        for (java.util.Iterator<PathfinderGoalWrapped> it = this.d.iterator(); it.hasNext();) {
-+            PathfinderGoalWrapped pathfinderGoalWrapped = it.next();
-+            if (!pathfinderGoalWrapped.g()) {
-+                for (PathfinderGoal.Type type : pathfinderGoalWrapped.i()) {
-+                    if (this.f.contains(type)) {
-+                        continue UPDATE_LOOP;
-+                    }
-+                }
-+
-+                for (PathfinderGoal.Type type : pathfinderGoalWrapped.i()) {
-+                    if (!this.c.getOrDefault(type, PathfinderGoalSelector.b).a(pathfinderGoalWrapped)) {
-+                        continue UPDATE_LOOP;
-+                    }
-+                }
-+
-+                if (pathfinderGoalWrapped.a()) {
-+                    for (PathfinderGoal.Type type : pathfinderGoalWrapped.i()) {
-+                        this.c.getOrDefault(type, PathfinderGoalSelector.b).d();
-+                        this.c.put(type, pathfinderGoalWrapped);
-+                    }
-+                    pathfinderGoalWrapped.c();
-+                }
-+            }
-+        }
-+        // Origami end
-         this.e.exit();
-         this.e.enter("goalTick");
--        this.c().forEach(PathfinderGoalWrapped::e);
-+        // Origami start - remove streams
-+        for (java.util.Iterator<PathfinderGoalWrapped> it = this.d.iterator(); it.hasNext();) {
-+            PathfinderGoalWrapped pathfinderGoalWrapped = it.next();
-+            if (pathfinderGoalWrapped.g()) {
-+                pathfinderGoalWrapped.e();
-+            }
-+        }
-+        // Origami end
-         this.e.exit();
-     }
- 
 diff --git a/src/main/java/net/minecraft/server/PathfinderNormal.java b/src/main/java/net/minecraft/server/PathfinderNormal.java
 index 4240ca81c..36fef7f70 100644
 --- a/src/main/java/net/minecraft/server/PathfinderNormal.java
@@ -383,10 +115,10 @@ index 4240ca81c..36fef7f70 100644
          if (iblockdata == null) return PathType.BLOCKED; // Paper
          Block block = iblockdata.getBlock();
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index c21a3ea50..05a384bc6 100644
+index c38d31faf..4172cc8c3 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-@@ -1360,7 +1360,20 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1380,7 +1380,20 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
          // Spigot end
          long i = chunkcoordintpair.pair();
  
@@ -408,7 +140,7 @@ index c21a3ea50..05a384bc6 100644
              // Paper start -
              com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent event;
              double blockRange = 16384.0D;
-@@ -1372,7 +1385,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1392,7 +1405,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
  
              return (!entityplayer.isSpectator() && a(chunkcoordintpair, (Entity) entityplayer) < blockRange); // Spigot
              // Paper end
