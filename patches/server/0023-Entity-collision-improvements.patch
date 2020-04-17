@@ -1,4 +1,4 @@
-From 7f3ed07ff1be1a9f224e928fcfcfc4ca433d8ea3 Mon Sep 17 00:00:00 2001
+From 9581ce258c5d8af998ef7b6f2e3d2b477b16c1dd Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 10 Apr 2020 22:11:26 +0100
 Subject: [PATCH] Entity collision improvements
@@ -24,7 +24,7 @@ index c56efe035..36c02e7f6 100644
  
      private void eq() {
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index ad474500e..1eaefed10 100644
+index dfb9421a1..b5375902b 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
 @@ -128,6 +128,7 @@ public abstract class EntityLiving extends Entity {
@@ -35,15 +35,15 @@ index ad474500e..1eaefed10 100644
      public boolean collides = true;
      public boolean canPickUpLoot;
      public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
-@@ -2663,6 +2664,7 @@ public abstract class EntityLiving extends Entity {
-     protected void doTick() {}
- 
-     protected void collideNearby() {
+@@ -2669,6 +2670,7 @@ public abstract class EntityLiving extends Entity {
+             return;
+         }
+         // Paper - end don't run getEntities if we're not going to use its result
 +        if (!this.canCollide) return; // Origami - canCollide API
          List<Entity> list = this.world.getEntities(this, this.getBoundingBox(), IEntitySelector.a(this));
  
          if (!list.isEmpty()) {
-@@ -2793,7 +2795,7 @@ public abstract class EntityLiving extends Entity {
+@@ -2799,7 +2801,7 @@ public abstract class EntityLiving extends Entity {
  
      @Override
      public boolean isCollidable() {
