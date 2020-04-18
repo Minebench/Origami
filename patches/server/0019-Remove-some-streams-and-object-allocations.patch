@@ -1,4 +1,4 @@
-From 5bd8d75a5d3b07b5ef50b0f5649c702bcda19002 Mon Sep 17 00:00:00 2001
+From c322a239bf50cbaca2fe80d70dccf222ffb6e60d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
@@ -115,10 +115,10 @@ index 4240ca81c..36fef7f70 100644
          if (iblockdata == null) return PathType.BLOCKED; // Paper
          Block block = iblockdata.getBlock();
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index c38d31faf..4172cc8c3 100644
+index e19342eb8..45ffa8ff4 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-@@ -1380,7 +1380,20 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1383,7 +1383,20 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
          // Spigot end
          long i = chunkcoordintpair.pair();
  
@@ -140,7 +140,7 @@ index c38d31faf..4172cc8c3 100644
              // Paper start -
              com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent event;
              double blockRange = 16384.0D;
-@@ -1392,7 +1405,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
+@@ -1395,7 +1408,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
  
              return (!entityplayer.isSpectator() && a(chunkcoordintpair, (Entity) entityplayer) < blockRange); // Spigot
              // Paper end
