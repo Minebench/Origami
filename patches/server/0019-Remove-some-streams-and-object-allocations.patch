@@ -1,11 +1,11 @@
-From c322a239bf50cbaca2fe80d70dccf222ffb6e60d Mon Sep 17 00:00:00 2001
+From 4249187f3f2bfe426f4b6851aa7d7b9333cba3dc Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
 
 Partially based on a patch in Spottedleaf's Paper fork
 ---
- .../java/net/minecraft/server/Behavior.java   |  4 ++
+ .../java/net/minecraft/server/Behavior.java   | 18 +++++---
  .../minecraft/server/BehaviorController.java  |  4 +-
  .../java/net/minecraft/server/ChunkMap.java   | 14 +++---
  .../minecraft/server/PathfinderNormal.java    |  4 +-
@@ -13,10 +13,10 @@ Partially based on a patch in Spottedleaf's Paper fork
  .../java/net/minecraft/server/PlayerMap.java  |  2 +-
  .../minecraft/server/TileEntityHopper.java    | 45 ++++++++++++++-----
  .../minecraft/server/TileEntityLootable.java  |  9 +++-
- 8 files changed, 76 insertions(+), 24 deletions(-)
+ 8 files changed, 84 insertions(+), 30 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
-index 640dd0d5f..5bd814eef 100644
+index 640dd0d5f..b4d74440a 100644
 --- a/src/main/java/net/minecraft/server/Behavior.java
 +++ b/src/main/java/net/minecraft/server/Behavior.java
 @@ -38,10 +38,12 @@ public abstract class Behavior<E extends EntityLiving> {
@@ -48,6 +48,27 @@ index 640dd0d5f..5bd814eef 100644
      public final void e(WorldServer worldserver, E e0, long i) {
          this.b = Behavior.Status.STOPPED;
          this.f(worldserver, e0, i);
+@@ -92,12 +96,14 @@ public abstract class Behavior<E extends EntityLiving> {
+     }
+ 
+     private boolean a(E e0) {
+-        return this.a.entrySet().stream().allMatch((entry) -> {
+-            MemoryModuleType<?> memorymoduletype = (MemoryModuleType) entry.getKey();
+-            MemoryStatus memorystatus = (MemoryStatus) entry.getValue();
+-
+-            return e0.getBehaviorController().a(memorymoduletype, memorystatus);
+-        });
++        // Origami start - remove streams
++        for (Entry<MemoryModuleType<?>, MemoryStatus> entry : this.a.entrySet()) {
++            if (!e0.getBehaviorController().a(entry.getKey(), entry.getValue())) {
++                return false;
++            }
++        }
++        return true;
++        // Origami end
+     }
+ 
+     public static enum Status {
 diff --git a/src/main/java/net/minecraft/server/BehaviorController.java b/src/main/java/net/minecraft/server/BehaviorController.java
 index c75581dd5..41136e2bb 100644
 --- a/src/main/java/net/minecraft/server/BehaviorController.java
@@ -115,7 +136,7 @@ index 4240ca81c..36fef7f70 100644
          if (iblockdata == null) return PathType.BLOCKED; // Paper
          Block block = iblockdata.getBlock();
 diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index e19342eb8..45ffa8ff4 100644
+index 8b2eed105..b8d83f607 100644
 --- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
 +++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
 @@ -1383,7 +1383,20 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
