@@ -1,4 +1,4 @@
-From ce932017d1af21ac2fc382e3a3a3f26a69d6eb44 Mon Sep 17 00:00:00 2001
+From 9c8d708ad7a80b42b87ade5bc6caeba9e6dcfcdc Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 20 Apr 2020 17:41:09 +0100
 Subject: [PATCH] Add timings for Behavior
@@ -24,7 +24,7 @@ index c9a3ba4bf..ef19886ed 100644
 +    // Origami end
  }
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
-index 564d7fa87..d4ce207e0 100644
+index 8d2f63052..e7754bca9 100644
 --- a/src/main/java/net/minecraft/server/Behavior.java
 +++ b/src/main/java/net/minecraft/server/Behavior.java
 @@ -14,6 +14,7 @@ public abstract class Behavior<E extends EntityLiving> {
@@ -45,8 +45,8 @@ index 564d7fa87..d4ce207e0 100644
      }
  
      public Behavior.Status getStatus() { return a();} // Origami - OBFHELPER
-@@ -54,7 +58,9 @@ public abstract class Behavior<E extends EntityLiving> {
-             // Origami end - configurable behavior tick rates
+@@ -56,7 +60,9 @@ public abstract class Behavior<E extends EntityLiving> {
+             int j = this.d + worldserver.getRandom().nextInt(this.e + 1 - this.d);
  
              this.c = i + (long) j;
 +            timing.startTiming(); // Origami - behavior timing

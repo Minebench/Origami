@@ -1,4 +1,4 @@
-From 009496a53ce6acd944ea21be2e70669ca91f47af Mon Sep 17 00:00:00 2001
+From 1e6f312f546136b861909aab33fd220e4d7e0904 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 31 Mar 2020 21:43:04 +0100
 Subject: [PATCH] Add option to disable observer clocks
@@ -9,10 +9,10 @@ Subject: [PATCH] Add option to disable observer clocks
  2 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e05d7e299..089e7f3c5 100644
+index 8c3ee5813..9ec7609e8 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -188,6 +188,11 @@ public final class OrigamiConfig {
+@@ -187,6 +187,11 @@ public final class OrigamiConfig {
              tickEmptyHoppers = getBoolean("tick-empty-hoppers", tickEmptyHoppers);
              fullHopperCooldown = getInt("ticks-per.full-hopper-cooldown", fullHopperCooldown);
          }

@@ -1,4 +1,4 @@
-From 3d5cc1cd8457847e13bf3cfc920e03f8e17457bb Mon Sep 17 00:00:00 2001
+From da09ec713d2dbec5f5b8653361becb52055fe42a Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 27 Mar 2020 18:03:44 +0100
 Subject: [PATCH] Add getHolder method without getting block state snapshot
@@ -12,10 +12,10 @@ Subject: [PATCH] Add getHolder method without getting block state snapshot
  5 files changed, 16 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 368d6db0f..e05d7e299 100644
+index 846183d5f..8c3ee5813 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -200,4 +200,9 @@ public final class OrigamiConfig {
+@@ -199,4 +199,9 @@ public final class OrigamiConfig {
          fixItemPositionDesync = getBoolean("fix-item-position-desync", fixItemPositionDesync);
      }
  

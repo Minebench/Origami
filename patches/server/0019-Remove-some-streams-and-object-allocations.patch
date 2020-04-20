@@ -1,4 +1,4 @@
-From 7d3e9a8d13fe5db9f16c0dfcc5d61ab3d684c295 Mon Sep 17 00:00:00 2001
+From 149e23938fc9de19068d967a694315069500ceab Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
@@ -16,7 +16,7 @@ Partially based on a patch in Spottedleaf's Paper fork
  8 files changed, 84 insertions(+), 30 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
-index f9ee7abb1..564d7fa87 100644
+index ae1d901e5..8d2f63052 100644
 --- a/src/main/java/net/minecraft/server/Behavior.java
 +++ b/src/main/java/net/minecraft/server/Behavior.java
 @@ -38,10 +38,12 @@ public abstract class Behavior<E extends EntityLiving> {
@@ -30,9 +30,9 @@ index f9ee7abb1..564d7fa87 100644
  
 +    public final void attemptStart(WorldServer worldserver, E entity, long time) { b(worldserver, entity, time); } // Origami - OBFHELPER
      public final boolean b(WorldServer worldserver, E e0, long i) {
-         if (this.a(e0) && this.a(worldserver, e0)) {
-             this.b = Behavior.Status.RUNNING;
-@@ -61,6 +63,7 @@ public abstract class Behavior<E extends EntityLiving> {
+         // Origami start - configurable behavior tick rates
+         int tickRate = worldserver.origamiConfig.getTickRate(RATE_TYPE, configKey, e0.getMinecraftKey().getKey(), -1);
+@@ -63,6 +65,7 @@ public abstract class Behavior<E extends EntityLiving> {
  
      protected void a(WorldServer worldserver, E e0, long i) {}
  
@@ -40,7 +40,7 @@ index f9ee7abb1..564d7fa87 100644
      public final void c(WorldServer worldserver, E e0, long i) {
          if (!this.a(i) && this.g(worldserver, e0, i)) {
              this.d(worldserver, e0, i);
-@@ -72,6 +75,7 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -74,6 +77,7 @@ public abstract class Behavior<E extends EntityLiving> {
  
      protected void d(WorldServer worldserver, E e0, long i) {}
  
@@ -48,7 +48,7 @@ index f9ee7abb1..564d7fa87 100644
      public final void e(WorldServer worldserver, E e0, long i) {
          this.b = Behavior.Status.STOPPED;
          this.f(worldserver, e0, i);
-@@ -96,12 +100,14 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -98,12 +102,14 @@ public abstract class Behavior<E extends EntityLiving> {
      }
  
      private boolean a(E e0) {
