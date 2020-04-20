@@ -1,16 +1,16 @@
-From 4321cb8dca2df392fa6feea23210b9e740449008 Mon Sep 17 00:00:00 2001
+From ff24225fe7615602181733c1e8c207add2aef692 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
 
 ---
- .../de/minebench/origami/OrigamiConfig.java   | 28 +++++++++++++++++++
- .../java/net/minecraft/server/Behavior.java   | 14 +++++++++-
- .../java/net/minecraft/server/Sensor.java     | 14 +++++++++-
- 3 files changed, 54 insertions(+), 2 deletions(-)
+ .../de/minebench/origami/OrigamiConfig.java   | 29 +++++++++++++++++++
+ .../java/net/minecraft/server/Behavior.java   | 18 +++++++++++-
+ .../java/net/minecraft/server/Sensor.java     | 14 ++++++++-
+ 3 files changed, 59 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index bcaf74e79..abea609bf 100644
+index bcaf74e79..56689ff17 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -1,11 +1,14 @@
@@ -28,7 +28,7 @@ index bcaf74e79..abea609bf 100644
  import java.util.logging.Level;
  
  public final class OrigamiConfig {
-@@ -115,6 +118,31 @@ public final class OrigamiConfig {
+@@ -115,6 +118,32 @@ public final class OrigamiConfig {
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
          }
@@ -36,7 +36,8 @@ index bcaf74e79..abea609bf 100644
 +        private Map<String, Integer> tickRates = new HashMap<>();
 +        private void tickRates() {
 +            config.addDefault("worlds.default.tick-rates.sensor.villager.secondaryplaces", 40);
-+            config.addDefault("worlds.default.tick-rates.behavior.villager.positionvalidate", 60);
++            config.addDefault("worlds.default.tick-rates.behavior.villager.positionvalidate.min", 60);
++            config.addDefault("worlds.default.tick-rates.behavior.villager.positionvalidate.max", 60);
 +            tickRates = new HashMap<>();
 +            Bukkit.getLogger().info("Tick rates:");
 +            ConfigurationSection tickRatesSection = config.getConfigurationSection("worlds." + worldName + ".tick-rates");
@@ -61,7 +62,7 @@ index bcaf74e79..abea609bf 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
-index 788d1433e..640dd0d5f 100644
+index 788d1433e..f9ee7abb1 100644
 --- a/src/main/java/net/minecraft/server/Behavior.java
 +++ b/src/main/java/net/minecraft/server/Behavior.java
 @@ -10,6 +10,10 @@ public abstract class Behavior<E extends EntityLiving> {
@@ -90,12 +91,16 @@ index 788d1433e..640dd0d5f 100644
      }
  
      public Behavior.Status a() {
-@@ -33,7 +45,7 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -33,7 +45,11 @@ public abstract class Behavior<E extends EntityLiving> {
      public final boolean b(WorldServer worldserver, E e0, long i) {
          if (this.a(e0) && this.a(worldserver, e0)) {
              this.b = Behavior.Status.RUNNING;
 -            int j = this.d + worldserver.getRandom().nextInt(this.e + 1 - this.d);
-+            int j =  worldserver.origamiConfig.getTickRate(RATE_TYPE, configKey, e0.getMinecraftKey().getKey(), this.d) + worldserver.getRandom().nextInt(this.e + 1 - this.d); // Origami - configurable behavior tick rates
++            // Origami start - configurable behavior tick rates
++            int min = worldserver.origamiConfig.getTickRate(RATE_TYPE, configKey + ".min", e0.getMinecraftKey().getKey(), this.d);
++            int max = worldserver.origamiConfig.getTickRate(RATE_TYPE, configKey + ".max", e0.getMinecraftKey().getKey(), this.e);
++            int j = min + worldserver.getRandom().nextInt(max + 1 - min);
++            // Origami end - configurable behavior tick rates
  
              this.c = i + (long) j;
              this.a(worldserver, e0, i);

@@ -1,4 +1,4 @@
-From fe5445413fe6669fa310bb847a7d6189f9ec2677 Mon Sep 17 00:00:00 2001
+From eb2f23ea5a7c4be88da9fb24a27f218587bc8add Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 22 Dec 2019 19:29:21 +0100
 Subject: [PATCH] Add ability for ender crystals to attack monsters
@@ -13,10 +13,10 @@ crystals attack phantoms
  4 files changed, 56 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 1249d7a44..7df93228f 100644
+index b5dd13a7f..ba65e5243 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -148,6 +148,12 @@ public final class OrigamiConfig {
+@@ -149,6 +149,12 @@ public final class OrigamiConfig {
          private void pigmenDontTargetUnlessHit() {
              pigmenDontTargetUnlessHit = getBoolean("pigmen.dont-target-unless-hit", pigmenDontTargetUnlessHit);
          }
@@ -111,7 +111,7 @@ index a57d0089d..b148d7376 100644
      @Override
      protected void b(NBTTagCompound nbttagcompound) {
 diff --git a/src/main/java/net/minecraft/server/IEntityAccess.java b/src/main/java/net/minecraft/server/IEntityAccess.java
-index 4157e50e4..a24397815 100644
+index 5135308fb..3040f4810 100644
 --- a/src/main/java/net/minecraft/server/IEntityAccess.java
 +++ b/src/main/java/net/minecraft/server/IEntityAccess.java
 @@ -34,6 +34,7 @@ public interface IEntityAccess {
