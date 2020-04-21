@@ -1,4 +1,4 @@
-From 8def3bbb8f2dead98a6ee6cdacd81c200078eea8 Mon Sep 17 00:00:00 2001
+From 8c559627be5627853392b883ab572fe73bad231d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
@@ -11,7 +11,7 @@ Subject: [PATCH] Add options for modifying pigmen farm behaviour
  4 files changed, 45 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 2d38f4f7f..0ecc8e363 100644
+index 1aa355df7..8b4682eb6 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -148,6 +148,22 @@ public final class OrigamiConfig {
@@ -85,7 +85,7 @@ index 09c7c1318..d6e586625 100644
              EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
              world.getServer().getPluginManager().callEvent(event);
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 96a47dd1c..99f2634c3 100644
+index 46e631d46..d37db54c6 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -196,6 +196,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
@@ -108,7 +108,7 @@ index 96a47dd1c..99f2634c3 100644
              return nbttagcompound;
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.a(throwable, "Saving entity NBT");
-@@ -1828,6 +1834,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -1830,6 +1836,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT;
              }
              // Paper end
