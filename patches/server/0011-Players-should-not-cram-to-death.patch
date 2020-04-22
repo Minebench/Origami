@@ -1,4 +1,4 @@
-From 267f359a7d4e0bcc2a1a3d84ec508bb7b8c1a5d7 Mon Sep 17 00:00:00 2001
+From cfcf72c8ec4c46bdc8822a1466c1eb97223c9274 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sat, 21 Dec 2019 18:11:57 +0100
 Subject: [PATCH] Players should not cram to death
@@ -8,10 +8,10 @@ Subject: [PATCH] Players should not cram to death
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 75543ee6d..3a27e000c 100644
+index 84c6e5b614..70f72cc126 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -1108,7 +1108,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -1101,7 +1101,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
  
      @Override
      public boolean isInvulnerable(DamageSource damagesource) {
