@@ -1,4 +1,4 @@
-From d6322dbd0dfe52ad647a3a2d219c93b4f47f7b78 Mon Sep 17 00:00:00 2001
+From dd8b6e87541e82e4904b9448c93582d81ec87ef1 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Hopper Optimizations
@@ -18,7 +18,7 @@ chain.
  7 files changed, 91 insertions(+), 11 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 42dfbdf54..846183d5f 100644
+index ecf9ec3a3f..9e94ea6d61 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -180,6 +180,13 @@ public final class OrigamiConfig {
@@ -36,7 +36,7 @@ index 42dfbdf54..846183d5f 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/BlockComposter.java b/src/main/java/net/minecraft/server/BlockComposter.java
-index a2a9949ea..b29d5181d 100644
+index a2a9949ea7..b29d5181d6 100644
 --- a/src/main/java/net/minecraft/server/BlockComposter.java
 +++ b/src/main/java/net/minecraft/server/BlockComposter.java
 @@ -192,6 +192,7 @@ public class BlockComposter extends Block implements IInventoryHolder {
@@ -48,7 +48,7 @@ index a2a9949ea..b29d5181d 100644
  
          super.tick(iblockdata, worldserver, blockposition, random);
 diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
-index 2926fbb95..992050f81 100644
+index 2926fbb957..992050f810 100644
 --- a/src/main/java/net/minecraft/server/EntityItem.java
 +++ b/src/main/java/net/minecraft/server/EntityItem.java
 @@ -129,6 +129,13 @@ public class EntityItem extends Entity {
@@ -66,7 +66,7 @@ index 2926fbb95..992050f81 100644
                  // CraftBukkit start - fire ItemDespawnEvent
                  if (org.bukkit.craftbukkit.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
 diff --git a/src/main/java/net/minecraft/server/EntityMinecartContainer.java b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
-index 60efd439a..59395508a 100644
+index 60efd439af..59395508a8 100644
 --- a/src/main/java/net/minecraft/server/EntityMinecartContainer.java
 +++ b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
 @@ -130,7 +130,6 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
@@ -105,7 +105,7 @@ index 60efd439a..59395508a 100644
      @Override
      public boolean a(EntityHuman entityhuman) {
 diff --git a/src/main/java/net/minecraft/server/TileEntityContainer.java b/src/main/java/net/minecraft/server/TileEntityContainer.java
-index ab6b86e4e..8313696a9 100644
+index ab6b86e4e9..8313696a99 100644
 --- a/src/main/java/net/minecraft/server/TileEntityContainer.java
 +++ b/src/main/java/net/minecraft/server/TileEntityContainer.java
 @@ -84,4 +84,14 @@ public abstract class TileEntityContainer extends TileEntity implements IInvento
@@ -124,7 +124,7 @@ index ab6b86e4e..8313696a9 100644
 +    // Origami end
  }
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index a71702b4d..9c1c3ed91 100644
+index 62bab0c9ec..82a58e55e3 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
 @@ -19,8 +19,9 @@ import org.bukkit.inventory.Inventory;
@@ -252,7 +252,7 @@ index a71702b4d..9c1c3ed91 100644
          return itemstack;
      }
  
-@@ -662,7 +695,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -668,7 +701,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
          return (double) this.position.getZ() + 0.5D;
      }
  
@@ -261,7 +261,7 @@ index a71702b4d..9c1c3ed91 100644
          this.j = i;
      }
  
-@@ -689,6 +722,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -695,6 +728,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
              BlockPosition blockposition = this.getPosition();
  
              if (VoxelShapes.c(VoxelShapes.a(entity.getBoundingBox().d((double) (-blockposition.getX()), (double) (-blockposition.getY()), (double) (-blockposition.getZ()))), this.P_(), OperatorBoolean.AND)) {
@@ -270,7 +270,7 @@ index a71702b4d..9c1c3ed91 100644
                      return a((IInventory) this, (EntityItem) entity);
                  });
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java
-index 3e22d558e..f1f21d193 100644
+index 3e22d558ea..f1f21d1935 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockEntityState.java
 @@ -26,7 +26,11 @@ public class CraftBlockEntityState<T extends TileEntity> extends CraftBlockState
