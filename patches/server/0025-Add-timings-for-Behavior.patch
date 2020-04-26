@@ -1,4 +1,4 @@
-From 9c8d708ad7a80b42b87ade5bc6caeba9e6dcfcdc Mon Sep 17 00:00:00 2001
+From 5d17a7f183b4799596ecb72973e78d5a495093b0 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 20 Apr 2020 17:41:09 +0100
 Subject: [PATCH] Add timings for Behavior
@@ -9,10 +9,10 @@ Subject: [PATCH] Add timings for Behavior
  2 files changed, 12 insertions(+)
 
 diff --git a/src/main/java/co/aikar/timings/WorldTimingsHandler.java b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-index c9a3ba4bf..ef19886ed 100644
+index a94ebf7c76..671f7ab7ec 100644
 --- a/src/main/java/co/aikar/timings/WorldTimingsHandler.java
 +++ b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-@@ -147,4 +147,10 @@ public class WorldTimingsHandler {
+@@ -139,4 +139,10 @@ public class WorldTimingsHandler {
      public static Timing getTickList(WorldServer worldserver, String timingsType) {
          return Timings.ofSafe(worldserver.getWorldData().getName() + " - Scheduled " + timingsType);
      }
@@ -24,7 +24,7 @@ index c9a3ba4bf..ef19886ed 100644
 +    // Origami end
  }
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
-index 8d2f63052..e7754bca9 100644
+index 8d2f63052f..e7754bca9b 100644
 --- a/src/main/java/net/minecraft/server/Behavior.java
 +++ b/src/main/java/net/minecraft/server/Behavior.java
 @@ -14,6 +14,7 @@ public abstract class Behavior<E extends EntityLiving> {
