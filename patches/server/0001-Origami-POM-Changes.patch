@@ -1,4 +1,4 @@
-From d1ce280def4e13f587d7e4886be0b86bf18a6b7d Mon Sep 17 00:00:00 2001
+From a2880d9ace6ff38a6f23784a11ef38b898fdf2fc Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:35 +0100
 Subject: [PATCH] Origami POM Changes
@@ -9,7 +9,7 @@ Subject: [PATCH] Origami POM Changes
  2 files changed, 50 insertions(+), 10 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 55679af92..83a4f9a75 100644
+index bc8438ae1a..40483556b1 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -27,7 +27,7 @@ index 55679af92..83a4f9a75 100644
  
      <properties>
          <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
-@@ -21,16 +21,16 @@
+@@ -18,16 +18,16 @@
      </properties>
  
      <parent>
@@ -48,7 +48,7 @@ index 55679af92..83a4f9a75 100644
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
-@@ -143,7 +143,7 @@
+@@ -146,7 +146,7 @@
  
      <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
      <build>
@@ -57,7 +57,7 @@ index 55679af92..83a4f9a75 100644
          <defaultGoal>clean install</defaultGoal> <!-- Paper -->
          <plugins>
              <plugin>
-@@ -151,7 +151,7 @@
+@@ -154,7 +154,7 @@
                  <artifactId>gitdescribe-maven-plugin</artifactId>
                  <version>1.3</version>
                  <configuration>
@@ -66,7 +66,7 @@ index 55679af92..83a4f9a75 100644
                      <scmDirectory>..</scmDirectory>
                  </configuration>
                  <executions>
-@@ -367,5 +367,45 @@
+@@ -383,5 +383,45 @@
                  </plugins>
              </build>
          </profile>
@@ -113,7 +113,7 @@ index 55679af92..83a4f9a75 100644
      </profiles>
  </project>
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 674096cab..f3cc2b9c3 100644
+index 674096cab1..f3cc2b9c37 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {

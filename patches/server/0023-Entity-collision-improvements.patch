@@ -1,4 +1,4 @@
-From 9581ce258c5d8af998ef7b6f2e3d2b477b16c1dd Mon Sep 17 00:00:00 2001
+From 992ade8a7eab0c0a0bd5652a6a9aaff6f5fa8bc2 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 10 Apr 2020 22:11:26 +0100
 Subject: [PATCH] Entity collision improvements
@@ -11,7 +11,7 @@ Subject: [PATCH] Entity collision improvements
  4 files changed, 17 insertions(+), 3 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityHorseAbstract.java b/src/main/java/net/minecraft/server/EntityHorseAbstract.java
-index c56efe035..36c02e7f6 100644
+index c56efe035a..36c02e7f6a 100644
 --- a/src/main/java/net/minecraft/server/EntityHorseAbstract.java
 +++ b/src/main/java/net/minecraft/server/EntityHorseAbstract.java
 @@ -162,7 +162,7 @@ public abstract class EntityHorseAbstract extends EntityAnimal implements IInven
@@ -24,7 +24,7 @@ index c56efe035..36c02e7f6 100644
  
      private void eq() {
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index dfb9421a1..b5375902b 100644
+index 3fc2360a10..a77aa71c11 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
 @@ -128,6 +128,7 @@ public abstract class EntityLiving extends Entity {
@@ -35,7 +35,7 @@ index dfb9421a1..b5375902b 100644
      public boolean collides = true;
      public boolean canPickUpLoot;
      public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
-@@ -2669,6 +2670,7 @@ public abstract class EntityLiving extends Entity {
+@@ -2682,6 +2683,7 @@ public abstract class EntityLiving extends Entity {
              return;
          }
          // Paper - end don't run getEntities if we're not going to use its result
@@ -43,7 +43,7 @@ index dfb9421a1..b5375902b 100644
          List<Entity> list = this.world.getEntities(this, this.getBoundingBox(), IEntitySelector.a(this));
  
          if (!list.isEmpty()) {
-@@ -2799,7 +2801,7 @@ public abstract class EntityLiving extends Entity {
+@@ -2812,7 +2814,7 @@ public abstract class EntityLiving extends Entity {
  
      @Override
      public boolean isCollidable() {
@@ -53,7 +53,7 @@ index dfb9421a1..b5375902b 100644
  
      @Override
 diff --git a/src/main/java/net/minecraft/server/EntityParrot.java b/src/main/java/net/minecraft/server/EntityParrot.java
-index 140208761..132b236bd 100644
+index 1402087612..132b236bde 100644
 --- a/src/main/java/net/minecraft/server/EntityParrot.java
 +++ b/src/main/java/net/minecraft/server/EntityParrot.java
 @@ -320,7 +320,7 @@ public class EntityParrot extends EntityPerchable implements EntityBird {
@@ -66,11 +66,11 @@ index 140208761..132b236bd 100644
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 8ffa3cb05..ae9b6024b 100644
+index 245bd116d1..80930c3c14 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 @@ -663,6 +663,18 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
-         getHandle().a(EnumHand.OFF_HAND); // PAIL rename swingHand
+         getHandle().a(EnumHand.OFF_HAND, true); // PAIL rename swingHand
      }
  
 +    // Origami start - canCollide API
