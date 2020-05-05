@@ -13,6 +13,7 @@
     </build>
     <modules>
         <module>Origami-API</module>
+        <module>Origami-MojangAPI</module>
         <module>Origami-Server</module>
     </modules>
 </project>

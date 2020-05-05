@@ -43,6 +43,11 @@ case "$1" in
         savePatches ${FORK_NAME}-API api
     )
     ;;
+    "m" | "mojangapi")
+    (
+        savePatches ${FORK_NAME}-MojangAPI api
+    )
+    ;;
     "s" | "server")
     (
         savePatches ${FORK_NAME}-Server server
@@ -51,6 +56,7 @@ case "$1" in
     *)
     (
         savePatches ${FORK_NAME}-API api
+        savePatches ${FORK_NAME}-MojangAPI mojangapi
         savePatches ${FORK_NAME}-Server server
     )
     ;;

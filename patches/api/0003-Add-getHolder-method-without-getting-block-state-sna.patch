@@ -1,4 +1,4 @@
-From cc7bb13d282f17a68ed96535ee991f371f986c07 Mon Sep 17 00:00:00 2001
+From fb2bac56a5053f7f1e085c83bd138e869e34300f Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 27 Mar 2020 18:03:45 +0100
 Subject: [PATCH] Add getHolder method without getting block state snapshot
@@ -8,7 +8,7 @@ Subject: [PATCH] Add getHolder method without getting block state snapshot
  1 file changed, 11 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/inventory/Inventory.java b/src/main/java/org/bukkit/inventory/Inventory.java
-index 01fe217d..e46921f7 100644
+index 01fe217df..e46921f76 100644
 --- a/src/main/java/org/bukkit/inventory/Inventory.java
 +++ b/src/main/java/org/bukkit/inventory/Inventory.java
 @@ -376,6 +376,17 @@ public interface Inventory extends Iterable<ItemStack> {

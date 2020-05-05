@@ -1,4 +1,4 @@
-From fa7d0e8c2fb1b24e9b80c587ea56865728c61187 Mon Sep 17 00:00:00 2001
+From aec65873fdc2276d5948fd520dd3cf5451819708 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 21 Dec 2019 02:17:03 +0100
 Subject: [PATCH] Re-add the portal TravelAgent
@@ -12,7 +12,7 @@ Subject: [PATCH] Re-add the portal TravelAgent
 
 diff --git a/src/main/java/org/bukkit/TravelAgent.java b/src/main/java/org/bukkit/TravelAgent.java
 new file mode 100644
-index 00000000..efbdbe38
+index 000000000..efbdbe38c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/TravelAgent.java
 @@ -0,0 +1,123 @@
@@ -140,7 +140,7 @@ index 00000000..efbdbe38
 +
 +}
 diff --git a/src/main/java/org/bukkit/event/entity/EntityPortalEvent.java b/src/main/java/org/bukkit/event/entity/EntityPortalEvent.java
-index 67fb9d93..710a85ef 100644
+index 67fb9d93e..710a85efa 100644
 --- a/src/main/java/org/bukkit/event/entity/EntityPortalEvent.java
 +++ b/src/main/java/org/bukkit/event/entity/EntityPortalEvent.java
 @@ -16,6 +16,41 @@ public class EntityPortalEvent extends EntityTeleportEvent {
@@ -253,7 +253,7 @@ index 67fb9d93..710a85ef 100644
      @Override
      public HandlerList getHandlers() {
 diff --git a/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java b/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java
-index a6f91166..656bfbab 100644
+index a6f91166a..656bfbab5 100644
 --- a/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java
 +++ b/src/main/java/org/bukkit/event/player/PlayerPortalEvent.java
 @@ -17,6 +17,43 @@ public class PlayerPortalEvent extends PlayerTeleportEvent {

@@ -1,15 +1,15 @@
-From a2880d9ace6ff38a6f23784a11ef38b898fdf2fc Mon Sep 17 00:00:00 2001
+From f78df36546ca67690148ab0d5e547952477f5574 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:35 +0100
 Subject: [PATCH] Origami POM Changes
 
 ---
- pom.xml                                       | 58 ++++++++++++++++---
+ pom.xml                                       | 62 +++++++++++++++----
  .../bukkit/craftbukkit/util/Versioning.java   |  2 +-
- 2 files changed, 50 insertions(+), 10 deletions(-)
+ 2 files changed, 52 insertions(+), 12 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index bc8438ae1a..40483556b1 100644
+index bc8438ae1a..0501d6ef88 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -27,7 +27,7 @@ index bc8438ae1a..40483556b1 100644
  
      <properties>
          <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
-@@ -18,16 +18,16 @@
+@@ -18,22 +18,22 @@
      </properties>
  
      <parent>
@@ -45,6 +45,14 @@ index bc8438ae1a..40483556b1 100644
 -            <artifactId>paper-api</artifactId>
 +            <groupId>de.minebench.origami</groupId>
 +            <artifactId>origami-api</artifactId>
+             <version>${project.version}</version>
+             <scope>compile</scope>
+         </dependency>
+         <dependency>
+-            <groupId>com.destroystokyo.paper</groupId>
+-            <artifactId>paper-mojangapi</artifactId>
++            <groupId>de.minebench.origami</groupId>
++            <artifactId>origami-mojangapi</artifactId>
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>

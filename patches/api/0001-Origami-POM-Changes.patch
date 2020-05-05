@@ -1,4 +1,4 @@
-From 51fd895bbe793d79b4408c758284d14fd9b5fc8b Mon Sep 17 00:00:00 2001
+From 463cdfe2fc8af37d668e717f7e1de6e224c7e0a1 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:36 +0100
 Subject: [PATCH] Origami POM Changes
@@ -8,7 +8,7 @@ Subject: [PATCH] Origami POM Changes
  1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 2cb97140..3685e481 100644
+index 20c473f52..c8399bdb3 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,19 +3,18 @@
@@ -38,5 +38,5 @@ index 2cb97140..3685e481 100644
      <properties>
          <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 

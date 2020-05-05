@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+shopt -s nocasematch
 # get base dir regardless of execution location
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
@@ -40,70 +41,52 @@ case "$1" in
     "e" | "edit" )
         case "$2" in
             "s" | "server")
-            cd "$basedir/${FORK_NAME}-Server"
-            (
-                set -e
-                case "$3" in
-                    "c" | "continue")
-                    (
-                        $gitcmd add .
-                        $gitcmd commit --amend
-                        $gitcmd rebase --continue
-
-                        cd "$basedir"
-                        scripts/rebuildPatches.sh server
-                    )
-                    ;;
-                    *)
-                        origamistash
-                        $gitcmd rebase -i upstream/upstream
-                        origamiunstash
-                    ;;
-                esac
-            )
+            type="Server"
+            ;;
+            "m" | "mojang" | "mojangapi")
+            type="MojangAPI"
             ;;
             "a" | "api")
-            cd "$basedir/${FORK_NAME}-API"
-            (
-                set -e
-                case "$3" in
-                    "c" | "continue")
-                    (
-                        $gitcmd add .
-                        $gitcmd commit --amend
-                        $gitcmd rebase --continue
-
-                        cd "$basedir"
-                        scripts/rebuildPatches.sh api
-                    )
-                    ;;
-                    *)
-                        origamistash
-                        $gitcmd rebase -i upstream/upstream
-                        origamiunstash
-                    ;;
-                esac
-            )
+            type="API"
             ;;
             *)
                 echo "You must edit either the api or server."
             ;;
         esac
+        if [ $type ]; then
+            cd "$basedir/${FORK_NAME}-$type"
+            set -e
+            case "$3" in
+                "c" | "continue")
+                (
+                    $gitcmd add .
+                    $gitcmd commit --amend
+                    $gitcmd rebase --continue
+
+                    cd "$basedir"
+                    scripts/rebuildPatches.sh $2
+                )
+                ;;
+                *)
+                    origamistash
+                    $gitcmd rebase -i upstream/upstream
+                    origamiunstash
+                ;;
+            esac
+        fi
     ;;
     "b" | "bu" | "build")
     (
         cd "$basedir"
         mvn -N install
-        cd ${FORK_NAME}-API
-        mvn -e clean install && cd ../${FORK_NAME}-Server && mvn -e clean install
+        cd ${FORK_NAME}-API && mvn -e clean install && cd ../${FORK_NAME}-MojangAPI && mvn -e clean install && cd ../${FORK_NAME}-Server && mvn -e clean install
     )
     ;;
     "devbuild")
     (
         cd "$basedir"
         mvn -N install
-        cd ${FORK_NAME}-API
-        mvn -e clean install && cd ../${FORK_NAME}-Server && mvn -P dont-relocate -e clean install
+        cd ${FORK_NAME}-API && mvn -e clean install && cd ../${FORK_NAME}-MojangAPI && mvn -e clean install && cd ../${FORK_NAME}-Server && mvn -P dont-relocate -e clean install
     )
     ;;
     "crane" | "patcher")
@@ -116,8 +99,7 @@ case "$1" in
     (
         basedir
         mvn -N install
-        cd ${FORK_NAME}-API
-        mvn clean deploy && cd ../${FORK_NAME}-Server && mvn clean install
+        cd ${FORK_NAME}-API && mvn clean deploy && cd ../${FORK_NAME}-MojangAPI && mvn clean deploy && cd ../${FORK_NAME}-Server && mvn clean install
     )
     ;;
     "up" | "upstream")
@@ -131,6 +113,9 @@ case "$1" in
     ;;
     "a" | "api")
         cd "$basedir/${FORK_NAME}-API"
+    ;;
+    "m" | "mojang" | "mojangapi")
+        cd "$basedir/${FORK_NAME}-MojangAPI"
     ;;
     "s" | "server")
         cd "$basedir/${FORK_NAME}-Server"
@@ -162,6 +147,7 @@ case "$1" in
         echo " These commands require the setup command before use:"
         echo "  * r, root      | Change directory to the root of the project."
         echo "  * a. api       | Move to the ${FORK_NAME}-API directory."
+        echo "  * m. mojangapi | Move to the ${FORK_NAME}-MojangAPI directory."
         echo "  * s, server    | Move to the ${FORK_NAME}-Server directory."
         echo "  * e, edit      | Use to edit a specific patch, give it the argument \"server\" or \"api\""
         echo "                 | respectively to edit the correct project. Use the argument \"continue\" after"

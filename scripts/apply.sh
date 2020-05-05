@@ -94,6 +94,16 @@ case "$1" in
         exit 1
     ) || exit 1
     ;;
+    "m" | "mojang" | "mojangapi")
+    (
+        applyPatch Paper/Paper-MojangAPI ${FORK_NAME}-MojangAPI HEAD mojangapi $MOJANGAPI_REPO || exit 1
+        enableCommitSigningIfNeeded
+    ) || (
+        echo "Failed to apply mojangapi patches"
+        enableCommitSigningIfNeeded
+        exit 1
+    ) || exit 1
+    ;;
     "s" | "server")
     (
         applyPatch Paper/Paper-Server ${FORK_NAME}-Server HEAD server $SERVER_REPO || exit 1
@@ -107,6 +117,7 @@ case "$1" in
     *)
     (
         (applyPatch Paper/Paper-API ${FORK_NAME}-API HEAD api $API_REPO &&
+        applyPatch Paper/Paper-MojangAPI ${FORK_NAME}-MojangAPI HEAD mojangapi $MOJANGAPI_REPO &&
         applyPatch Paper/Paper-Server ${FORK_NAME}-Server HEAD server $SERVER_REPO) || exit 1
         enableCommitSigningIfNeeded
     ) || (
