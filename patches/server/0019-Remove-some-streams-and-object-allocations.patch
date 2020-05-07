@@ -1,4 +1,4 @@
-From 56964a79ace5124a85da69ef64f8ab811d900d98 Mon Sep 17 00:00:00 2001
+From eede72670c2b318601f6a9e44830679318c86b4b Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
@@ -9,11 +9,10 @@ Partially based on a patch in Spottedleaf's Paper fork
  .../minecraft/server/BehaviorController.java  |  4 +-
  .../java/net/minecraft/server/ChunkMap.java   | 14 +++---
  .../minecraft/server/PathfinderNormal.java    |  4 +-
- .../net/minecraft/server/PlayerChunkMap.java  | 18 +++++++-
  .../java/net/minecraft/server/PlayerMap.java  |  2 +-
  .../minecraft/server/TileEntityHopper.java    | 45 ++++++++++++++-----
  .../minecraft/server/TileEntityLootable.java  |  9 +++-
- 8 files changed, 84 insertions(+), 30 deletions(-)
+ 7 files changed, 68 insertions(+), 28 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
 index ae1d901e57..8d2f63052f 100644
@@ -70,7 +69,7 @@ index ae1d901e57..8d2f63052f 100644
  
      public static enum Status {
 diff --git a/src/main/java/net/minecraft/server/BehaviorController.java b/src/main/java/net/minecraft/server/BehaviorController.java
-index c75581dd53..41136e2bba 100644
+index 396b64ea0f..4904eb8386 100644
 --- a/src/main/java/net/minecraft/server/BehaviorController.java
 +++ b/src/main/java/net/minecraft/server/BehaviorController.java
 @@ -23,11 +23,11 @@ public class BehaviorController<E extends EntityLiving> implements MinecraftSeri
@@ -135,42 +134,6 @@ index 4240ca81cb..36fef7f70c 100644
          IBlockData iblockdata = iblockaccess.getTypeIfLoaded(blockposition); // Paper
          if (iblockdata == null) return PathType.BLOCKED; // Paper
          Block block = iblockdata.getBlock();
-diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-index c1a036e889..669404d51a 100644
---- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
-+++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
-@@ -1395,7 +1395,20 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
-         // Spigot end
-         long i = chunkcoordintpair.pair();
- 
--        return !this.chunkDistanceManager.d(i) ? true : this.playerMap.a(i).noneMatch((entityplayer) -> {
-+        // Origami start - remove stream
-+        if (!this.chunkDistanceManager.d(i)) {
-+            return true;
-+        }
-+
-+        for (EntityPlayer entityPlayer : this.playerMap.a.keySet()) {
-+            if (playerIsInRange(entityPlayer, chunkcoordintpair, reducedRange)) {
-+                return false;
-+            }
-+        }
-+        return true;
-+    }
-+    //    return !this.chunkDistanceManager.d(i) ? true : this.playerMap.a(i).noneMatch((entityplayer) -> {
-+    private boolean playerIsInRange(EntityPlayer entityplayer, ChunkCoordIntPair chunkcoordintpair, boolean reducedRange) {
-             // Paper start -
-             com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent event;
-             double blockRange = 16384.0D;
-@@ -1407,7 +1420,8 @@ public class PlayerChunkMap extends IChunkLoader implements PlayerChunk.d {
- 
-             return (!entityplayer.isSpectator() && a(chunkcoordintpair, (Entity) entityplayer) < blockRange); // Spigot
-             // Paper end
--        });
-+        //});
-+        // Origami end
-     }
- 
-     private boolean b(EntityPlayer entityplayer) {
 diff --git a/src/main/java/net/minecraft/server/PlayerMap.java b/src/main/java/net/minecraft/server/PlayerMap.java
 index f386c4e997..442ef443be 100644
 --- a/src/main/java/net/minecraft/server/PlayerMap.java
