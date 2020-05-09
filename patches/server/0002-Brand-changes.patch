@@ -1,4 +1,4 @@
-From 4f54b50a5c81082ac805b15f5c1f58bac17bafd9 Mon Sep 17 00:00:00 2001
+From 64649d6274d5837d098789ca3ce6d9c5614ad185 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:28:42 +0100
 Subject: [PATCH] Brand changes
@@ -36,10 +36,10 @@ index 1a4bc90435..3419ce1dbf 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index b89f99a66f..2662c9c087 100644
+index 5a40661c1c..c6c67e3497 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -204,7 +204,7 @@ import javax.annotation.Nullable; // Paper
+@@ -205,7 +205,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
