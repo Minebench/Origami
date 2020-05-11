@@ -1,18 +1,17 @@
-From eede72670c2b318601f6a9e44830679318c86b4b Mon Sep 17 00:00:00 2001
+From 416e95d92ed02ef4087cf999f6051bfc4071ad09 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
 
 Partially based on a patch in Spottedleaf's Paper fork
 ---
- .../java/net/minecraft/server/Behavior.java   | 18 +++++---
- .../minecraft/server/BehaviorController.java  |  4 +-
- .../java/net/minecraft/server/ChunkMap.java   | 14 +++---
- .../minecraft/server/PathfinderNormal.java    |  4 +-
- .../java/net/minecraft/server/PlayerMap.java  |  2 +-
- .../minecraft/server/TileEntityHopper.java    | 45 ++++++++++++++-----
- .../minecraft/server/TileEntityLootable.java  |  9 +++-
- 7 files changed, 68 insertions(+), 28 deletions(-)
+ .../java/net/minecraft/server/Behavior.java    | 18 ++++++++++++------
+ .../minecraft/server/BehaviorController.java   |  4 ++--
+ .../java/net/minecraft/server/ChunkMap.java    | 14 ++++++++------
+ .../net/minecraft/server/PathfinderNormal.java |  4 +++-
+ .../java/net/minecraft/server/PlayerMap.java   |  2 +-
+ .../net/minecraft/server/TileEntityHopper.java |  8 +++++++-
+ 6 files changed, 33 insertions(+), 17 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
 index ae1d901e57..8d2f63052f 100644
@@ -148,10 +147,10 @@ index f386c4e997..442ef443be 100644
      public PlayerMap() {}
  
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index 280c4e99e8..62bab0c9ec 100644
+index c755faed4f..8118d53179 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
-@@ -377,21 +377,36 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -377,7 +377,13 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
      }
  
      private static IntStream a(IInventory iinventory, EnumDirection enumdirection) {
@@ -165,79 +164,7 @@ index 280c4e99e8..62bab0c9ec 100644
 +        // Origami end
      }
  
-     private boolean b(IInventory iinventory, EnumDirection enumdirection) {
--        return a(iinventory, enumdirection).allMatch((i) -> {
-+        // Origami start - remove streams
-+        for (int i : getSlots(iinventory, enumdirection)) {
-             ItemStack itemstack = iinventory.getItem(i);
--
--            return itemstack.getCount() >= itemstack.getMaxStackSize();
--        });
-+            if (itemstack.getCount() < itemstack.getMaxStackSize()) {
-+                return false;
-+            }
-+        }
-+        return true;
-+        // Origami end
-     }
- 
-     private static boolean c(IInventory iinventory, EnumDirection enumdirection) {
--        return a(iinventory, enumdirection).allMatch((i) -> {
--            return iinventory.getItem(i).isEmpty();
--        });
-+        // Origami start - remove streams
-+        for (int i : getSlots(iinventory, enumdirection)) {
-+            if (!iinventory.getItem(i).isEmpty()) {
-+                return false;
-+            }
-+        }
-+        return true;
-+        // Origami end
-     }
- 
-     public static boolean a(IHopper ihopper) {
-@@ -400,10 +415,18 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
-         if (iinventory != null) {
-             EnumDirection enumdirection = EnumDirection.DOWN;
- 
--            return c(iinventory, enumdirection) ? false : a(iinventory, enumdirection).anyMatch((i) -> {
-+            // Origami start - remove streams
-+            if (c(iinventory, enumdirection)) {
-+                return false;
-+            }
-+            for (int i : getSlots(iinventory, enumdirection)) {
-                 skipPullModeEventFire = skipHopperEvents; // Paper
--                return a(ihopper, iinventory, i, enumdirection);
--            });
-+                if (a(ihopper, iinventory, i, enumdirection)) {
-+                    return true;
-+                }
-+            }
-+            return false;
-+            // Origami end
-         } else {
-             Iterator iterator = c(ihopper).iterator();
- 
-diff --git a/src/main/java/net/minecraft/server/TileEntityLootable.java b/src/main/java/net/minecraft/server/TileEntityLootable.java
-index d4cbce3243..fa01e8ed84 100644
---- a/src/main/java/net/minecraft/server/TileEntityLootable.java
-+++ b/src/main/java/net/minecraft/server/TileEntityLootable.java
-@@ -72,7 +72,14 @@ public abstract class TileEntityLootable extends TileEntityContainer {
-     @Override
-     public boolean isEmpty() {
-         this.d((EntityHuman) null);
--        return this.f().stream().allMatch(ItemStack::isEmpty);
-+        // Origami start - remove streams
-+        for (ItemStack itemStack : this.f()) {
-+            if (!itemStack.isEmpty()) {
-+                return false;
-+            }
-+        }
-+        return true;
-+        // Origami end
-     }
- 
-     @Override
+     private static boolean allMatch(IInventory iinventory, EnumDirection enumdirection, java.util.function.BiPredicate<ItemStack, Integer> test) {
 -- 
 2.25.1.windows.1
 
