@@ -1,13 +1,13 @@
-From 41757e88d0c6462877ce522e7cd342930a5fe6cd Mon Sep 17 00:00:00 2001
+From cef7bc56e3d16175c3362aa09ff6a4e56ff31fa9 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sat, 21 Dec 2019 18:24:15 +0100
 Subject: [PATCH] Fix item position desync (MC-4)
 
 ---
- src/main/java/de/minebench/origami/OrigamiConfig.java       | 5 +++++
- src/main/java/net/minecraft/server/EntityTrackerEntry.java  | 6 ++++++
- src/main/java/net/minecraft/server/PacketPlayOutEntity.java | 2 ++
- 3 files changed, 13 insertions(+)
+ src/main/java/de/minebench/origami/OrigamiConfig.java    | 5 +++++
+ .../java/net/minecraft/server/EntityTrackerEntry.java    | 9 ++++++++-
+ .../java/net/minecraft/server/PacketPlayOutEntity.java   | 2 ++
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 index da110c288a..f5a2443b45 100644
@@ -25,22 +25,30 @@ index da110c288a..f5a2443b45 100644
  }
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-index 6d3b34ead9..db49c75fe8 100644
+index 5cc89c0cf9..ce05187ce4 100644
 --- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 +++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-@@ -125,6 +125,12 @@ public class EntityTrackerEntry {
+@@ -125,12 +125,19 @@ public class EntityTrackerEntry {
                  ++this.o;
                  i = MathHelper.d(this.tracker.yaw * 256.0F / 360.0F);
                  j = MathHelper.d(this.tracker.pitch * 256.0F / 360.0F);
 +                // Origami start - fixes MC-4
 +                if (de.minebench.origami.OrigamiConfig.fixItemPositionDesync && this.tracker instanceof EntityItem) {
-+                    Vec3D loc = PacketPlayOutEntity.decrypt(PacketPlayOutEntity.encrypt(tracker.locX()), PacketPlayOutEntity.encrypt(tracker.locY()), PacketPlayOutEntity.encrypt(tracker.locZ()));
-+                    tracker.setPosition(loc.getX(), loc.getY(), loc.getZ());
++                    double vec3d_x = 2.44140625E-4D*(PacketPlayOutEntity.encrypt(tracker.locX()));
++                    double vec3d_y = 2.44140625E-4D*(PacketPlayOutEntity.encrypt(tracker.locY()));
++                    double vec3d_z = 2.44140625E-4D*(PacketPlayOutEntity.encrypt(tracker.locZ()));
++                    tracker.setPosition(vec3d_x, vec3d_y, vec3d_z);
 +                }
 +                // Origami end
-                 Vec3D vec3d = this.tracker.getPositionVector().d(PacketPlayOutEntity.a(this.xLoc, this.yLoc, this.zLoc));
-                 boolean flag1 = vec3d.g() >= 7.62939453125E-6D;
+                 // Paper start - reduce allocation of Vec3D here
+                 double vec3d_dx = this.tracker.locX() - 2.44140625E-4D*(this.xLoc);
+                 double vec3d_dy = this.tracker.locY() - 2.44140625E-4D*(this.yLoc);
+                 double vec3d_dz = this.tracker.locZ() - 2.44140625E-4D*(this.zLoc);
+                 boolean flag1 = (vec3d_dx * vec3d_dx + vec3d_dy * vec3d_dy + vec3d_dz * vec3d_dz) >= 7.62939453125E-6D;
+-                // Paper end - reduce allocation of Vec3D here
                  Packet<?> packet1 = null;
+                 boolean flag2 = flag1 || this.tickCounter % 60 == 0;
+                 boolean flag3 = Math.abs(i - this.yRot) >= 1 || Math.abs(j - this.xRot) >= 1;
 diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntity.java b/src/main/java/net/minecraft/server/PacketPlayOutEntity.java
 index e5da2b19c1..4b92957475 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayOutEntity.java

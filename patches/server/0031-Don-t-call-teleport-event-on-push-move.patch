@@ -1,4 +1,4 @@
-From 501205d391c13ca3b357b78d12e61a2dda59e470 Mon Sep 17 00:00:00 2001
+From a4c2d20385129c920d4a9cfa74f27d5a3dbd31cb Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 16 May 2020 23:13:20 +0100
 Subject: [PATCH] Don't call teleport event on push move
@@ -8,10 +8,10 @@ Subject: [PATCH] Don't call teleport event on push move
  1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 05396af866..43b9a60ed4 100644
+index dce888954d..423bb080cd 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1094,10 +1094,16 @@ public class PlayerConnection implements PacketListenerPlayIn {
+@@ -1101,10 +1101,16 @@ public class PlayerConnection implements PacketListenerPlayIn {
                              this.player.setLocation(d4, d5, d6, f, f1);
                              this.player.checkMovement(this.player.locX() - d0, this.player.locY() - d1, this.player.locZ() - d2);
                              if (!this.player.noclip && !this.player.isSleeping()) {
