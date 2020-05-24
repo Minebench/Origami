@@ -1,4 +1,4 @@
-From 25e04c8da7c6cfae5b7749ae3ec65f46f5682606 Mon Sep 17 00:00:00 2001
+From f36eb76fe4b3d948bbd65390424a847f81b0cc86 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:35 +0100
 Subject: [PATCH] Origami POM Changes
@@ -9,7 +9,7 @@ Subject: [PATCH] Origami POM Changes
  2 files changed, 52 insertions(+), 12 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 1ae57e8ab2..a157e99342 100644
+index 84c54a32af..92d2b0935d 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -56,7 +56,7 @@ index 1ae57e8ab2..a157e99342 100644
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
-@@ -159,7 +159,7 @@
+@@ -164,7 +164,7 @@
  
      <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
      <build>
@@ -65,7 +65,7 @@ index 1ae57e8ab2..a157e99342 100644
          <defaultGoal>clean install</defaultGoal> <!-- Paper -->
          <plugins>
              <plugin>
-@@ -167,7 +167,7 @@
+@@ -172,7 +172,7 @@
                  <artifactId>gitdescribe-maven-plugin</artifactId>
                  <version>1.3</version>
                  <configuration>
@@ -74,7 +74,7 @@ index 1ae57e8ab2..a157e99342 100644
                      <scmDirectory>..</scmDirectory>
                  </configuration>
                  <executions>
-@@ -396,5 +396,45 @@
+@@ -408,5 +408,45 @@
                  </plugins>
              </build>
          </profile>
