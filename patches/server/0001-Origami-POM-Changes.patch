@@ -1,4 +1,4 @@
-From f36eb76fe4b3d948bbd65390424a847f81b0cc86 Mon Sep 17 00:00:00 2001
+From 8814e404e7c977c6a80b1b24c1d6633d26427507 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:35 +0100
 Subject: [PATCH] Origami POM Changes
@@ -9,7 +9,7 @@ Subject: [PATCH] Origami POM Changes
  2 files changed, 52 insertions(+), 12 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 84c54a32af..92d2b0935d 100644
+index e4c63bb76c..f1f7453051 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -74,7 +74,7 @@ index 84c54a32af..92d2b0935d 100644
                      <scmDirectory>..</scmDirectory>
                  </configuration>
                  <executions>
-@@ -408,5 +408,45 @@
+@@ -409,5 +409,45 @@
                  </plugins>
              </build>
          </profile>
