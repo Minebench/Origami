@@ -1,4 +1,4 @@
-From a3a7c41f2c8f3735adc2b1510da1bb3972a21a32 Mon Sep 17 00:00:00 2001
+From 644e1ff3fa3c6d49bf7882684c615c0a5d4d3e1c Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:28:42 +0100
 Subject: [PATCH] Brand changes
@@ -7,10 +7,11 @@ Subject: [PATCH] Brand changes
  src/main/java/net/minecraft/server/EULA.java            | 2 +-
  src/main/java/net/minecraft/server/MinecraftServer.java | 2 +-
  src/main/java/org/bukkit/craftbukkit/CraftServer.java   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ src/main/java/org/bukkit/craftbukkit/Main.java          | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/EULA.java b/src/main/java/net/minecraft/server/EULA.java
-index cf00f35a5b..eb76f3b899 100644
+index cf00f35a5..eb76f3b89 100644
 --- a/src/main/java/net/minecraft/server/EULA.java
 +++ b/src/main/java/net/minecraft/server/EULA.java
 @@ -70,7 +70,7 @@ public class EULA {
@@ -23,7 +24,7 @@ index cf00f35a5b..eb76f3b899 100644
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 3ec164785f..a30823483f 100644
+index 5b24de6d6..9d852b8c8 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1559,7 +1559,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
@@ -36,7 +37,7 @@ index 3ec164785f..a30823483f 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 894917c889..d1e395312c 100644
+index 894917c88..d1e395312 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -205,7 +205,7 @@ import javax.annotation.Nullable; // Paper
@@ -48,6 +49,19 @@ index 894917c889..d1e395312c 100644
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index ffee0c5dd..724ca0136 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -252,7 +252,7 @@ public class Main {
+                     if (buildDate.before(deadline.getTime())) {
+                         // Paper start - This is some stupid bullshit
+                         System.err.println("*** Warning, you've not updated in a while! ***");
+-                        System.err.println("*** Please download a new build as per instructions from https://papermc.io/downloads ***"); // Paper
++                        System.err.println("*** Please download a new build as per instructions from https://github.com/Minebench/Origami/ ***"); // Origami
+                         //System.err.println("*** Server will start in 20 seconds ***");
+                         //Thread.sleep(TimeUnit.SECONDS.toMillis(20));
+                         // Paper End
 -- 
 2.25.1.windows.1
 
