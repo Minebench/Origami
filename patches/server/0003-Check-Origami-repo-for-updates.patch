@@ -1,4 +1,4 @@
-From 1fa52e012fc310112dbf66ea9fc57e709c8fe64b Mon Sep 17 00:00:00 2001
+From 81a4925988ff88ef8a8a2bb5edc9707b94689e2e Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:31:18 +0100
 Subject: [PATCH] Check Origami repo for updates
@@ -11,7 +11,7 @@ Subject: [PATCH] Check Origami repo for updates
  create mode 100644 src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 49a38c660..77324bbb1 100644
+index 49a38c6608..77324bbb16 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -90,7 +90,7 @@ public class PaperVersionFetcher implements VersionFetcher {
@@ -34,7 +34,7 @@ index 49a38c660..77324bbb1 100644
              return null;
 diff --git a/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java b/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 new file mode 100644
-index 000000000..6cd58564a
+index 0000000000..6cd58564a6
 --- /dev/null
 +++ b/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 @@ -0,0 +1,35 @@
@@ -74,10 +74,10 @@ index 000000000..6cd58564a
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 770375ed4..becb01eef 100644
+index 004b6ce132..4f5af13d7b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -306,7 +306,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -312,7 +312,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
@@ -87,5 +87,5 @@ index 770375ed4..becb01eef 100644
  
      @Override
 -- 
-2.18.0.windows.1
+2.25.1.windows.1
 

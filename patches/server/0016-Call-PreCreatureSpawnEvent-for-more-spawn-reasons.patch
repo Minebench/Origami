@@ -1,4 +1,4 @@
-From b688e4ab7455fb4299941cc590add8f90a0626a6 Mon Sep 17 00:00:00 2001
+From 0834f49226f00fe4b09d8d0ac44675b067b4fb2a Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 16:28:31 +0100
 Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
@@ -9,7 +9,7 @@ Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
  2 files changed, 26 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityTypes.java b/src/main/java/net/minecraft/server/EntityTypes.java
-index 4100e367a..299298e54 100644
+index 0f04bcc8b7..b11cbdf065 100644
 --- a/src/main/java/net/minecraft/server/EntityTypes.java
 +++ b/src/main/java/net/minecraft/server/EntityTypes.java
 @@ -167,6 +167,16 @@ public class EntityTypes<T extends Entity> {
@@ -30,10 +30,10 @@ index 4100e367a..299298e54 100644
  
          return world.addEntity(t0, spawnReason) ? t0 : null; // Don't return an entity when CreatureSpawnEvent is canceled
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index 6e0020ae0..dd9557490 100644
+index 7da267d287..31f0edbed4 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
-@@ -850,6 +850,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -865,6 +865,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
          }
      }
  
@@ -41,7 +41,7 @@ index 6e0020ae0..dd9557490 100644
      private void b(long i) {
          this.bo.setMemory(MemoryModuleType.GOLEM_LAST_SEEN_TIME, i); // CraftBukkit - decompile error
      }
-@@ -896,6 +897,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -911,6 +912,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
                  }
  
                  BlockPosition blockposition2 = blockposition.a(d0, d2, d1);

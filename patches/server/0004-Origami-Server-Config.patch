@@ -1,4 +1,4 @@
-From 83d987f32184efa1757915984155f995dfdf9b61 Mon Sep 17 00:00:00 2001
+From 4d17d4ef4c498b63328175b42ae0b50134eb505f Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:41:38 +0100
 Subject: [PATCH] Origami Server Config
@@ -147,7 +147,7 @@ index b07c49f1b4..504a6722b9 100644
          this.setSpawnAnimals(dedicatedserverproperties.spawnAnimals);
          this.setSpawnNPCs(dedicatedserverproperties.spawnNpcs);
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 561b424722..ab8a577628 100644
+index 9de505d01f..30ea673b3e 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -88,6 +88,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -166,7 +166,7 @@ index 561b424722..ab8a577628 100644
 +        this.origamiConfig = new de.minebench.origami.OrigamiConfig.WorldConfig(worlddata.getName()); // Origami - World Config
          this.chunkPacketBlockController = this.paperConfig.antiXray ? new ChunkPacketBlockControllerAntiXray(this.paperConfig) : ChunkPacketBlockController.NO_OPERATION_INSTANCE; // Paper - Anti-Xray
          this.generator = gen;
-         dimensionmanager.world = (WorldServer) this; // Paper
+         if (dimensionmanager.world == null) dimensionmanager.world = (WorldServer) this; // Paper
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 index d1e395312c..d9a7f705d2 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
@@ -188,7 +188,7 @@ index d1e395312c..d9a7f705d2 100644
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 93340e9470..1326d25517 100644
+index 8bed6977d7..457c080f31 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -139,6 +139,14 @@ public class Main {

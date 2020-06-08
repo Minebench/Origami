@@ -1,4 +1,4 @@
-From 259cc68dac5187a22d80a53aaa9d78b83c8f61a2 Mon Sep 17 00:00:00 2001
+From a82c013d9cd3e1c8722d6a8c20a7a87f6a99ea26 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 20 Jan 2020 18:51:00 +0100
 Subject: [PATCH] Add PlayerPortalEvent to end exit portal
@@ -8,10 +8,10 @@ Subject: [PATCH] Add PlayerPortalEvent to end exit portal
  1 file changed, 12 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index a8db3e2b5c..77f07e7743 100644
+index bb7baf0be3..39dd791978 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -793,6 +793,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+@@ -802,6 +802,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
          DimensionManager dimensionmanager1 = this.dimension;
  
          if (dimensionmanager1.getType() == DimensionManager.THE_END && dimensionmanager.getType() == DimensionManager.OVERWORLD) { // CraftBukkit - getType()
