@@ -1,4 +1,4 @@
-From 01d1b59989af3333ba621f00010c2bf7fda403e3 Mon Sep 17 00:00:00 2001
+From c15ad44f55b90a58377448bf41b938705344c903 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:28:42 +0100
 Subject: [PATCH] Brand changes
@@ -24,10 +24,10 @@ index cf00f35a5b..eb76f3b899 100644
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index a03dc23052..2831c8b87e 100644
+index 4ab6579032..16cbddab8b 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1569,7 +1569,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1570,7 +1570,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
