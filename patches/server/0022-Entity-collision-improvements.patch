@@ -1,4 +1,4 @@
-From 992ade8a7eab0c0a0bd5652a6a9aaff6f5fa8bc2 Mon Sep 17 00:00:00 2001
+From c74d729e0c7bae639b2c72985597b296316c29ac Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 10 Apr 2020 22:11:26 +0100
 Subject: [PATCH] Entity collision improvements
@@ -66,7 +66,7 @@ index 1402087612..132b236bde 100644
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 245bd116d1..80930c3c14 100644
+index a461ac3614..2c7b16fc5b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 @@ -663,6 +663,18 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {

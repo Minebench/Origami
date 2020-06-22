@@ -1,4 +1,4 @@
-From 004be7da173b02a5b9b15bb5ff0b3aa5d20da307 Mon Sep 17 00:00:00 2001
+From 3e96ae7a36bae5aba4d03b7ecbd93091d71a5107 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 25 May 2020 18:31:34 +0100
 Subject: [PATCH] Full 64bit long as the random seed for new worlds
@@ -8,7 +8,7 @@ Subject: [PATCH] Full 64bit long as the random seed for new worlds
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 504a6722b..59425f864 100644
+index d7a449854c..d459763836 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
 @@ -261,7 +261,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer

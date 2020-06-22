@@ -1,4 +1,4 @@
-From 422ec4932d51acbba272b2452cda4d98a4f1bf4c Mon Sep 17 00:00:00 2001
+From bc4b476395b1c9c4d2ee1625b60839481b0f95cc Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 14 May 2020 20:47:40 +0100
 Subject: [PATCH] Re-add send chunk change API

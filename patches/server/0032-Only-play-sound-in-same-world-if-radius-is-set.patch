@@ -1,4 +1,4 @@
-From 5c3834e50c506a0df0e6c59fb36286052f535534 Mon Sep 17 00:00:00 2001
+From 3756055d283a58eb82e7555865580839958c8cfa Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 12 Jun 2020 21:43:36 +0100
 Subject: [PATCH] Only play sound in same world if radius is set
@@ -13,7 +13,7 @@ Integer.MAX_VALUE I guess.
  3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityEnderDragon.java b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-index aecdaacfc7..a30e424d30 100644
+index 7daebfdab5..36d52a22b8 100644
 --- a/src/main/java/net/minecraft/server/EntityEnderDragon.java
 +++ b/src/main/java/net/minecraft/server/EntityEnderDragon.java
 @@ -580,13 +580,13 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {

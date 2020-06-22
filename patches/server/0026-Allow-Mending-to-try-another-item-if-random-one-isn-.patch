@@ -1,28 +1,27 @@
-From 5459ef6caa77a7ec69b6e86e8cb8a633be73b0fe Mon Sep 17 00:00:00 2001
+From 6ce8b1392b107da2ce625281658a16a31a5d5836 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 29 Apr 2020 22:53:49 +0100
 Subject: [PATCH] Allow Mending to try another item if random one isn't
  suitable
 
 ---
- src/main/java/de/minebench/origami/OrigamiConfig.java |  5 +++++
+ src/main/java/de/minebench/origami/OrigamiConfig.java |  4 ++++
  .../java/net/minecraft/server/EnchantmentManager.java | 11 +++++++++--
  .../net/minecraft/server/EntityExperienceOrb.java     | 10 +++++++---
- 3 files changed, 21 insertions(+), 5 deletions(-)
+ 3 files changed, 20 insertions(+), 5 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 777fdbaae6..45b8766c02 100644
+index 6db5f6a7eb..a4b40573ef 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -209,4 +209,9 @@ public final class OrigamiConfig {
-         getHolderReturnsSnapshot = getBoolean("inventory-get-holder-returns-snapshot", getHolderReturnsSnapshot);
+@@ -204,4 +204,8 @@ public final class OrigamiConfig {
+         fixItemPositionDesync = getBoolean("fix-item-position-desync", fixItemPositionDesync);
      }
  
 +    public static boolean mendingTriesAllItems = true;
 +    private static void mendingTriesAllItems() {
 +        mendingTriesAllItems = getBoolean("mending-tries-all-items", mendingTriesAllItems);
 +    }
-+
  }
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/EnchantmentManager.java b/src/main/java/net/minecraft/server/EnchantmentManager.java
