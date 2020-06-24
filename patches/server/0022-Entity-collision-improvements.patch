@@ -1,4 +1,4 @@
-From c74d729e0c7bae639b2c72985597b296316c29ac Mon Sep 17 00:00:00 2001
+From f298a539f150cdf5d7b7c6c93b52ca1c62ac85f3 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 10 Apr 2020 22:11:26 +0100
 Subject: [PATCH] Entity collision improvements
@@ -24,7 +24,7 @@ index c56efe035a..36c02e7f6a 100644
  
      private void eq() {
 diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index 3fc2360a10..a77aa71c11 100644
+index ab6576f36e..41e7c2d90d 100644
 --- a/src/main/java/net/minecraft/server/EntityLiving.java
 +++ b/src/main/java/net/minecraft/server/EntityLiving.java
 @@ -128,6 +128,7 @@ public abstract class EntityLiving extends Entity {
@@ -43,7 +43,7 @@ index 3fc2360a10..a77aa71c11 100644
          List<Entity> list = this.world.getEntities(this, this.getBoundingBox(), IEntitySelector.a(this));
  
          if (!list.isEmpty()) {
-@@ -2812,7 +2814,7 @@ public abstract class EntityLiving extends Entity {
+@@ -2813,7 +2815,7 @@ public abstract class EntityLiving extends Entity {
  
      @Override
      public boolean isCollidable() {
