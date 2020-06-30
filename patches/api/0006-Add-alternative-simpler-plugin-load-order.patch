@@ -1,0 +1,105 @@
+From 54f934ef76b7f4d6a342643ae499ae26f1171433 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <mail@moep.tv>
+Date: Tue, 30 Jun 2020 19:02:23 +0100
+Subject: [PATCH] Add alternative, simpler plugin load order
+
+Can be disabled with the system property useAlternativePluginLoadOrder
+---
+ .../bukkit/plugin/SimplePluginManager.java    | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
+index 26685f59b..27adf5ffb 100644
+--- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
++++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
+@@ -60,6 +60,7 @@ public final class SimplePluginManager implements PluginManager {
+     private final Map<String, Map<Permissible, Boolean>> permSubs = new HashMap<String, Map<Permissible, Boolean>>();
+     private final Map<Boolean, Map<Permissible, Boolean>> defSubs = new HashMap<Boolean, Map<Permissible, Boolean>>();
+     private boolean useTimings = false;
++    private boolean useAlternativeLoadOrder = System.getProperty("useAlternativePluginLoadOrder", "true").equalsIgnoreCase("true"); // Origami - use alternative load order
+ 
+     public SimplePluginManager(@NotNull Server instance, @NotNull SimpleCommandMap commandMap) {
+         server = instance;
+@@ -242,6 +243,79 @@ public final class SimplePluginManager implements PluginManager {
+             }
+         }
+ 
++        // Origami start - use alternative load order
++        if (useAlternativeLoadOrder) {
++            server.getLogger().log(Level.INFO, "Loading plugins in alternative order...");
++            Set<String> toLoad = new LinkedHashSet<>(plugins.keySet());
++
++            int lastPassSize = toLoad.size();
++            for (Iterator<String> it = toLoad.iterator(); it.hasNext();) {
++                String plugin = it.next();
++                // Check if we have all dependencies
++                boolean allDependenciesInstalled = true;
++                for (String dependency : dependencies.getOrDefault(plugin, java.util.Collections.emptySet())) {
++                    if (!plugins.containsKey(dependency) && !pluginsProvided.containsKey(dependency)) {
++                        allDependenciesInstalled = false;
++                        it.remove();
++                        server.getLogger().log(
++                                Level.SEVERE,
++                                "Could not load '" + plugins.get(plugin).getPath() + "' in folder '" + directory.getPath() + "'",
++                                new UnknownDependencyException("Unknown dependency " + dependency + ". Please download and install " + dependency + " to run this plugin."));
++                        break;
++                    }
++                }
++
++                if (allDependenciesInstalled) {
++                    // Check if the dependencies got loaded before
++                    boolean allLoadedBefore = true;
++                    for (String dependency : dependencies.getOrDefault(plugin, java.util.Collections.emptySet())) {
++                        if (!loadedPlugins.contains(dependency)) {
++                            allLoadedBefore = false;
++                            break;
++                        }
++                    }
++                    if (allLoadedBefore) {
++                        // Check if soft dependencies got loaded before
++                        for (String softDependency : softDependencies.getOrDefault(plugin, java.util.Collections.emptySet())) {
++                            if (!loadedPlugins.contains(softDependency) && (plugins.containsKey(softDependency) || pluginsProvided.containsKey(softDependency))) {
++                                allLoadedBefore = false;
++                                break;
++                            }
++                        }
++                    }
++                    // All dependencies and soft-dependencies exist, load plugin
++                    if (allLoadedBefore) {
++                        it.remove();
++                        File file = plugins.get(plugin);
++                        try {
++                            Plugin loadedPlugin = loadPlugin(file);
++                            if (loadedPlugin != null) {
++                                result.add(loadedPlugin);
++                                loadedPlugins.add(loadedPlugin.getName());
++                                loadedPlugins.addAll(loadedPlugin.getDescription().getProvides());
++                            } else {
++                                server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'");
++                            }
++                        } catch (InvalidPluginException ex) {
++                            server.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", ex);
++                        }
++                    }
++                }
++                // Return to start if we still have stuff to load
++                if (!it.hasNext() && !toLoad.isEmpty()) {
++                    if (lastPassSize == toLoad.size()) {
++                        // No plugin loaded this pass. Circular dependency detected!
++                        server.getLogger().log(Level.SEVERE, "Could not load '" + plugins.get(plugin).getPath() + "': circular dependency detected");
++                        it.remove();
++                        plugins.remove(plugin);
++                        pluginsProvided.entrySet().removeIf(e -> e.getValue().equals(plugin));
++                    }
++                    it = toLoad.iterator();
++                    lastPassSize = toLoad.size();
++                }
++            }
++        } else
++        // Origami end
+         while (!plugins.isEmpty()) {
+             boolean missingDependency = true;
+             Iterator<Map.Entry<String, File>> pluginIterator = plugins.entrySet().iterator();
+-- 
+2.25.1.windows.1
+
