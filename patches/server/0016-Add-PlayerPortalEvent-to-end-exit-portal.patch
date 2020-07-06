@@ -1,4 +1,4 @@
-From 06b248d9c5e3b5daeae82a053698081a7ac7f9d0 Mon Sep 17 00:00:00 2001
+From 0c29164007937fc3f17a85340500b48bd3920f8a Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 20 Jan 2020 18:51:00 +0100
 Subject: [PATCH] Add PlayerPortalEvent to end exit portal
@@ -8,13 +8,13 @@ Subject: [PATCH] Add PlayerPortalEvent to end exit portal
  1 file changed, 12 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 6ff4625616..b925954a7c 100644
+index a2237d13a6..8603bfc073 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
-@@ -814,6 +814,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
-         DimensionManager dimensionmanager1 = this.dimension;
+@@ -868,6 +868,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         ResourceKey<DimensionManager> resourcekey = worldserver1.getTypeKey(); // CraftBukkit
  
-         if (dimensionmanager1.getType() == DimensionManager.THE_END && dimensionmanager.getType() == DimensionManager.OVERWORLD) { // CraftBukkit - getType()
+         if (resourcekey == DimensionManager.THE_END && worldserver != null && worldserver.getTypeKey() == DimensionManager.OVERWORLD) { // CraftBukkit
 +            // Origami start - add PlayerPortalEvent to leaving the end
 +            Location exit = this.getBukkitEntity().getBedSpawnLocation();
 +            PlayerPortalEvent event = new PlayerPortalEvent(this.getBukkitEntity(), this.getBukkitEntity().getLocation(), exit, cause, 0, true, 0);

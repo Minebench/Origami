@@ -1,4 +1,4 @@
-From 6f061b551a9116a822599fac68a5e437d6a2cdd1 Mon Sep 17 00:00:00 2001
+From 546557984724413b0f667119bc7b0a2b125e3403 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:35 +0100
 Subject: [PATCH] Origami POM Changes
@@ -9,7 +9,7 @@ Subject: [PATCH] Origami POM Changes
  2 files changed, 53 insertions(+), 12 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index e4c63bb76..466faa68e 100644
+index ef8ee637a8..173ac74677 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -19,7 +19,7 @@ index e4c63bb76..466faa68e 100644
 -    <artifactId>paper</artifactId>
 +    <artifactId>origami</artifactId>
      <packaging>jar</packaging>
-     <version>1.15.2-R0.1-SNAPSHOT</version>
+     <version>1.16.1-R0.1-SNAPSHOT</version>
 -    <name>Paper</name>
 -    <url>https://papermc.io</url>
 +    <name>Origami-Server</name>
@@ -28,7 +28,7 @@ index e4c63bb76..466faa68e 100644
      <properties>
          <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
 @@ -15,25 +15,26 @@
-         <minecraft_version>1_15_R1</minecraft_version>
+         <minecraft_version>1_16_R1</minecraft_version>
          <maven.compiler.source>1.8</maven.compiler.source>
          <maven.compiler.target>1.8</maven.compiler.target>
 +        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
@@ -78,7 +78,7 @@ index e4c63bb76..466faa68e 100644
                      <scmDirectory>..</scmDirectory>
                  </configuration>
                  <executions>
-@@ -409,5 +410,45 @@
+@@ -414,5 +415,45 @@
                  </plugins>
              </build>
          </profile>
@@ -125,7 +125,7 @@ index e4c63bb76..466faa68e 100644
      </profiles>
  </project>
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 674096cab..f3cc2b9c3 100644
+index 674096cab1..f3cc2b9c37 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {

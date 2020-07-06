@@ -1,4 +1,4 @@
-From a51eb3dd0d232c345198675d34501996f97018c7 Mon Sep 17 00:00:00 2001
+From 7429543890ed1059db832f5cbb70d866ef90f6f1 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
@@ -10,7 +10,7 @@ Subject: [PATCH] Add option for behavior and sensor tick rates
  3 files changed, 59 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index bcaf74e79..69b0c5b5e 100644
+index bcaf74e794..69b0c5b5ea 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -1,11 +1,14 @@
@@ -61,10 +61,10 @@ index bcaf74e79..69b0c5b5e 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
-index 788d1433e..ae1d901e5 100644
+index 65af976527..7915334116 100644
 --- a/src/main/java/net/minecraft/server/Behavior.java
 +++ b/src/main/java/net/minecraft/server/Behavior.java
-@@ -10,6 +10,10 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -11,6 +11,10 @@ public abstract class Behavior<E extends EntityLiving> {
      private long c;
      private final int d;
      private final int e;
@@ -75,7 +75,7 @@ index 788d1433e..ae1d901e5 100644
  
      public Behavior(Map<MemoryModuleType<?>, MemoryStatus> map) {
          this(map, 60);
-@@ -24,6 +28,14 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -25,6 +29,14 @@ public abstract class Behavior<E extends EntityLiving> {
          this.d = i;
          this.e = j;
          this.a = map;
@@ -90,10 +90,10 @@ index 788d1433e..ae1d901e5 100644
      }
  
      public Behavior.Status a() {
-@@ -31,6 +43,12 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -32,6 +44,12 @@ public abstract class Behavior<E extends EntityLiving> {
      }
  
-     public final boolean b(WorldServer worldserver, E e0, long i) {
+     public final boolean e(WorldServer worldserver, E e0, long i) {
 +        // Origami start - configurable behavior tick rates
 +        int tickRate = worldserver.origamiConfig.getTickRate(RATE_TYPE, configKey, e0.getMinecraftKey().getKey(), -1);
 +        if (tickRate > -1 && i < this.c + tickRate) {
@@ -104,7 +104,7 @@ index 788d1433e..ae1d901e5 100644
              this.b = Behavior.Status.RUNNING;
              int j = this.d + worldserver.getRandom().nextInt(this.e + 1 - this.d);
 diff --git a/src/main/java/net/minecraft/server/Sensor.java b/src/main/java/net/minecraft/server/Sensor.java
-index e3888dd97..cb92b2485 100644
+index e3888dd972..cb92b24851 100644
 --- a/src/main/java/net/minecraft/server/Sensor.java
 +++ b/src/main/java/net/minecraft/server/Sensor.java
 @@ -8,10 +8,22 @@ public abstract class Sensor<E extends EntityLiving> {

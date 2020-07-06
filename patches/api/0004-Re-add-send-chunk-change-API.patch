@@ -1,4 +1,4 @@
-From bc4b476395b1c9c4d2ee1625b60839481b0f95cc Mon Sep 17 00:00:00 2001
+From c4aa387abac038618d80f2cd9554488077524168 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 14 May 2020 20:47:40 +0100
 Subject: [PATCH] Re-add send chunk change API
@@ -8,10 +8,10 @@ Subject: [PATCH] Re-add send chunk change API
  1 file changed, 11 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 787bb144b..43e31ef8c 100644
+index 2eb312138..1c57a0eee 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -403,6 +403,17 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -443,6 +443,17 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      @Deprecated
      public boolean sendChunkChange(@NotNull Location loc, int sx, int sy, int sz, @NotNull byte[] data);
  

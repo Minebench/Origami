@@ -1,4 +1,4 @@
-From fed15076133b48ce5ce83ca6f63ceb995c811d26 Mon Sep 17 00:00:00 2001
+From 0b8a2591c4f433b9c271250d9b6ba47a4b3aff35 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 31 Mar 2020 21:43:04 +0100
 Subject: [PATCH] Add option to disable observer clocks
@@ -9,10 +9,10 @@ Subject: [PATCH] Add option to disable observer clocks
  2 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 9e94ea6d61..6db5f6a7eb 100644
+index 17539a7bd7..10d5b9dce1 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -187,6 +187,11 @@ public final class OrigamiConfig {
+@@ -175,6 +175,11 @@ public final class OrigamiConfig {
              tickEmptyHoppers = getBoolean("tick-empty-hoppers", tickEmptyHoppers);
              fullHopperCooldown = getInt("ticks-per.full-hopper-cooldown", fullHopperCooldown);
          }
@@ -25,7 +25,7 @@ index 9e94ea6d61..6db5f6a7eb 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/BlockObserver.java b/src/main/java/net/minecraft/server/BlockObserver.java
-index 09b68eac7f..5e66673c9c 100644
+index 7dfe632523..29c3f328f5 100644
 --- a/src/main/java/net/minecraft/server/BlockObserver.java
 +++ b/src/main/java/net/minecraft/server/BlockObserver.java
 @@ -52,7 +52,8 @@ public class BlockObserver extends BlockDirectional {

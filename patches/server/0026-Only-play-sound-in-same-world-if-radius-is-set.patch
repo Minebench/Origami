@@ -1,4 +1,4 @@
-From 3756055d283a58eb82e7555865580839958c8cfa Mon Sep 17 00:00:00 2001
+From dde8ad35c629c2435569ac9c00cdbf56075199a6 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 12 Jun 2020 21:43:36 +0100
 Subject: [PATCH] Only play sound in same world if radius is set
@@ -13,16 +13,16 @@ Integer.MAX_VALUE I guess.
  3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityEnderDragon.java b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-index 7daebfdab5..36d52a22b8 100644
+index 63a759cc18..86996473f9 100644
 --- a/src/main/java/net/minecraft/server/EntityEnderDragon.java
 +++ b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-@@ -580,13 +580,13 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
-                 // this.world.b(1028, new BlockPosition(this), 0);
-                 // Paper start
-                 int viewDistance = this.world.getWorld().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
--                for (EntityPlayer player : ((WorldServer)world).getPlayers()) {
+@@ -577,13 +577,13 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
+                 // CraftBukkit start - Use relative location for far away sounds
+                 // this.world.b(1028, this.getChunkCoordinates(), 0);
+                 int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
+-                for (EntityPlayer player : (List<EntityPlayer>) ((WorldServer)world).getPlayers()) {
 +                for (EntityPlayer player : this.world.getServer().getServer().getPlayerList().players) { // Origami - only play sound in same world if radius is set
-                     //final int viewDistance = player.getViewDistance(); // TODO apply view distance api patch
+                     // final int viewDistance = player.getViewDistance(); // TODO apply view distance api patch
                      // Paper end
                      double deltaX = this.locX() - player.locX();
                      double deltaZ = this.locZ() - player.locZ();
@@ -33,27 +33,26 @@ index 7daebfdab5..36d52a22b8 100644
                          double deltaLength = Math.sqrt(distanceSquared);
                          double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
 diff --git a/src/main/java/net/minecraft/server/EntityWither.java b/src/main/java/net/minecraft/server/EntityWither.java
-index 2f466af4d5..042cf5e561 100644
+index 1074995e8c..0fcc956cca 100644
 --- a/src/main/java/net/minecraft/server/EntityWither.java
 +++ b/src/main/java/net/minecraft/server/EntityWither.java
-@@ -209,13 +209,13 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
-                 // this.world.b(1023, new BlockPosition(this), 0);
-                 // Paper start
-                 int viewDistance = this.world.getWorld().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
--                for (EntityPlayer player : ((WorldServer)world).getPlayers()) {
-+                for (EntityPlayer player : this.world.getServer().getServer().getPlayerList().players) { // Origami - only play sound in same world if radius is set
-                     //final int viewDistance = player.getViewDistance(); // TODO apply view distance api patch
-                     // Paper end
-                     double deltaX = this.locX() - player.locX();
-                     double deltaZ = this.locZ() - player.locZ();
-                     double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;
--                    if ( world.spigotConfig.witherSpawnSoundRadius > 0 && distanceSquared > world.spigotConfig.witherSpawnSoundRadius * world.spigotConfig.witherSpawnSoundRadius ) continue; // Spigot
-+                    if ( world.spigotConfig.witherSpawnSoundRadius > 0 && player.world == this.world && distanceSquared > world.spigotConfig.witherSpawnSoundRadius * world.spigotConfig.witherSpawnSoundRadius ) continue; // Spigot // Origami - only play sound in same world if radius is set
-                     if (distanceSquared > viewDistance * viewDistance) {
-                         double deltaLength = Math.sqrt(distanceSquared);
-                         double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
+@@ -209,12 +209,12 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
+                     // CraftBukkit start - Use relative location for far away sounds
+                     // this.world.b(1023, new BlockPosition(this), 0);
+                     int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
+-                    for (EntityPlayer player : (List<EntityPlayer>)this.world.getPlayers()) {
++                    for (EntityPlayer player : this.world.getServer().getServer().getPlayerList().players) { // Origami - only play sound in same world if radius is set
+                         // final int viewDistance = player.getViewDistance(); // TODO apply view distance api patch
+                         double deltaX = this.locX() - player.locX();
+                         double deltaZ = this.locZ() - player.locZ();
+                         double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;
+-                        if ( world.spigotConfig.witherSpawnSoundRadius > 0 && distanceSquared > world.spigotConfig.witherSpawnSoundRadius * world.spigotConfig.witherSpawnSoundRadius ) continue; // Spigot
++                        if ( world.spigotConfig.witherSpawnSoundRadius > 0 && player.world == this.world && distanceSquared > world.spigotConfig.witherSpawnSoundRadius * world.spigotConfig.witherSpawnSoundRadius ) continue; // Spigot // Origami - only play sound in same world if radius is set
+                         if (distanceSquared > viewDistance * viewDistance) {
+                             double deltaLength = Math.sqrt(distanceSquared);
+                             double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
 diff --git a/src/main/java/net/minecraft/server/ItemEnderEye.java b/src/main/java/net/minecraft/server/ItemEnderEye.java
-index b9ffbb7c15..a5ac884fd0 100644
+index 0685030128..9471081851 100644
 --- a/src/main/java/net/minecraft/server/ItemEnderEye.java
 +++ b/src/main/java/net/minecraft/server/ItemEnderEye.java
 @@ -42,7 +42,7 @@ public class ItemEnderEye extends Item {

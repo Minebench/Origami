@@ -1,4 +1,4 @@
-From a3a2303e50fe14cf434df52f7425f6936f1df540 Mon Sep 17 00:00:00 2001
+From 64e826d0fd38bb49c0d0a0e6b5e4df2ad37dc861 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 01:27:40 +0100
 Subject: [PATCH] Add setting to only find generated features
@@ -9,12 +9,12 @@ map but might at the same time lead to structures not being found
 by the items more often than normal when used in less-generated area.
 Thanks @electronicboy for the improvements.
 ---
- src/main/java/de/minebench/origami/OrigamiConfig.java     | 5 +++++
- .../java/net/minecraft/server/StructureGenerator.java     | 8 +++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ src/main/java/de/minebench/origami/OrigamiConfig.java      | 5 +++++
+ src/main/java/net/minecraft/server/StructureGenerator.java | 7 ++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 59e861e6c..bcaf74e79 100644
+index 59e861e6c3..bcaf74e794 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -110,6 +110,11 @@ public final class OrigamiConfig {
@@ -30,24 +30,23 @@ index 59e861e6c..bcaf74e79 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
-index acfe732af..b4eb1f592 100644
+index 6eb8150414..b21fa19c76 100644
 --- a/src/main/java/net/minecraft/server/StructureGenerator.java
 +++ b/src/main/java/net/minecraft/server/StructureGenerator.java
-@@ -118,7 +118,13 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
-                                     }
-                                 }
-                                 // Paper end
--                                StructureStart structurestart = world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS).a(this.b());
-+                                // Origami start - option to only find generated features to not generate new chunks
-+                                final IChunkAccess chunk = world.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !world.origamiConfig.onlyFindGeneratedFeatures);
-+                                if (chunk == null) {
-+                                    continue;
-+                                }
-+                                StructureStart structurestart = chunk.a(this.b());
-+                                // Origami end
+@@ -139,7 +139,12 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+                             int j2 = i1 + k * l1;
+                             ChunkCoordIntPair chunkcoordintpair = this.a(structuresettingsfeature, j, seededrandom, i2, j2);
+                             if (!iworldreader.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
+-                            IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS);
++                            // Origami start - option to only find generated features to not generate new chunks
++                            IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !(iworldreader instanceof World) || !((World) iworldreader).origamiConfig.onlyFindGeneratedFeatures);
++                            if (ichunkaccess == null) {
++                                continue;
++                            }
++                            // Origami end
+                             StructureStart<?> structurestart = structuremanager.a(SectionPosition.a(ichunkaccess.getPos(), 0), this, ichunkaccess);
  
-                                 if (structurestart != null && structurestart.e()) {
-                                     if (flag && structurestart.h()) {
+                             if (structurestart != null && structurestart.e()) {
 -- 
 2.25.1.windows.1
 

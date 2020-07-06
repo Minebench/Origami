@@ -1,4 +1,4 @@
-From 81a3bf3a226f44f0b58c0fcd10404b34ee46546b Mon Sep 17 00:00:00 2001
+From 43d7a4811f0df9671630a9e582bf38b04aa71bd9 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 13 Jan 2020 01:00:49 +0100
 Subject: [PATCH] Don't load chunk with seed based feature search
@@ -9,7 +9,7 @@ Subject: [PATCH] Don't load chunk with seed based feature search
  2 files changed, 13 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index ad34239e8..9b9d54608 100644
+index 10fc95b7f9..ffd07c2fda 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -116,6 +116,14 @@ public final class OrigamiConfig {
@@ -28,21 +28,21 @@ index ad34239e8..9b9d54608 100644
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
 diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
-index b4eb1f592..bcce50217 100644
+index b21fa19c76..eac4fe11c0 100644
 --- a/src/main/java/net/minecraft/server/StructureGenerator.java
 +++ b/src/main/java/net/minecraft/server/StructureGenerator.java
-@@ -116,6 +116,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
-                                     if (!shouldGenerate(biomeManager, chunkgenerator, seededrandom, chunkcoordintpair.x, chunkcoordintpair.z, biomeBase)) {
-                                         continue;
-                                     }
-+                                    // Origami start - seed based feature search doesn't load
-+                                    if (world.origamiConfig.fastFeatureSearchDontLoad) {
-+                                        return chunkcoordintpair.l();
-+                                    }
-+                                    // Origami end
-                                 }
-                                 // Paper end
-                                 // Origami start - option to only find generated features to not generate new chunks
+@@ -139,6 +139,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+                             int j2 = i1 + k * l1;
+                             ChunkCoordIntPair chunkcoordintpair = this.a(structuresettingsfeature, j, seededrandom, i2, j2);
+                             if (!iworldreader.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
++                            // Origami start - seed based feature search doesn't load
++                            if (iworldreader instanceof World && ((World) iworldreader).origamiConfig.fastFeatureSearchDontLoad) {
++                                return chunkcoordintpair.l();
++                            }
++                            // Origami end
+                             // Origami start - option to only find generated features to not generate new chunks
+                             IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !(iworldreader instanceof World) || !((World) iworldreader).origamiConfig.onlyFindGeneratedFeatures);
+                             if (ichunkaccess == null) {
 -- 
 2.25.1.windows.1
 
