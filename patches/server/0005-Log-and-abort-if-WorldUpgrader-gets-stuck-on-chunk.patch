@@ -1,4 +1,4 @@
-From efcac69e1d0ac344039cba3bf3ebfe6bff724bf7 Mon Sep 17 00:00:00 2001
+From 4aa01faaa5edc54551c4b263d9928223c95ed859 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:51:07 +0100
 Subject: [PATCH] Log and abort if WorldUpgrader gets stuck on chunk
@@ -9,10 +9,10 @@ Subject: [PATCH] Log and abort if WorldUpgrader gets stuck on chunk
  2 files changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index 2f29d7040d..6351ffb68b 100644
+index c426d1ed14..d9f3ef5871 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
-@@ -211,7 +211,10 @@ public class Main {
+@@ -237,7 +237,10 @@ public class Main {
          Main.LOGGER.info("Forcing world upgrade! {}", convertable_conversionsession.getLevelName()); // CraftBukkit
          WorldUpgrader worldupgrader = new WorldUpgrader(convertable_conversionsession, datafixer, immutableset, flag);
          IChatBaseComponent ichatbasecomponent = null;
@@ -24,7 +24,7 @@ index 2f29d7040d..6351ffb68b 100644
          while (!worldupgrader.b()) {
              IChatBaseComponent ichatbasecomponent1 = worldupgrader.h();
  
-@@ -226,6 +229,23 @@ public class Main {
+@@ -252,6 +255,23 @@ public class Main {
                  int j = worldupgrader.f() + worldupgrader.g();
  
                  Main.LOGGER.info("{}% completed ({} / {} chunks)...", MathHelper.d((float) j / (float) i * 100.0F), j, i);
