@@ -1,15 +1,38 @@
-From dbfa694217e620336bb15b90dcd1dcba3a135833 Mon Sep 17 00:00:00 2001
+From fcd76a81915cbcff32d4434c06a3f61a7c2a864e Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:28:42 +0100
 Subject: [PATCH] Brand changes
 
 ---
+ src/main/java/com/destroystokyo/paper/Metrics.java      | 4 ++--
  src/main/java/net/minecraft/server/EULA.java            | 2 +-
  src/main/java/net/minecraft/server/MinecraftServer.java | 2 +-
  src/main/java/org/bukkit/craftbukkit/CraftServer.java   | 2 +-
  src/main/java/org/bukkit/craftbukkit/Main.java          | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
+index 8a19c96499..560f93abc5 100644
+--- a/src/main/java/com/destroystokyo/paper/Metrics.java
++++ b/src/main/java/com/destroystokyo/paper/Metrics.java
+@@ -581,7 +581,7 @@ public class Metrics {
+             boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
+             // Only start Metrics, if it's enabled in the config
+             if (config.getBoolean("enabled", true)) {
+-                Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger());
++                Metrics metrics = new Metrics(Bukkit.getName(), serverUUID, logFailedRequests, Bukkit.getLogger()); // Origami - use implementation name
+ 
+                 metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
+                     String minecraftVersion = Bukkit.getVersion();
+@@ -591,7 +591,7 @@ public class Metrics {
+ 
+                 metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
+                 metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() || PaperConfig.isProxyOnlineMode() ? "online" : "offline"));
+-                metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown"));
++                metrics.addCustomChart(new Metrics.SimplePie("implementation_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Origami - use brand-agnostic naming
+ 
+                 metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
+                     Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/net/minecraft/server/EULA.java b/src/main/java/net/minecraft/server/EULA.java
 index 550232cb38..a551d9eead 100644
 --- a/src/main/java/net/minecraft/server/EULA.java
@@ -37,7 +60,7 @@ index 26f230a801..96ae9c2391 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index d8103ab0d5..06621915c9 100644
+index 6282a05ae8..d624539e77 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -231,7 +231,7 @@ import javax.annotation.Nullable; // Paper
@@ -50,7 +73,7 @@ index d8103ab0d5..06621915c9 100644
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index bac292e6d8..ba4c9c1b0e 100644
+index 9dd994f8b1..cd064fa7cc 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -252,7 +252,7 @@ public class Main {
