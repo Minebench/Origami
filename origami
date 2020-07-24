@@ -108,6 +108,14 @@ case "$1" in
         scripts/upstream.sh "$2"
     )
     ;;
+    "update")
+    (
+        cd "$basedir" && scripts/upstream.sh "up" && \
+        set -e && cd "$basedir" && scripts/apply.sh "$basedir" && \
+        cd "$basedir" && scripts/rebuildpatches.sh "$basedir" && \
+        cd "$basedir" && scripts/upstreamCommit.sh
+    )
+    ;;
     "r" | "root")
         cd "$basedir"
     ;;
