@@ -1,12 +1,12 @@
-From b57045c524709cae447ed0aa8dc7d775662b9a97 Mon Sep 17 00:00:00 2001
+From f279427f4916ec096376a3274d4d5b918f3ea890 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 15:52:09 +0100
 Subject: [PATCH] Add origami command
 
 ---
  .../de/minebench/origami/OrigamiCommand.java  | 127 ++++++++++++++++++
- .../de/minebench/origami/OrigamiConfig.java   |   2 +
- 2 files changed, 129 insertions(+)
+ .../net/minecraft/server/DedicatedServer.java |   1 +
+ 2 files changed, 128 insertions(+)
  create mode 100644 src/main/java/de/minebench/origami/OrigamiCommand.java
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiCommand.java b/src/main/java/de/minebench/origami/OrigamiCommand.java
@@ -142,19 +142,18 @@ index 0000000000..45f72f7570
 +        Command.broadcastCommandMessage(sender, ChatColor.GREEN + "Origami config reload complete.");
 +    }
 +}
-diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index a49a2eac82..10fc95b7f9 100644
---- a/src/main/java/de/minebench/origami/OrigamiConfig.java
-+++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -44,6 +44,8 @@ public final class OrigamiConfig {
-         }
+diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
+index 8b2755a3b9..3a0947db54 100644
+--- a/src/main/java/net/minecraft/server/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/DedicatedServer.java
+@@ -170,6 +170,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+         com.destroystokyo.paper.PaperConfig.registerCommands();
+         com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
+         // Paper end
++        de.minebench.origami.OrigamiCommand.register(); // Origami - add command
  
-         OrigamiConfig.load(OrigamiConfig.class, null);
-+
-+        OrigamiCommand.register();
-     }
- 
-     public static void load(Class<?> clazz, Object instance) {
+         this.setPVP(dedicatedserverproperties.pvp);
+         this.setAllowFlight(dedicatedserverproperties.allowFlight);
 -- 
 2.25.1.windows.1
 

@@ -1,0 +1,415 @@
+From b04def500ec69d4ad0e0469dbe78db9324211e66 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <max@themoep.de>
+Date: Wed, 29 Jul 2020 15:04:33 +0100
+Subject: [PATCH] Add configurable nether height
+
+---
+ .../de/minebench/origami/OrigamiConfig.java   |  6 ++++
+ .../minecraft/server/BiomeBasaltDeltas.java   | 34 ++++++++++---------
+ .../minecraft/server/BiomeCrimsonForest.java  | 20 ++++++-----
+ .../java/net/minecraft/server/BiomeHell.java  | 24 +++++++------
+ .../minecraft/server/BiomeSoulSandValley.java | 26 +++++++-------
+ .../minecraft/server/BiomeWarpedForest.java   | 20 ++++++-----
+ .../minecraft/server/DimensionManager.java    | 18 +++++++---
+ .../server/GeneratorSettingBase.java          | 21 ++++++++----
+ .../minecraft/server/WorldGenCavesHell.java   |  2 +-
+ .../server/WorldGenDecoratorNetherFire.java   |  2 +-
+ .../WorldGenDecoratorNetherGlowstone.java     |  2 +-
+ .../server/WorldGenSurfaceNether.java         |  2 +-
+ .../server/WorldGenSurfaceNetherAbstract.java |  4 +--
+ .../server/WorldGenSurfaceNetherForest.java   |  2 +-
+ 14 files changed, 107 insertions(+), 76 deletions(-)
+
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index 3bc4911695..9617333344 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -196,4 +196,10 @@ public final class OrigamiConfig {
+         fixItemPositionDesync = getBoolean("fix-item-position-desync", fixItemPositionDesync);
+     }
+ 
++
++    public static int netherHeight = 128;
++    private static void setNetherHeight() {
++        netherHeight = getInt("nether-height", netherHeight);
++    }
++
+ }
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/BiomeBasaltDeltas.java b/src/main/java/net/minecraft/server/BiomeBasaltDeltas.java
+index e653f5105f..2c0fd561b4 100644
+--- a/src/main/java/net/minecraft/server/BiomeBasaltDeltas.java
++++ b/src/main/java/net/minecraft/server/BiomeBasaltDeltas.java
+@@ -8,23 +8,25 @@ public class BiomeBasaltDeltas extends BiomeBase {
+     protected BiomeBasaltDeltas() {
+         super((new BiomeBase.a()).a(WorldGenSurface.af, WorldGenSurface.R).a(BiomeBase.Precipitation.NONE).a(BiomeBase.Geography.NETHER).a(0.1F).b(0.2F).c(2.0F).d(0.0F).a((new BiomeFog.a()).b(4159204).c(4341314).a(6840176).a(new BiomeParticles(Particles.WHITE_ASH, 0.118093334F)).a(SoundEffects.AMBIENT_BASALT_DELTAS_LOOP).a(new CaveSoundSettings(SoundEffects.AMBIENT_BASALT_DELTAS_MOOD, 6000, 8, 2.0D)).a(new CaveSound(SoundEffects.AMBIENT_BASALT_DELTAS_ADDITIONS, 0.0111D)).a(Musics.a(SoundEffects.MUSIC_NETHER_BASALT_DELTAS)).a()).a((String) null).a((List) ImmutableList.of(new BiomeBase.d(-0.5F, 0.0F, 0.0F, 0.0F, 0.175F))));
+         this.a(BiomeDecoratorGroups.E);
+-        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (WorldGenCarverConfiguration) (new WorldGenFeatureConfigurationChance(0.2F))));
++        // Origami start - decompile fixes & configurable nether height
++        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (new WorldGenFeatureConfigurationChance(0.2F))));
+         this.a(BiomeDecoratorGroups.o);
+-        this.a(WorldGenStage.Decoration.SURFACE_STRUCTURES, WorldGenerator.DELTA_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aV).a(WorldGenDecorator.b.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(40)))));
+-        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(40, 8, 16, 256)))));
+-        this.a(WorldGenStage.Decoration.SURFACE_STRUCTURES, WorldGenerator.BASALT_COLUMNS.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aR).a(WorldGenDecorator.b.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(4)))));
+-        this.a(WorldGenStage.Decoration.SURFACE_STRUCTURES, WorldGenerator.BASALT_COLUMNS.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aS).a(WorldGenDecorator.b.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(2)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.NETHERRACK_REPLACE_BLOBS.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aT).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(75, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.NETHERRACK_REPLACE_BLOBS.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aU).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(25, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aN).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(16, 4, 8, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aq).a(WorldGenDecorator.A.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.at).a(WorldGenDecorator.r.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorRangeConfiguration(0.5F, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.as).a(WorldGenDecorator.r.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorRangeConfiguration(0.5F, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((WorldGenFeatureConfiguration) (new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(4)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(32, 10, 20, 128)))));
++        this.a(WorldGenStage.Decoration.SURFACE_STRUCTURES, WorldGenerator.DELTA_FEATURE.b(BiomeDecoratorGroups.aV).a(WorldGenDecorator.b.a((new WorldGenDecoratorFrequencyConfiguration(40)))));
++        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((new WorldGenFeatureChanceDecoratorCountConfiguration(40, 8, 16, 256)))));
++        this.a(WorldGenStage.Decoration.SURFACE_STRUCTURES, WorldGenerator.BASALT_COLUMNS.b(BiomeDecoratorGroups.aR).a(WorldGenDecorator.b.a((new WorldGenDecoratorFrequencyConfiguration(4)))));
++        this.a(WorldGenStage.Decoration.SURFACE_STRUCTURES, WorldGenerator.BASALT_COLUMNS.b(BiomeDecoratorGroups.aS).a(WorldGenDecorator.b.a((new WorldGenDecoratorFrequencyConfiguration(2)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.NETHERRACK_REPLACE_BLOBS.b(BiomeDecoratorGroups.aT).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(75, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.NETHERRACK_REPLACE_BLOBS.b(BiomeDecoratorGroups.aU).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(25, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aN).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(16, 4, 8, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.aq).a(WorldGenDecorator.A.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.at).a(WorldGenDecorator.r.a((new WorldGenFeatureChanceDecoratorRangeConfiguration(0.5F, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.as).a(WorldGenDecorator.r.a((new WorldGenFeatureChanceDecoratorRangeConfiguration(0.5F, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((new WorldGenDecoratorFrequencyConfiguration(4)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(32, 10, 20, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        // Origami end
+         BiomeDecoratorGroups.a(this, 20, 32);
+         BiomeDecoratorGroups.at(this);
+         this.a(EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.GHAST, 40, 1, 1));
+diff --git a/src/main/java/net/minecraft/server/BiomeCrimsonForest.java b/src/main/java/net/minecraft/server/BiomeCrimsonForest.java
+index 185a76efb9..3bbb92b6d3 100644
+--- a/src/main/java/net/minecraft/server/BiomeCrimsonForest.java
++++ b/src/main/java/net/minecraft/server/BiomeCrimsonForest.java
+@@ -8,18 +8,20 @@ public class BiomeCrimsonForest extends BiomeBase {
+     protected BiomeCrimsonForest() {
+         super((new BiomeBase.a()).a(WorldGenSurface.ad, WorldGenSurface.P).a(BiomeBase.Precipitation.NONE).a(BiomeBase.Geography.NETHER).a(0.1F).b(0.2F).c(2.0F).d(0.0F).a((new BiomeFog.a()).b(4159204).c(329011).a(3343107).a(new BiomeParticles(Particles.CRIMSON_SPORE, 0.025F)).a(SoundEffects.AMBIENT_CRIMSON_FOREST_LOOP).a(new CaveSoundSettings(SoundEffects.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)).a(new CaveSound(SoundEffects.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D)).a(Musics.a(SoundEffects.MUSIC_NETHER_CRIMSON_FOREST)).a()).a((String) null).a((List) ImmutableList.of(new BiomeBase.d(0.4F, 0.0F, 0.0F, 0.0F, 0.0F))));
+         this.a(BiomeDecoratorGroups.E);
+-        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (WorldGenCarverConfiguration) (new WorldGenFeatureConfigurationChance(0.2F))));
++        // Origami start - decompile fixes & configurable nether height
++        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (new WorldGenFeatureConfigurationChance(0.2F))));
+         this.a(BiomeDecoratorGroups.o);
+         this.a(BiomeDecoratorGroups.s);
+-        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(20, 8, 16, 256)))));
++        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((new WorldGenFeatureChanceDecoratorCountConfiguration(20, 8, 16, 256)))));
+         BiomeDecoratorGroups.ab(this);
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aM).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(8, 4, 8, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((WorldGenFeatureConfiguration) (new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(4)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(16, 10, 20, 128)))));
+-        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.WEEPING_VINES.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, 128)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aM).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(8, 4, 8, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((new WorldGenDecoratorFrequencyConfiguration(4)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(16, 10, 20, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.WEEPING_VINES.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        // Origami end
+         BiomeDecoratorGroups.au(this);
+         BiomeDecoratorGroups.as(this);
+         this.a(EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ZOMBIFIED_PIGLIN, 1, 2, 4));
+diff --git a/src/main/java/net/minecraft/server/BiomeHell.java b/src/main/java/net/minecraft/server/BiomeHell.java
+index 10071221ab..71e6892b45 100644
+--- a/src/main/java/net/minecraft/server/BiomeHell.java
++++ b/src/main/java/net/minecraft/server/BiomeHell.java
+@@ -10,18 +10,20 @@ public final class BiomeHell extends BiomeBase {
+         this.a(BiomeDecoratorGroups.E);
+         this.a(BiomeDecoratorGroups.o);
+         this.a(BiomeDecoratorGroups.s);
+-        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (WorldGenCarverConfiguration) (new WorldGenFeatureConfigurationChance(0.2F))));
+-        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(20, 8, 16, 256)))));
++        // Origami start - decompile fixes & configurable nether height
++        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (new WorldGenFeatureConfigurationChance(0.2F))));
++        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((new WorldGenFeatureChanceDecoratorCountConfiguration(20, 8, 16, 256)))));
+         BiomeDecoratorGroups.ab(this);
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aM).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(8, 4, 8, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aq).a(WorldGenDecorator.A.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.at).a(WorldGenDecorator.r.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorRangeConfiguration(0.5F, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.as).a(WorldGenDecorator.r.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorRangeConfiguration(0.5F, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((WorldGenFeatureConfiguration) (new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(4)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(16, 10, 20, 128)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aM).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(8, 4, 8, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.aq).a(WorldGenDecorator.A.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.at).a(WorldGenDecorator.r.a((new WorldGenFeatureChanceDecoratorRangeConfiguration(0.5F, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.as).a(WorldGenDecorator.r.a((new WorldGenFeatureChanceDecoratorRangeConfiguration(0.5F, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((new WorldGenDecoratorFrequencyConfiguration(4)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(16, 10, 20, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        // Origami end
+         BiomeDecoratorGroups.as(this);
+         this.a(EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.GHAST, 50, 4, 4));
+         this.a(EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ZOMBIFIED_PIGLIN, 100, 4, 4));
+diff --git a/src/main/java/net/minecraft/server/BiomeSoulSandValley.java b/src/main/java/net/minecraft/server/BiomeSoulSandValley.java
+index d04933e526..2e5eed1285 100644
+--- a/src/main/java/net/minecraft/server/BiomeSoulSandValley.java
++++ b/src/main/java/net/minecraft/server/BiomeSoulSandValley.java
+@@ -11,18 +11,20 @@ public class BiomeSoulSandValley extends BiomeBase {
+         this.a(BiomeDecoratorGroups.p);
+         this.a(BiomeDecoratorGroups.E);
+         this.a(BiomeDecoratorGroups.s);
+-        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (WorldGenCarverConfiguration) (new WorldGenFeatureConfigurationChance(0.2F))));
+-        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(20, 8, 16, 256)))));
+-        this.a(WorldGenStage.Decoration.LOCAL_MODIFICATIONS, WorldGenerator.BASALT_PILLAR.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aM).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(8, 4, 8, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.au).a(WorldGenDecorator.r.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorRangeConfiguration(1.0F, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aq).a(WorldGenDecorator.A.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((WorldGenFeatureConfiguration) (new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(4)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(16, 10, 20, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((WorldGenFeatureConfiguration) (new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.SOUL_SAND.getBlockData(), 12))).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(12, 0, 0, 32)))));
++        // Origami start - decompile fixes & configurable nether height
++        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (new WorldGenFeatureConfigurationChance(0.2F))));
++        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((new WorldGenFeatureChanceDecoratorCountConfiguration(20, 8, 16, 256)))));
++        this.a(WorldGenStage.Decoration.LOCAL_MODIFICATIONS, WorldGenerator.BASALT_PILLAR.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aM).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(8, 4, 8, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.au).a(WorldGenDecorator.r.a((new WorldGenFeatureChanceDecoratorRangeConfiguration(1.0F, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.aq).a(WorldGenDecorator.A.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((new WorldGenDecoratorFrequencyConfiguration(4)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(16, 10, 20, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.SOUL_SAND.getBlockData(), 12))).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(12, 0, 0, 32)))));
++        // Origami end
+         BiomeDecoratorGroups.as(this);
+         this.a(EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.SKELETON, 20, 5, 5));
+         this.a(EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.GHAST, 50, 4, 4));
+diff --git a/src/main/java/net/minecraft/server/BiomeWarpedForest.java b/src/main/java/net/minecraft/server/BiomeWarpedForest.java
+index 82e0465f15..c0607a96b6 100644
+--- a/src/main/java/net/minecraft/server/BiomeWarpedForest.java
++++ b/src/main/java/net/minecraft/server/BiomeWarpedForest.java
+@@ -10,16 +10,18 @@ public class BiomeWarpedForest extends BiomeBase {
+         this.a(BiomeDecoratorGroups.o);
+         this.a(BiomeDecoratorGroups.s);
+         this.a(BiomeDecoratorGroups.E);
+-        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (WorldGenCarverConfiguration) (new WorldGenFeatureConfigurationChance(0.2F))));
+-        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(20, 8, 16, 256)))));
++        // Origami start - decompile fixes & configurable nether height
++        this.a(WorldGenStage.Features.AIR, a(WorldGenCarverAbstract.b, (new WorldGenFeatureConfigurationChance(0.2F))));
++        this.a(WorldGenStage.Decoration.VEGETAL_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aL).a(WorldGenDecorator.p.a((new WorldGenFeatureChanceDecoratorCountConfiguration(20, 8, 16, 256)))));
+         BiomeDecoratorGroups.ab(this);
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aM).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(8, 4, 8, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aq).a(WorldGenDecorator.A.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(10)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b((WorldGenFeatureConfiguration) WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, 128)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((WorldGenFeatureConfiguration) (new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenDecoratorFrequencyConfiguration(4)))));
+-        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b((WorldGenFeatureConfiguration) BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((WorldGenFeatureDecoratorConfiguration) (new WorldGenFeatureChanceDecoratorCountConfiguration(16, 10, 20, 128)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aM).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(8, 4, 8, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.ap).a(WorldGenDecorator.A.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.RANDOM_PATCH.b(BiomeDecoratorGroups.aq).a(WorldGenDecorator.A.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.I.a((new WorldGenDecoratorFrequencyConfiguration(10)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.GLOWSTONE_BLOB.b(WorldGenFeatureConfiguration.k).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(10, 0, 0, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.ORE.b((new WorldGenFeatureOreConfiguration(WorldGenFeatureOreConfiguration.Target.NETHERRACK, Blocks.MAGMA_BLOCK.getBlockData(), 33))).a(WorldGenDecorator.B.a((new WorldGenDecoratorFrequencyConfiguration(4)))));
++        this.a(WorldGenStage.Decoration.UNDERGROUND_DECORATION, WorldGenerator.SPRING_FEATURE.b(BiomeDecoratorGroups.aO).a(WorldGenDecorator.n.a((new WorldGenFeatureChanceDecoratorCountConfiguration(16, 10, 20, de.minebench.origami.OrigamiConfig.netherHeight)))));
++        // Origami end
+         BiomeDecoratorGroups.av(this);
+         BiomeDecoratorGroups.as(this);
+         this.a(EnumCreatureType.MONSTER, new BiomeBase.BiomeMeta(EntityTypes.ENDERMAN, 1, 4, 4));
+diff --git a/src/main/java/net/minecraft/server/DimensionManager.java b/src/main/java/net/minecraft/server/DimensionManager.java
+index ae69c31dca..dfeb86e53d 100644
+--- a/src/main/java/net/minecraft/server/DimensionManager.java
++++ b/src/main/java/net/minecraft/server/DimensionManager.java
+@@ -31,7 +31,7 @@ public class DimensionManager {
+     public static final ResourceKey<DimensionManager> THE_NETHER = ResourceKey.a(IRegistry.ad, new MinecraftKey("the_nether"));
+     public static final ResourceKey<DimensionManager> THE_END = ResourceKey.a(IRegistry.ad, new MinecraftKey("the_end"));
+     protected static final DimensionManager OVERWORLD_IMPL = new DimensionManager(OptionalLong.empty(), true, false, false, true, false, false, false, true, false, true, 256, GenLayerZoomVoronoiFixed.INSTANCE, TagsBlock.aC.a(), 0.0F);
+-    protected static final DimensionManager THE_NETHER_IMPL = new DimensionManager(OptionalLong.of(18000L), false, true, true, false, true, false, true, false, true, false, 128, GenLayerZoomVoronoi.INSTANCE, TagsBlock.aD.a(), 0.1F);
++    protected static final DimensionManager THE_NETHER_IMPL = new DimensionManager(OptionalLong.of(18000L), false, true, true, false, true, false, true, false, true, false, de.minebench.origami.OrigamiConfig.netherHeight, GenLayerZoomVoronoi.INSTANCE, TagsBlock.aD.a(), 0.1F); // Origami - configurable nether height
+     protected static final DimensionManager THE_END_IMPL = new DimensionManager(OptionalLong.of(6000L), false, false, false, false, false, true, false, false, false, true, 256, GenLayerZoomVoronoi.INSTANCE, TagsBlock.aE.a(), 0.0F);
+     public static final ResourceKey<DimensionManager> i = ResourceKey.a(IRegistry.ad, new MinecraftKey("overworld_caves"));
+     protected static final DimensionManager j = new DimensionManager(OptionalLong.empty(), true, true, false, true, false, false, false, true, false, true, 256, GenLayerZoomVoronoiFixed.INSTANCE, TagsBlock.aC.a(), 0.0F);
+@@ -125,20 +125,28 @@ public class DimensionManager {
+     }
+ 
+     private static ChunkGenerator d(long i) {
+-        return new ChunkGeneratorAbstract(new WorldChunkManagerTheEnd(i), i, GeneratorSettingBase.a.e.b());
++        return new ChunkGeneratorAbstract(new WorldChunkManagerTheEnd(i), i, GeneratorSettingBase.SettingsPreset.e.b()); // Origami - decompile fixes
+     }
+ 
+     private static ChunkGenerator e(long i) {
+-        return new ChunkGeneratorAbstract(WorldChunkManagerMultiNoise.a.b.a(i), i, GeneratorSettingBase.a.d.b());
++        return new ChunkGeneratorAbstract(NoisePreset.b.a(i), i, GeneratorSettingBase.SettingsPreset.d.b()); // Origami - decompile fixes
+     }
+ 
++    // Origami start - OBFHELPER
++    private static class NoisePreset extends WorldChunkManagerMultiNoise.a {
++        public NoisePreset(MinecraftKey minecraftkey, java.util.function.LongFunction<WorldChunkManagerMultiNoise> longfunction) {
++            super(minecraftkey, longfunction);
++        }
++    }
++    // Origami end
++
+     public static RegistryMaterials<WorldDimension> a(long i) {
+         RegistryMaterials<WorldDimension> registrymaterials = new RegistryMaterials<>(IRegistry.af, Lifecycle.experimental());
+ 
+-        registrymaterials.a(WorldDimension.THE_NETHER, (Object) (new WorldDimension(() -> {
++        registrymaterials.a(WorldDimension.THE_NETHER, (new WorldDimension(() -> { // Origami - decompile fixes
+             return DimensionManager.THE_NETHER_IMPL;
+         }, e(i))));
+-        registrymaterials.a(WorldDimension.THE_END, (Object) (new WorldDimension(() -> {
++        registrymaterials.a(WorldDimension.THE_END, (new WorldDimension(() -> { // Origami - decompile fixes
+             return DimensionManager.THE_END_IMPL;
+         }, d(i))));
+         registrymaterials.d(WorldDimension.THE_NETHER);
+diff --git a/src/main/java/net/minecraft/server/GeneratorSettingBase.java b/src/main/java/net/minecraft/server/GeneratorSettingBase.java
+index 26381c949d..6a87bb6cf1 100644
+--- a/src/main/java/net/minecraft/server/GeneratorSettingBase.java
++++ b/src/main/java/net/minecraft/server/GeneratorSettingBase.java
+@@ -15,8 +15,8 @@ public final class GeneratorSettingBase {
+     public static final Codec<GeneratorSettingBase> a = RecordCodecBuilder.create((instance) -> {
+         return instance.group(StructureSettings.a.fieldOf("structures").forGetter(GeneratorSettingBase::a), NoiseSettings.a.fieldOf("noise").forGetter(GeneratorSettingBase::b), IBlockData.b.fieldOf("default_block").forGetter(GeneratorSettingBase::c), IBlockData.b.fieldOf("default_fluid").forGetter(GeneratorSettingBase::d), Codecs.a(-20, 276).fieldOf("bedrock_roof_position").forGetter(GeneratorSettingBase::e), Codecs.a(-20, 276).fieldOf("bedrock_floor_position").forGetter(GeneratorSettingBase::f), Codecs.a(0, 255).fieldOf("sea_level").forGetter(GeneratorSettingBase::g), Codec.BOOL.fieldOf("disable_mob_generation").forGetter(GeneratorSettingBase::h)).apply(instance, GeneratorSettingBase::new);
+     });
+-    public static final Codec<GeneratorSettingBase> b = Codec.either(GeneratorSettingBase.a.a, GeneratorSettingBase.a).xmap((either) -> {
+-        return (GeneratorSettingBase) either.map(GeneratorSettingBase.a::b, Function.identity());
++    public static final Codec<GeneratorSettingBase> b = Codec.either(GeneratorSettingBase.SettingsPreset.a, GeneratorSettingBase.a).xmap((either) -> { // Origami - decompile fixes
++        return either.map(a -> a.b(), Function.identity()); // Origami - decompile fixes
+     }, (generatorsettingbase) -> {
+         return (Either) generatorsettingbase.k.map(Either::left).orElseGet(() -> {
+             return Either.right(generatorsettingbase);
+@@ -85,11 +85,18 @@ public final class GeneratorSettingBase {
+         return Objects.equals(this.k, Optional.of(generatorsettingbase_a));
+     }
+ 
++    // Origami start - OBFHELPER
++    public static class SettingsPreset extends GeneratorSettingBase.a {
++        public SettingsPreset(String s, java.util.function.Function<GeneratorSettingBase.a, GeneratorSettingBase> function) {
++            super(s, function);
++        }
++    }
++    // Origami end
+     public static class a {
+ 
+-        private static final Map<MinecraftKey, GeneratorSettingBase.a> h = Maps.newHashMap();
++        static final Map<MinecraftKey, GeneratorSettingBase.a> h = Maps.newHashMap(); // Origami - decompile fixes
+         public static final Codec<GeneratorSettingBase.a> a = MinecraftKey.a.flatXmap((minecraftkey) -> {
+-            return (DataResult) Optional.ofNullable(GeneratorSettingBase.a.h.get(minecraftkey)).map(DataResult::success).orElseGet(() -> {
++            return Optional.ofNullable(SettingsPreset.h.get(minecraftkey)).map(DataResult::success).orElseGet(() -> { // Origami - decompile fixes
+                 return DataResult.error("Unknown preset: " + minecraftkey);
+             });
+         }, (generatorsettingbase_a) -> {
+@@ -121,7 +128,7 @@ public final class GeneratorSettingBase {
+             this.j = new MinecraftKey(s);
+             this.i = new ChatMessage("generator.noise." + s);
+             this.k = (GeneratorSettingBase) function.apply(this);
+-            GeneratorSettingBase.a.h.put(this.j, this);
++            GeneratorSettingBase.SettingsPreset.h.put(this.j, this); // Origami - decompile fixes
+         }
+ 
+         public GeneratorSettingBase b() {
+@@ -129,14 +136,14 @@ public final class GeneratorSettingBase {
+         }
+ 
+         private static GeneratorSettingBase a(StructureSettings structuresettings, IBlockData iblockdata, IBlockData iblockdata1, GeneratorSettingBase.a generatorsettingbase_a, boolean flag, boolean flag1) {
+-            return new GeneratorSettingBase(structuresettings, new NoiseSettings(128, new NoiseSamplingSettings(2.0D, 1.0D, 80.0D, 160.0D), new NoiseSlideSettings(-3000, 64, -46), new NoiseSlideSettings(-30, 7, 1), 2, 1, 0.0D, 0.0D, true, false, flag1, false), iblockdata, iblockdata1, -10, -10, 0, flag, Optional.of(generatorsettingbase_a));
++            return new GeneratorSettingBase(structuresettings, new NoiseSettings(de.minebench.origami.OrigamiConfig.netherHeight, new NoiseSamplingSettings(2.0D, 1.0D, 80.0D, 160.0D), new NoiseSlideSettings(-3000, 64, -46), new NoiseSlideSettings(-30, 7, 1), 2, 1, 0.0D, 0.0D, true, false, flag1, false), iblockdata, iblockdata1, -10, -10, 0, flag, Optional.of(generatorsettingbase_a)); // Origami - configurable nether height
+         }
+ 
+         private static GeneratorSettingBase a(StructureSettings structuresettings, IBlockData iblockdata, IBlockData iblockdata1, GeneratorSettingBase.a generatorsettingbase_a) {
+             Map<StructureGenerator<?>, StructureSettingsFeature> map = Maps.newHashMap(StructureSettings.b);
+ 
+             map.put(StructureGenerator.RUINED_PORTAL, new StructureSettingsFeature(25, 10, 34222645));
+-            return new GeneratorSettingBase(new StructureSettings(Optional.ofNullable(structuresettings.b()), map), new NoiseSettings(128, new NoiseSamplingSettings(1.0D, 3.0D, 80.0D, 60.0D), new NoiseSlideSettings(120, 3, 0), new NoiseSlideSettings(320, 4, -1), 1, 2, 0.0D, 0.019921875D, false, false, false, false), iblockdata, iblockdata1, 0, 0, 32, false, Optional.of(generatorsettingbase_a));
++            return new GeneratorSettingBase(new StructureSettings(Optional.ofNullable(structuresettings.b()), map), new NoiseSettings(de.minebench.origami.OrigamiConfig.netherHeight, new NoiseSamplingSettings(1.0D, 3.0D, 80.0D, 60.0D), new NoiseSlideSettings(120, 3, 0), new NoiseSlideSettings(320, 4, -1), 1, 2, 0.0D, 0.019921875D, false, false, false, false), iblockdata, iblockdata1, 0, 0, 32, false, Optional.of(generatorsettingbase_a)); // Origami - configurable nether height
+         }
+ 
+         private static GeneratorSettingBase a(StructureSettings structuresettings, boolean flag, GeneratorSettingBase.a generatorsettingbase_a) {
+diff --git a/src/main/java/net/minecraft/server/WorldGenCavesHell.java b/src/main/java/net/minecraft/server/WorldGenCavesHell.java
+index b975bf29dc..9c8192ac34 100644
+--- a/src/main/java/net/minecraft/server/WorldGenCavesHell.java
++++ b/src/main/java/net/minecraft/server/WorldGenCavesHell.java
+@@ -10,7 +10,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
+ public class WorldGenCavesHell extends WorldGenCaves {
+ 
+     public WorldGenCavesHell(Codec<WorldGenFeatureConfigurationChance> codec) {
+-        super(codec, 128);
++        super(codec, de.minebench.origami.OrigamiConfig.netherHeight); // Origami - configurable nether height
+         this.j = ImmutableSet.of(Blocks.STONE, Blocks.GRANITE, Blocks.DIORITE, Blocks.ANDESITE, Blocks.DIRT, Blocks.COARSE_DIRT, new Block[]{Blocks.PODZOL, Blocks.GRASS_BLOCK, Blocks.NETHERRACK, Blocks.SOUL_SAND, Blocks.SOUL_SOIL, Blocks.CRIMSON_NYLIUM, Blocks.WARPED_NYLIUM, Blocks.NETHER_WART_BLOCK, Blocks.WARPED_WART_BLOCK, Blocks.BASALT, Blocks.BLACKSTONE});
+         this.k = ImmutableSet.of(FluidTypes.LAVA, FluidTypes.WATER);
+     }
+diff --git a/src/main/java/net/minecraft/server/WorldGenDecoratorNetherFire.java b/src/main/java/net/minecraft/server/WorldGenDecoratorNetherFire.java
+index 7481f8d8e2..f1b3a6878c 100644
+--- a/src/main/java/net/minecraft/server/WorldGenDecoratorNetherFire.java
++++ b/src/main/java/net/minecraft/server/WorldGenDecoratorNetherFire.java
+@@ -18,7 +18,7 @@ public class WorldGenDecoratorNetherFire extends WorldGenDecoratorFeatureSimple<
+         for (int i = 0; i < random.nextInt(random.nextInt(worldgendecoratorfrequencyconfiguration.b) + 1) + 1; ++i) {
+             int j = random.nextInt(16) + blockposition.getX();
+             int k = random.nextInt(16) + blockposition.getZ();
+-            int l = random.nextInt(120) + 4;
++            int l = random.nextInt(de.minebench.origami.OrigamiConfig.netherHeight - 8) + 4; // Origami - configurable nether height
+ 
+             list.add(new BlockPosition(j, l, k));
+         }
+diff --git a/src/main/java/net/minecraft/server/WorldGenDecoratorNetherGlowstone.java b/src/main/java/net/minecraft/server/WorldGenDecoratorNetherGlowstone.java
+index 8ebbeabaf4..acab670783 100644
+--- a/src/main/java/net/minecraft/server/WorldGenDecoratorNetherGlowstone.java
++++ b/src/main/java/net/minecraft/server/WorldGenDecoratorNetherGlowstone.java
+@@ -15,7 +15,7 @@ public class WorldGenDecoratorNetherGlowstone extends WorldGenDecoratorFeatureSi
+         return IntStream.range(0, random.nextInt(random.nextInt(worldgendecoratorfrequencyconfiguration.b) + 1)).mapToObj((i) -> {
+             int j = random.nextInt(16) + blockposition.getX();
+             int k = random.nextInt(16) + blockposition.getZ();
+-            int l = random.nextInt(120) + 4;
++            int l = random.nextInt(de.minebench.origami.OrigamiConfig.netherHeight - 8) + 4; // Origami - configurable nether height
+ 
+             return new BlockPosition(j, l, k);
+         });
+diff --git a/src/main/java/net/minecraft/server/WorldGenSurfaceNether.java b/src/main/java/net/minecraft/server/WorldGenSurfaceNether.java
+index 6677740edb..2dec2657ee 100644
+--- a/src/main/java/net/minecraft/server/WorldGenSurfaceNether.java
++++ b/src/main/java/net/minecraft/server/WorldGenSurfaceNether.java
+@@ -29,7 +29,7 @@ public class WorldGenSurfaceNether extends WorldGenSurface<WorldGenSurfaceConfig
+         IBlockData iblockdata2 = worldgensurfaceconfigurationbase.a();
+         IBlockData iblockdata3 = worldgensurfaceconfigurationbase.b();
+ 
+-        for (int k2 = 127; k2 >= 0; --k2) {
++        for (int k2 = de.minebench.origami.OrigamiConfig.netherHeight - 1; k2 >= 0; --k2) { // Origami - configurable nether height
+             blockposition_mutableblockposition.d(k1, k2, l1);
+             IBlockData iblockdata4 = ichunkaccess.getType(blockposition_mutableblockposition);
+ 
+diff --git a/src/main/java/net/minecraft/server/WorldGenSurfaceNetherAbstract.java b/src/main/java/net/minecraft/server/WorldGenSurfaceNetherAbstract.java
+index 1ff8b4eb10..6fd58e98ee 100644
+--- a/src/main/java/net/minecraft/server/WorldGenSurfaceNetherAbstract.java
++++ b/src/main/java/net/minecraft/server/WorldGenSurfaceNetherAbstract.java
+@@ -35,9 +35,9 @@ public abstract class WorldGenSurfaceNetherAbstract extends WorldGenSurface<Worl
+             return ((NoiseGeneratorOctaves) entry.getValue()).a((double) i, (double) l, (double) j);
+         })).get()).getKey();
+         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition();
+-        IBlockData iblockdata4 = ichunkaccess.getType(blockposition_mutableblockposition.d(k1, 128, l1));
++        IBlockData iblockdata4 = ichunkaccess.getType(blockposition_mutableblockposition.d(k1, de.minebench.origami.OrigamiConfig.netherHeight, l1)); // Origami - configurable nether height
+ 
+-        for (int k2 = 127; k2 >= 0; --k2) {
++        for (int k2 = de.minebench.origami.OrigamiConfig.netherHeight - 1; k2 >= 0; --k2) { // Origami - configurable nether height
+             blockposition_mutableblockposition.d(k1, k2, l1);
+             IBlockData iblockdata5 = ichunkaccess.getType(blockposition_mutableblockposition);
+             int l2;
+diff --git a/src/main/java/net/minecraft/server/WorldGenSurfaceNetherForest.java b/src/main/java/net/minecraft/server/WorldGenSurfaceNetherForest.java
+index c3c31fa356..2057ee3a82 100644
+--- a/src/main/java/net/minecraft/server/WorldGenSurfaceNetherForest.java
++++ b/src/main/java/net/minecraft/server/WorldGenSurfaceNetherForest.java
+@@ -27,7 +27,7 @@ public class WorldGenSurfaceNetherForest extends WorldGenSurface<WorldGenSurface
+         int j2 = -1;
+         IBlockData iblockdata2 = worldgensurfaceconfigurationbase.b();
+ 
+-        for (int k2 = 127; k2 >= 0; --k2) {
++        for (int k2 = de.minebench.origami.OrigamiConfig.netherHeight - 1; k2 >= 0; --k2) { // Origami - configurable nether height
+             blockposition_mutableblockposition.d(k1, k2, l1);
+             IBlockData iblockdata3 = worldgensurfaceconfigurationbase.a();
+             IBlockData iblockdata4 = ichunkaccess.getType(blockposition_mutableblockposition);
+-- 
+2.25.1.windows.1
+

@@ -1,23 +1,22 @@
-From bd40339ca510f4a1e28d4499e320ae886e435f2b Mon Sep 17 00:00:00 2001
+From bb6a570c69b9e7bf97c6e743fd58afbecbf6e1a8 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:41:38 +0100
 Subject: [PATCH] Origami Server Config
 
 ---
- .../de/minebench/origami/OrigamiConfig.java   | 115 ++++++++++++++++++
- .../net/minecraft/server/DedicatedServer.java |   1 +
+ .../de/minebench/origami/OrigamiConfig.java   | 117 ++++++++++++++++++
  src/main/java/net/minecraft/server/World.java |   3 +
  .../org/bukkit/craftbukkit/CraftServer.java   |   2 +
- .../java/org/bukkit/craftbukkit/Main.java     |   8 ++
- 5 files changed, 129 insertions(+)
+ .../java/org/bukkit/craftbukkit/Main.java     |   9 ++
+ 4 files changed, 131 insertions(+)
  create mode 100644 src/main/java/de/minebench/origami/OrigamiConfig.java
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 new file mode 100644
-index 0000000000..cf633866bf
+index 0000000000..fe7330fabe
 --- /dev/null
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -0,0 +1,115 @@
+@@ -0,0 +1,117 @@
 +package de.minebench.origami;
 +
 +import org.bukkit.Bukkit;
@@ -49,13 +48,14 @@ index 0000000000..cf633866bf
 +            try {
 +                file.createNewFile();
 +            } catch (final Exception ex) {
-+                Bukkit.getLogger().log(Level.SEVERE, "Failure to create origami config", ex);
++                System.out.println("Failure to create origami config");
++                ex.printStackTrace();
 +            }
 +        } else {
 +            try {
 +                config.load(file);
 +            } catch (final Exception ex) {
-+                Bukkit.getLogger().log(Level.SEVERE, "Failure to load origami config", ex);
++                System.out.println("Failure to load origami config");
 +                throw new RuntimeException(ex);
 +            }
 +        }
@@ -84,7 +84,8 @@ index 0000000000..cf633866bf
 +        try {
 +            config.save(OrigamiConfig.configFile);
 +        } catch (final Exception ex) {
-+            Bukkit.getLogger().log(Level.SEVERE, "Unable to save origami config", ex);
++            System.out.println("Unable to save origami config");
++            ex.printStackTrace();
 +        }
 +    }
 +
@@ -134,20 +135,8 @@ index 0000000000..cf633866bf
 +
 +}
 \ No newline at end of file
-diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 8b2755a3b9..90ec78e5a1 100644
---- a/src/main/java/net/minecraft/server/DedicatedServer.java
-+++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -170,6 +170,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
-         com.destroystokyo.paper.PaperConfig.registerCommands();
-         com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
-         // Paper end
-+        de.minebench.origami.OrigamiConfig.init((java.io.File) options.valueOf("origami-settings")); // Origami - Server Config
- 
-         this.setPVP(dedicatedserverproperties.pvp);
-         this.setAllowFlight(dedicatedserverproperties.allowFlight);
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index b598c48692..233a727941 100644
+index 5f81997db7..ec0908379d 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -94,6 +94,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -168,7 +157,7 @@ index b598c48692..233a727941 100644
          this.generator = gen;
          this.world = new CraftWorld((WorldServer) this, gen, env);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 06621915c9..cecb159735 100644
+index d624539e77..ed05937ab9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -848,6 +848,7 @@ public final class CraftServer implements Server {
@@ -188,7 +177,7 @@ index 06621915c9..cecb159735 100644
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index ba4c9c1b0e..cf948d7b13 100644
+index cd064fa7cc..e10db92b9c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -139,6 +139,14 @@ public class Main {
@@ -206,6 +195,14 @@ index ba4c9c1b0e..cf948d7b13 100644
                  // Paper start
                  acceptsAll(asList("server-name"), "Name of the server")
                          .withRequiredArg()
+@@ -272,6 +280,7 @@ public class Main {
+                 }
+                 // Paper end
+                 System.setProperty( "library.jansi.version", "Paper" ); // Paper - set meaningless jansi version to prevent git builds from crashing on Windows
++                de.minebench.origami.OrigamiConfig.init((java.io.File) options.valueOf("origami-settings")); // Origami - Server Config
+                 System.out.println("Loading libraries, please wait...");
+                 net.minecraft.server.Main.main(options);
+             } catch (Throwable t) {
 -- 
 2.25.1.windows.1
 

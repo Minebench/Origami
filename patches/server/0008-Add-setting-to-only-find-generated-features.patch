@@ -1,4 +1,4 @@
-From 64e826d0fd38bb49c0d0a0e6b5e4df2ad37dc861 Mon Sep 17 00:00:00 2001
+From 5ac0f055f7f6a0588612dcfe85cc20eba09108ea Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 01:27:40 +0100
 Subject: [PATCH] Add setting to only find generated features
@@ -14,10 +14,10 @@ Thanks @electronicboy for the improvements.
  2 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 59e861e6c3..bcaf74e794 100644
+index e7207e835b..caf07cad8e 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -110,6 +110,11 @@ public final class OrigamiConfig {
+@@ -112,6 +112,11 @@ public final class OrigamiConfig {
              config.addDefault("worlds.default." + path, Double.valueOf(dfl));
              return config.getDouble("worlds." + worldName + "." + path, config.getDouble("worlds.default." + path, dfl));
          }
