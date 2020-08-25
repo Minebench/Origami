@@ -1,0 +1,45 @@
+From 743b507eab2e2428c2f55388d7193ecdb7f61198 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <max@themoep.de>
+Date: Tue, 25 Aug 2020 15:54:47 +0100
+Subject: [PATCH] Don't disconnect on brand read error
+
+Works around PaperMC/Paper#4201 until there is a proper fix
+---
+ .../java/net/minecraft/server/PlayerConnection.java    | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 3e75cbc878..7274c41355 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -2772,17 +2772,27 @@ public class PlayerConnection implements PacketListenerPlayIn {
+                 this.disconnect("Invalid payload UNREGISTER!");
+             }
+         } else {
++            boolean brandReadError = false; // Origami - Don't disconnect on brand read error
+             try {
+                 byte[] data = new byte[packetplayincustompayload.data.readableBytes()];
+                 packetplayincustompayload.data.readBytes(data);
+ 
+                 // Paper start - Brand support
+                 if (packetplayincustompayload.tag.equals(MINECRAFT_BRAND))
++                    // Origami start - Don't disconnect on brand read error
++                    try {
+                     this.clientBrandName = new PacketDataSerializer(Unpooled.copiedBuffer(data)).readUTF(256);
++                    } catch (StringIndexOutOfBoundsException e) {
++                        PlayerConnection.LOGGER.error("Couldn\'t read brand name: " + e.getMessage());
++                        this.clientBrandName = null;
++                        brandReadError = true;
++                    }
++                    // Origami end
+                 // Paper end
+                 server.getMessenger().dispatchIncomingMessage(player.getBukkitEntity(), packetplayincustompayload.tag.toString(), data);
+             } catch (Exception ex) {
+                 PlayerConnection.LOGGER.error("Couldn\'t dispatch custom payload", ex);
++                if (!brandReadError) // Origami - Don't disconnect on brand read error
+                 this.disconnect("Invalid custom payload!");
+             }
+         }
+-- 
+2.25.1.windows.1
+
