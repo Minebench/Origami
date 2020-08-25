@@ -1,4 +1,4 @@
-From 2b6ffbc6f6b3e85c5311d9ccb2e86a006d687087 Mon Sep 17 00:00:00 2001
+From 89c260b43cbeda0df75619af5429aa3a0b1b37cb Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
@@ -6,8 +6,8 @@ Subject: [PATCH] Add option for behavior and sensor tick rates
 ---
  .../de/minebench/origami/OrigamiConfig.java   | 28 +++++++++++++++++++
  .../java/net/minecraft/server/Behavior.java   | 18 ++++++++++++
- .../java/net/minecraft/server/Sensor.java     | 14 +++++++++-
- 3 files changed, 59 insertions(+), 1 deletion(-)
+ .../java/net/minecraft/server/Sensor.java     | 16 +++++++++--
+ 3 files changed, 60 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 index caf07cad8e..63eab94b8f 100644
@@ -104,21 +104,21 @@ index 65af976527..7915334116 100644
              this.b = Behavior.Status.RUNNING;
              int j = this.d + worldserver.getRandom().nextInt(this.e + 1 - this.d);
 diff --git a/src/main/java/net/minecraft/server/Sensor.java b/src/main/java/net/minecraft/server/Sensor.java
-index e3888dd972..cb92b24851 100644
+index 4dd2d99edc..d5a3651dca 100644
 --- a/src/main/java/net/minecraft/server/Sensor.java
 +++ b/src/main/java/net/minecraft/server/Sensor.java
-@@ -8,10 +8,22 @@ public abstract class Sensor<E extends EntityLiving> {
-     private static final Random a = new Random();
-     private final int b;
-     private long c;
+@@ -10,10 +10,22 @@ public abstract class Sensor<E extends EntityLiving> {
+     private static final PathfinderTargetCondition c = (new PathfinderTargetCondition()).a(16.0D).b().d().e();
+     private final int d;
+     private long e;
 +    // Origami start - configurable sensor tick rate
 +    private final String configKey;
 +    private static final String RATE_TYPE = "sensor";
 +    // Origami end
  
      public Sensor(int i) {
-         this.b = i;
-         this.c = (long) Sensor.a.nextInt(i);
+         this.d = i;
+         this.e = (long) Sensor.a.nextInt(i);
 +        // Origami start - configurable sensor tick rate
 +        String key = getClass().getName().startsWith("net.minecraft.server.") ? getClass().getSimpleName() : getClass().getName();
 +        key = key.toLowerCase();
@@ -130,15 +130,23 @@ index e3888dd972..cb92b24851 100644
      }
  
      public Sensor() {
-@@ -20,7 +32,7 @@ public abstract class Sensor<E extends EntityLiving> {
+@@ -22,7 +34,7 @@ public abstract class Sensor<E extends EntityLiving> {
  
      public final void b(WorldServer worldserver, E e0) {
-         if (--this.c <= 0L) {
--            this.c = (long) this.b;
-+            this.c = (long) worldserver.origamiConfig.getTickRate(RATE_TYPE, configKey, e0.getMinecraftKey().getKey(), this.b); // Origami - configurable sensor tick rates
+         if (--this.e <= 0L) {
+-            this.e = (long) this.d;
++            this.e = (long) worldserver.origamiConfig.getTickRate(RATE_TYPE, configKey, e0.getMinecraftKey().getKey(), this.d); // Origami - configurable sensor tick rates
              this.a(worldserver, e0);
          }
  
+@@ -33,6 +45,6 @@ public abstract class Sensor<E extends EntityLiving> {
+     public abstract Set<MemoryModuleType<?>> a();
+ 
+     protected static boolean a(EntityLiving entityliving, EntityLiving entityliving1) {
+-        return entityliving.getBehaviorController().b(MemoryModuleType.ATTACK_TARGET, (Object) entityliving1) ? Sensor.c.a(entityliving, entityliving1) : Sensor.b.a(entityliving, entityliving1);
++        return entityliving.getBehaviorController().b(MemoryModuleType.ATTACK_TARGET, entityliving1) ? Sensor.c.a(entityliving, entityliving1) : Sensor.b.a(entityliving, entityliving1); // Origami - decompile fix
+     }
+ }
 -- 
 2.25.1.windows.1
 

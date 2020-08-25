@@ -1,4 +1,4 @@
-From 1efac03509d9881964813d7a4cb74ec2cfa2af73 Mon Sep 17 00:00:00 2001
+From 6c540c0de4fb2a9485508f7c0af80756effb9235 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 4 Jul 2020 20:08:42 +0100
 Subject: [PATCH] Keep weather clear after sleep
@@ -9,10 +9,10 @@ Subject: [PATCH] Keep weather clear after sleep
  2 files changed, 2 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/WorldDataServer.java b/src/main/java/net/minecraft/server/WorldDataServer.java
-index 286f672b9b..a110d9ab59 100644
+index a7e623044a..d9dbe65701 100644
 --- a/src/main/java/net/minecraft/server/WorldDataServer.java
 +++ b/src/main/java/net/minecraft/server/WorldDataServer.java
-@@ -273,6 +273,7 @@ public class WorldDataServer implements IWorldDataServer, SaveData {
+@@ -287,6 +287,7 @@ public class WorldDataServer implements IWorldDataServer, SaveData {
          return this.clearWeatherTime;
      }
  
@@ -21,10 +21,10 @@ index 286f672b9b..a110d9ab59 100644
      public void a(int i) {
          this.clearWeatherTime = i;
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 63c1190729..3b2c121c3b 100644
+index efe10b7f58..61152f5ed4 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
-@@ -764,6 +764,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
+@@ -765,6 +765,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
      }
  
      private void clearWeather() {

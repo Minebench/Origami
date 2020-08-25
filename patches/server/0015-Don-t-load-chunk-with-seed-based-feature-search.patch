@@ -1,4 +1,4 @@
-From 43d7a4811f0df9671630a9e582bf38b04aa71bd9 Mon Sep 17 00:00:00 2001
+From ef12cb1ae32d694e2bcba2db0c304938a475bd01 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 13 Jan 2020 01:00:49 +0100
 Subject: [PATCH] Don't load chunk with seed based feature search
@@ -9,7 +9,7 @@ Subject: [PATCH] Don't load chunk with seed based feature search
  2 files changed, 13 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 10fc95b7f9..ffd07c2fda 100644
+index 40cd25dc8a..fe135b7f1a 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -116,6 +116,14 @@ public final class OrigamiConfig {
@@ -28,10 +28,10 @@ index 10fc95b7f9..ffd07c2fda 100644
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
 diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
-index b21fa19c76..eac4fe11c0 100644
+index 9bc35af88d..8b3c525df7 100644
 --- a/src/main/java/net/minecraft/server/StructureGenerator.java
 +++ b/src/main/java/net/minecraft/server/StructureGenerator.java
-@@ -139,6 +139,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+@@ -143,6 +143,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
                              int j2 = i1 + k * l1;
                              ChunkCoordIntPair chunkcoordintpair = this.a(structuresettingsfeature, j, seededrandom, i2, j2);
                              if (!iworldreader.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper

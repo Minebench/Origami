@@ -1,4 +1,4 @@
-From 546557984724413b0f667119bc7b0a2b125e3403 Mon Sep 17 00:00:00 2001
+From 4e937d0f356bd150d4cdfea226520cc1d0a29aa8 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:35 +0100
 Subject: [PATCH] Origami POM Changes
@@ -9,7 +9,7 @@ Subject: [PATCH] Origami POM Changes
  2 files changed, 53 insertions(+), 12 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index ef8ee637a8..173ac74677 100644
+index 594ab9afbd..a2b99b5452 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -19,7 +19,7 @@ index ef8ee637a8..173ac74677 100644
 -    <artifactId>paper</artifactId>
 +    <artifactId>origami</artifactId>
      <packaging>jar</packaging>
-     <version>1.16.1-R0.1-SNAPSHOT</version>
+     <version>1.16.2-R0.1-SNAPSHOT</version>
 -    <name>Paper</name>
 -    <url>https://papermc.io</url>
 +    <name>Origami-Server</name>
@@ -28,7 +28,7 @@ index ef8ee637a8..173ac74677 100644
      <properties>
          <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
 @@ -15,25 +15,26 @@
-         <minecraft_version>1_16_R1</minecraft_version>
+         <minecraft_version>1_16_R2</minecraft_version>
          <maven.compiler.source>1.8</maven.compiler.source>
          <maven.compiler.target>1.8</maven.compiler.target>
 +        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>

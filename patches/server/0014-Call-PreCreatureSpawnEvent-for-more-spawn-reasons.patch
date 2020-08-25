@@ -1,47 +1,39 @@
-From 64c026100ab806bb6f628d1f3a0496c98b0af7b6 Mon Sep 17 00:00:00 2001
+From 7c846191cb65ff86b56cddc1cf0a00b35ebc4952 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 16:28:31 +0100
 Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
 
 ---
- .../java/net/minecraft/server/EntityTypes.java   | 10 ++++++++++
- .../net/minecraft/server/EntityVillager.java     | 16 ++++++++++++++++
- 2 files changed, 26 insertions(+)
+ .../java/net/minecraft/server/EntityTypes.java    | 10 ++++++++++
+ .../java/net/minecraft/server/EntityVillager.java | 15 +++++++++++++++
+ 2 files changed, 25 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityTypes.java b/src/main/java/net/minecraft/server/EntityTypes.java
-index 18a806ebbf..c1479d4df2 100644
+index 2767de830b..6f1a1f17e1 100644
 --- a/src/main/java/net/minecraft/server/EntityTypes.java
 +++ b/src/main/java/net/minecraft/server/EntityTypes.java
-@@ -176,6 +176,16 @@ public class EntityTypes<T extends Entity> {
+@@ -177,6 +177,16 @@ public class EntityTypes<T extends Entity> {
  
      @Nullable
-     public T spawnCreature(World world, @Nullable NBTTagCompound nbttagcompound, @Nullable IChatBaseComponent ichatbasecomponent, @Nullable EntityHuman entityhuman, BlockPosition blockposition, EnumMobSpawn enummobspawn, boolean flag, boolean flag1, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason) {
+     public T spawnCreature(WorldServer worldserver, @Nullable NBTTagCompound nbttagcompound, @Nullable IChatBaseComponent ichatbasecomponent, @Nullable EntityHuman entityhuman, BlockPosition blockposition, EnumMobSpawn enummobspawn, boolean flag, boolean flag1, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason) {
 +        // Origami start - Call PreCreatureSpawnEvent for more spawn reasons
 +        org.bukkit.entity.EntityType type = org.bukkit.entity.EntityType.fromName(EntityTypes.getName(this).getKey());
 +        if (type != null) {
 +            if (!new com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent(
-+                    MCUtil.toLocation(world, blockposition), type, spawnReason
++                    MCUtil.toLocation(worldserver, blockposition), type, spawnReason
 +            ).callEvent()) {
 +                return null;
 +            }
 +        }
 +        // Origami end
-         T t0 = this.createCreature(world, nbttagcompound, ichatbasecomponent, entityhuman, blockposition, enummobspawn, flag, flag1);
+         T t0 = this.createCreature(worldserver, nbttagcompound, ichatbasecomponent, entityhuman, blockposition, enummobspawn, flag, flag1);
  
-         return world.addEntity(t0, spawnReason) ? t0 : null; // Don't return an entity when CreatureSpawnEvent is canceled
+         if (t0 != null) {
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index bf019043a9..5e4d6bcd25 100644
+index c10ff09dd0..161f6a9acd 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
-@@ -864,6 +864,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
-         }
-     }
- 
-+    private void setGolemLastSeen(long time) { b(time); } // Origami - OBFHELPER
-     private void b(long i) {
-         this.bn.setMemory(MemoryModuleType.GOLEM_LAST_SEEN_TIME, i); // CraftBukkit - decompile error
-     }
-@@ -894,6 +895,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -882,6 +882,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
              BlockPosition blockposition1 = this.a(blockposition, d0, d1);
  
              if (blockposition1 != null) {
@@ -53,14 +45,14 @@ index bf019043a9..5e4d6bcd25 100644
 +                    );
 +                    if (!event.callEvent()) {
 +                        if (event.shouldAbortSpawn()) {
-+                            this.setGolemLastSeen(world.getTime());
++                            this.bg.setMemory(MemoryModuleType.GOLEM_DETECTED_RECENTLY, true);
 +                            return null;
 +                        }
 +                        break;
 +                    }
 +                }
 +                // Origami end
-                 EntityIronGolem entityirongolem = (EntityIronGolem) EntityTypes.IRON_GOLEM.createCreature(this.world, (NBTTagCompound) null, (IChatBaseComponent) null, (EntityHuman) null, blockposition1, EnumMobSpawn.MOB_SUMMONED, false, false);
+                 EntityIronGolem entityirongolem = (EntityIronGolem) EntityTypes.IRON_GOLEM.createCreature(worldserver, (NBTTagCompound) null, (IChatBaseComponent) null, (EntityHuman) null, blockposition1, EnumMobSpawn.MOB_SUMMONED, false, false);
  
                  if (entityirongolem != null) {
 -- 

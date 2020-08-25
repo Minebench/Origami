@@ -1,4 +1,4 @@
-From 9a71f4061cc8ed81fde2e2be67798078c66c1d18 Mon Sep 17 00:00:00 2001
+From 8e16fe7d24ad881fc3f7fd6f9e59a2c057b831b6 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 14 May 2020 20:47:39 +0100
 Subject: [PATCH] Re-add send chunk change API
@@ -8,10 +8,10 @@ Subject: [PATCH] Re-add send chunk change API
  1 file changed, 12 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 72cd52fd7f..9cb0725182 100644
+index b97be51c68..befc09c8c4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -729,6 +729,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -722,6 +722,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          throw new NotImplementedException("Chunk changes do not yet work"); // TODO: Chunk changes.
      }
  
@@ -20,7 +20,7 @@ index 72cd52fd7f..9cb0725182 100644
 +    public boolean sendChunkChange(org.bukkit.Chunk chunk) {
 +        if (getHandle().playerConnection == null) return false;
 +
-+        net.minecraft.server.PacketPlayOutMapChunk packet = new net.minecraft.server.PacketPlayOutMapChunk(((org.bukkit.craftbukkit.CraftChunk) chunk).getHandle(), 65535, true);
++        net.minecraft.server.PacketPlayOutMapChunk packet = new net.minecraft.server.PacketPlayOutMapChunk(((org.bukkit.craftbukkit.CraftChunk) chunk).getHandle(), 65535);
 +
 +        getHandle().playerConnection.sendPacket(packet);
 +        return true;

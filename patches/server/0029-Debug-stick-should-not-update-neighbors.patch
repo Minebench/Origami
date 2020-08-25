@@ -1,14 +1,26 @@
-From 7f674af16aebbdc95cb89c89a059a6321164a6c5 Mon Sep 17 00:00:00 2001
+From 7c16ee849260a5d77f6dbf607da12bf13ff2f1de Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <Blake.Galbreath@GMail.com>
 Date: Sat, 4 Apr 2020 17:16:30 -0500
 Subject: [PATCH] Debug stick should not update neighbors
 
 ---
- src/main/java/net/minecraft/server/ItemStack.java | 5 +++++
- 1 file changed, 5 insertions(+)
+ src/main/java/de/minebench/origami/OrigamiConfig.java | 1 -
+ src/main/java/net/minecraft/server/ItemStack.java     | 5 +++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index 3bc4911695..abd895b461 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -195,5 +195,4 @@ public final class OrigamiConfig {
+     private static void fixItemPositionDesync() {
+         fixItemPositionDesync = getBoolean("fix-item-position-desync", fixItemPositionDesync);
+     }
+-
+ }
+\ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/ItemStack.java b/src/main/java/net/minecraft/server/ItemStack.java
-index 3c56053e30..092b4d3c2d 100644
+index ace50805bf..76cc285175 100644
 --- a/src/main/java/net/minecraft/server/ItemStack.java
 +++ b/src/main/java/net/minecraft/server/ItemStack.java
 @@ -229,6 +229,11 @@ public final class ItemStack {

@@ -1,4 +1,4 @@
-From 5ac0f055f7f6a0588612dcfe85cc20eba09108ea Mon Sep 17 00:00:00 2001
+From 7d108385d045c9a4a00f940c3747b297f1750e22 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 01:27:40 +0100
 Subject: [PATCH] Add setting to only find generated features
@@ -30,10 +30,10 @@ index e7207e835b..caf07cad8e 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
-index 6eb8150414..b21fa19c76 100644
+index c3bd58069d..9bc35af88d 100644
 --- a/src/main/java/net/minecraft/server/StructureGenerator.java
 +++ b/src/main/java/net/minecraft/server/StructureGenerator.java
-@@ -139,7 +139,12 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+@@ -143,7 +143,12 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
                              int j2 = i1 + k * l1;
                              ChunkCoordIntPair chunkcoordintpair = this.a(structuresettingsfeature, j, seededrandom, i2, j2);
                              if (!iworldreader.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper

@@ -1,4 +1,4 @@
-From 901da662676d08df0307ca83ebe7a2a4246597f0 Mon Sep 17 00:00:00 2001
+From 1cef1d267f84a15acd72da9439ae198c9ee9626a Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Hopper Optimizations
@@ -17,7 +17,7 @@ chain.
  6 files changed, 84 insertions(+), 10 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index ffd07c2fda..17539a7bd7 100644
+index fe135b7f1a..3da6c6ebda 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -169,6 +169,12 @@ public final class OrigamiConfig {
@@ -34,10 +34,10 @@ index ffd07c2fda..17539a7bd7 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/server/BlockComposter.java b/src/main/java/net/minecraft/server/BlockComposter.java
-index 83b80e25f4..c4e3a30644 100644
+index ccb61d656b..55a5999080 100644
 --- a/src/main/java/net/minecraft/server/BlockComposter.java
 +++ b/src/main/java/net/minecraft/server/BlockComposter.java
-@@ -251,6 +251,7 @@ public class BlockComposter extends Block implements IInventoryHolder {
+@@ -250,6 +250,7 @@ public class BlockComposter extends Block implements IInventoryHolder {
          if ((Integer) iblockdata.get(BlockComposter.a) == 7) {
              worldserver.setTypeAndData(blockposition, (IBlockData) iblockdata.a((IBlockState) BlockComposter.a), 3);
              worldserver.playSound((EntityHuman) null, blockposition, SoundEffects.BLOCK_COMPOSTER_READY, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -46,10 +46,10 @@ index 83b80e25f4..c4e3a30644 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
-index a7860cb4de..75ddcb0145 100644
+index cfb31c412c..be8464b942 100644
 --- a/src/main/java/net/minecraft/server/EntityItem.java
 +++ b/src/main/java/net/minecraft/server/EntityItem.java
-@@ -130,6 +130,13 @@ public class EntityItem extends Entity {
+@@ -135,6 +135,13 @@ public class EntityItem extends Entity {
                  }
              }
  
@@ -64,10 +64,10 @@ index a7860cb4de..75ddcb0145 100644
                  // CraftBukkit start - fire ItemDespawnEvent
                  if (org.bukkit.craftbukkit.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
 diff --git a/src/main/java/net/minecraft/server/EntityMinecartContainer.java b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
-index 397fc1a985..b7e7293a86 100644
+index 67ff7fe6ab..c8062b12e2 100644
 --- a/src/main/java/net/minecraft/server/EntityMinecartContainer.java
 +++ b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
-@@ -130,7 +130,6 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
+@@ -137,7 +137,6 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
          if (!itemstack.isEmpty() && itemstack.getCount() > this.getMaxStackSize()) {
              itemstack.setCount(this.getMaxStackSize());
          }
@@ -75,7 +75,7 @@ index 397fc1a985..b7e7293a86 100644
      }
  
      @Override
-@@ -144,7 +143,25 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
+@@ -151,7 +150,25 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp
      }
  
      @Override
@@ -122,7 +122,7 @@ index 74390aebd3..9ce4f340d0 100644
 +    // Origami end
  }
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index 94eac598a1..6e4171f163 100644
+index b17b8b5c51..4e2e889c91 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
 @@ -19,8 +19,9 @@ import org.bukkit.inventory.Inventory;
@@ -254,7 +254,7 @@ index 94eac598a1..6e4171f163 100644
 @@ -722,6 +754,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
              BlockPosition blockposition = this.getPosition();
  
-             if (VoxelShapes.c(VoxelShapes.a(entity.getBoundingBox().d((double) (-blockposition.getX()), (double) (-blockposition.getY()), (double) (-blockposition.getZ()))), this.ac_(), OperatorBoolean.AND)) {
+             if (VoxelShapes.c(VoxelShapes.a(entity.getBoundingBox().d((double) (-blockposition.getX()), (double) (-blockposition.getY()), (double) (-blockposition.getZ()))), this.aa_(), OperatorBoolean.AND)) {
 +                enableTicking(this, 0); // Origami - don't tick empty hoppers
                  this.a(() -> {
                      return a((IInventory) this, (EntityItem) entity);
