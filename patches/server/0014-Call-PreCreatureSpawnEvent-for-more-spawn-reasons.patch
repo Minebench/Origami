@@ -1,4 +1,4 @@
-From c8a437766d12f800580de70c36e4b562beb6a8dd Mon Sep 17 00:00:00 2001
+From 57de8fdc5acaa74c03c68454bc4055b4e2b32946 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 16:28:31 +0100
 Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
@@ -9,10 +9,10 @@ Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
  2 files changed, 25 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityTypes.java b/src/main/java/net/minecraft/server/EntityTypes.java
-index e23247e0a8..6aa5ae89b9 100644
+index a71ad8418e..a25483db96 100644
 --- a/src/main/java/net/minecraft/server/EntityTypes.java
 +++ b/src/main/java/net/minecraft/server/EntityTypes.java
-@@ -178,6 +178,16 @@ public class EntityTypes<T extends Entity> {
+@@ -188,6 +188,16 @@ public class EntityTypes<T extends Entity> {
  
      @Nullable
      public T spawnCreature(WorldServer worldserver, @Nullable NBTTagCompound nbttagcompound, @Nullable IChatBaseComponent ichatbasecomponent, @Nullable EntityHuman entityhuman, BlockPosition blockposition, EnumMobSpawn enummobspawn, boolean flag, boolean flag1, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason spawnReason) {

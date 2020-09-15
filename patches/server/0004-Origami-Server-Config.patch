@@ -1,4 +1,4 @@
-From 4ab9aa5017c628932d662a9f4ea29d9bde6e22b4 Mon Sep 17 00:00:00 2001
+From 0c866e14e3974b27a16c30a8a9f03d420d5e3e51 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:41:38 +0100
 Subject: [PATCH] Origami Server Config
@@ -136,7 +136,7 @@ index 0000000000..fe7330fabe
 +}
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 287db5203f..7bf69460cd 100644
+index eaa2853934..1166526b83 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -94,6 +94,8 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -157,10 +157,10 @@ index 287db5203f..7bf69460cd 100644
          this.generator = gen;
          this.world = new CraftWorld((WorldServer) this, gen, env);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 16de617cb5..e093cd26f8 100644
+index 00f0de36ec..e825969880 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -854,6 +854,7 @@ public final class CraftServer implements Server {
+@@ -856,6 +856,7 @@ public final class CraftServer implements Server {
  
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
@@ -168,7 +168,7 @@ index 16de617cb5..e093cd26f8 100644
          for (WorldServer world : console.getWorlds()) {
              world.worldDataServer.setDifficulty(config.difficulty);
              world.setSpawnFlags(config.spawnMonsters, config.spawnAnimals);
-@@ -888,6 +889,7 @@ public final class CraftServer implements Server {
+@@ -890,6 +891,7 @@ public final class CraftServer implements Server {
              }
              world.spigotConfig.init(); // Spigot
              world.paperConfig.init(); // Paper
@@ -177,7 +177,7 @@ index 16de617cb5..e093cd26f8 100644
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index ba4c9c1b0e..b8ef0d93cf 100644
+index 96b98f2572..131eaeaf16 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -139,6 +139,14 @@ public class Main {
