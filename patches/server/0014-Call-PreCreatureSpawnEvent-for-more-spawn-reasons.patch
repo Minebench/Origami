@@ -1,4 +1,4 @@
-From 57de8fdc5acaa74c03c68454bc4055b4e2b32946 Mon Sep 17 00:00:00 2001
+From 116437f27019f1823fe0dbaf201629f67e6748a5 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 16:28:31 +0100
 Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
@@ -30,7 +30,7 @@ index a71ad8418e..a25483db96 100644
  
          if (t0 != null) {
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index c10ff09dd0..161f6a9acd 100644
+index c10ff09dd0..d0d65b743d 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
 @@ -882,6 +882,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
@@ -45,7 +45,7 @@ index c10ff09dd0..161f6a9acd 100644
 +                    );
 +                    if (!event.callEvent()) {
 +                        if (event.shouldAbortSpawn()) {
-+                            this.bg.setMemory(MemoryModuleType.GOLEM_DETECTED_RECENTLY, true);
++                            SensorGolemLastSeen.b(this); // Set Golem Last Seen
 +                            return null;
 +                        }
 +                        break;
