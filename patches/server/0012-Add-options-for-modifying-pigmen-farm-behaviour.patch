@@ -1,4 +1,4 @@
-From 073cab5c416bb4f5e2dd762ef98d6c8e0d7712b4 Mon Sep 17 00:00:00 2001
+From a27cc2456d5e817c9ffcfe2a3adf0992f6cac526 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
@@ -85,10 +85,10 @@ index 4132cd4c6f..fccc0bf053 100644
              EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
              world.getServer().getPluginManager().callEvent(event);
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index cfb14c54d6..01b1e7e022 100644
+index 28e2d3f0a5..78311d36bd 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
-@@ -191,6 +191,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -193,6 +193,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
      public boolean isTemporarilyActive = false; // Paper
      public boolean spawnedViaMobSpawner; // Paper - Yes this name is similar to above, upstream took the better one
      public boolean fromNetherPortal; // Paper
@@ -96,7 +96,7 @@ index cfb14c54d6..01b1e7e022 100644
      protected int numCollisions = 0; // Paper
      public void inactiveTick() { }
      // Spigot end
-@@ -1625,6 +1626,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -1636,6 +1637,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  nbttagcompound.setBoolean("Paper.FromNetherPortal", true);
              }
              // Paper end
@@ -108,7 +108,7 @@ index cfb14c54d6..01b1e7e022 100644
              return nbttagcompound;
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.a(throwable, "Saving entity NBT");
-@@ -1773,6 +1779,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -1789,6 +1795,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT;
              }
              // Paper end
