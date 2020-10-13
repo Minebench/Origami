@@ -1,4 +1,4 @@
-From 1cef1d267f84a15acd72da9439ae198c9ee9626a Mon Sep 17 00:00:00 2001
+From 0db24128e037980648938de988fe2d799fc4a527 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Hopper Optimizations
@@ -46,7 +46,7 @@ index ccb61d656b..55a5999080 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
-index cfb31c412c..be8464b942 100644
+index bc4f84c885..e97c801f82 100644
 --- a/src/main/java/net/minecraft/server/EntityItem.java
 +++ b/src/main/java/net/minecraft/server/EntityItem.java
 @@ -135,6 +135,13 @@ public class EntityItem extends Entity {
@@ -122,7 +122,7 @@ index 74390aebd3..9ce4f340d0 100644
 +    // Origami end
  }
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index b17b8b5c51..4e2e889c91 100644
+index d432de40eb..271c55d860 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
 @@ -19,8 +19,9 @@ import org.bukkit.inventory.Inventory;
@@ -225,7 +225,7 @@ index b17b8b5c51..4e2e889c91 100644
          }
  
          return false;
-@@ -466,6 +497,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -460,6 +491,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
                  entityitem = (EntityItem) iterator.next();
              } while (!a((IInventory) ihopper, entityitem));
  
@@ -233,7 +233,7 @@ index b17b8b5c51..4e2e889c91 100644
              return true;
          }
      }
-@@ -554,7 +586,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -548,7 +580,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
                  itemstack = a(iinventory, iinventory1, itemstack, k, enumdirection);
              }
          }
@@ -242,7 +242,7 @@ index b17b8b5c51..4e2e889c91 100644
          return itemstack;
      }
  
-@@ -695,7 +727,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -689,7 +721,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
          return (double) this.position.getZ() + 0.5D;
      }
  
@@ -251,7 +251,7 @@ index b17b8b5c51..4e2e889c91 100644
          this.j = i;
      }
  
-@@ -722,6 +754,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
+@@ -716,6 +748,7 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
              BlockPosition blockposition = this.getPosition();
  
              if (VoxelShapes.c(VoxelShapes.a(entity.getBoundingBox().d((double) (-blockposition.getX()), (double) (-blockposition.getY()), (double) (-blockposition.getZ()))), this.aa_(), OperatorBoolean.AND)) {

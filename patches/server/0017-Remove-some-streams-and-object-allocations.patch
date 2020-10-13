@@ -1,13 +1,12 @@
-From 9a689ad91d57842a2ff744e164c85bc5340d53a5 Mon Sep 17 00:00:00 2001
+From 787eea7822521ee0ccbc9da9a1549c5843fb7713 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
 
 Partially based on a patch in Spottedleaf's Paper fork
 ---
- src/main/java/net/minecraft/server/ChunkMap.java   | 14 ++++++++------
- .../net/minecraft/server/TileEntityHopper.java     |  8 +++++++-
- 2 files changed, 15 insertions(+), 7 deletions(-)
+ src/main/java/net/minecraft/server/ChunkMap.java | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/ChunkMap.java b/src/main/java/net/minecraft/server/ChunkMap.java
 index 7bfb5cb728..60f184a0ef 100644
@@ -41,25 +40,6 @@ index 7bfb5cb728..60f184a0ef 100644
  
          for (int k1 = -1; k1 <= 1; ++k1) {
              for (int l1 = -1; l1 <= 1; ++l1) {
-diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index 20df9bd21d..94eac598a1 100644
---- a/src/main/java/net/minecraft/server/TileEntityHopper.java
-+++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
-@@ -377,7 +377,13 @@ public class TileEntityHopper extends TileEntityLootable implements IHopper, ITi
-     }
- 
-     private static IntStream a(IInventory iinventory, EnumDirection enumdirection) {
--        return iinventory instanceof IWorldInventory ? IntStream.of(((IWorldInventory) iinventory).getSlotsForFace(enumdirection)) : IntStream.range(0, iinventory.getSize());
-+        // Origami start - remove streams
-+        return IntStream.of(getSlots(iinventory, enumdirection));
-+    }
-+
-+    private static int[] getSlots(IInventory iinventory, EnumDirection enumdirection) {
-+        return iinventory instanceof IWorldInventory ? ((IWorldInventory) iinventory).getSlotsForFace(enumdirection) : IntStream.range(0, iinventory.getSize()).toArray();
-+        // Origami end
-     }
- 
-     private static boolean allMatch(IInventory iinventory, EnumDirection enumdirection, java.util.function.BiPredicate<ItemStack, Integer> test) {
 -- 
 2.25.1.windows.1
 
