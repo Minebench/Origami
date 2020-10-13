@@ -1,4 +1,4 @@
-From 13ae5ebfb7384e15ff555b059af4a84db0149ca0 Mon Sep 17 00:00:00 2001
+From de261a00809ddf1e8f5b678e735e23574926cdeb Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Thu, 6 Aug 2020 23:11:03 +0100
 Subject: [PATCH] Fix loading of maps of custom worlds without UUID
@@ -15,10 +15,10 @@ We just load them with an unknown dimension key and don't care about
  1 file changed, 7 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/WorldMap.java b/src/main/java/net/minecraft/server/WorldMap.java
-index 225353e072..9454551cb3 100644
+index 7ca4d279b9..5971cb8e40 100644
 --- a/src/main/java/net/minecraft/server/WorldMap.java
 +++ b/src/main/java/net/minecraft/server/WorldMap.java
-@@ -95,6 +95,13 @@ public class WorldMap extends PersistentBase {
+@@ -114,6 +114,13 @@ public class WorldMap extends PersistentBase {
                      return world.getHandle().getDimensionKey();
                  }
              }
