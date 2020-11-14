@@ -1,4 +1,4 @@
-From 116437f27019f1823fe0dbaf201629f67e6748a5 Mon Sep 17 00:00:00 2001
+From f15bbecdff1457115e94b9f57539b09222ab5ba0 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 16:28:31 +0100
 Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
@@ -9,7 +9,7 @@ Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
  2 files changed, 25 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityTypes.java b/src/main/java/net/minecraft/server/EntityTypes.java
-index a71ad8418e..a25483db96 100644
+index ac1ccd066a..c6ed269b66 100644
 --- a/src/main/java/net/minecraft/server/EntityTypes.java
 +++ b/src/main/java/net/minecraft/server/EntityTypes.java
 @@ -188,6 +188,16 @@ public class EntityTypes<T extends Entity> {
@@ -30,10 +30,10 @@ index a71ad8418e..a25483db96 100644
  
          if (t0 != null) {
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index c10ff09dd0..d0d65b743d 100644
+index 0388d1099f..ed14abf466 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
-@@ -882,6 +882,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -884,6 +884,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
              BlockPosition blockposition1 = this.a(blockposition, d0, d1);
  
              if (blockposition1 != null) {

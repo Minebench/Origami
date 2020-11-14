@@ -1,4 +1,4 @@
-From 30a09d67f59483367d5e13611bb8377850915b59 Mon Sep 17 00:00:00 2001
+From e57e5e3b891bd16ca5604298a9f0504d9924c56f Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 5 May 2020 00:58:28 +0100
 Subject: [PATCH] Origami POM changes
@@ -8,7 +8,7 @@ Subject: [PATCH] Origami POM changes
  1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 0ac10a3..1fc6f03 100644
+index 7075a42..60fbb1f 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,17 @@
@@ -25,7 +25,7 @@ index 0ac10a3..1fc6f03 100644
 -    <groupId>com.destroystokyo.paper</groupId>
 -    <artifactId>paper-mojangapi</artifactId>
 +    <artifactId>origami-mojangapi</artifactId>
-     <version>1.16.3-R0.1-SNAPSHOT</version>
+     <version>1.16.4-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
  
 -    <name>Paper-MojangAPI</name>

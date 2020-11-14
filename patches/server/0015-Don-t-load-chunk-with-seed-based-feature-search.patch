@@ -1,4 +1,4 @@
-From ef12cb1ae32d694e2bcba2db0c304938a475bd01 Mon Sep 17 00:00:00 2001
+From a4c3bc70db7df9383ea82ead9938577cb6ac0993 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 13 Jan 2020 01:00:49 +0100
 Subject: [PATCH] Don't load chunk with seed based feature search
@@ -9,14 +9,14 @@ Subject: [PATCH] Don't load chunk with seed based feature search
  2 files changed, 13 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 40cd25dc8a..fe135b7f1a 100644
+index 40cd25dc8a..c8081b8e2d 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -116,6 +116,14 @@ public final class OrigamiConfig {
              return config.getDouble("worlds." + worldName + "." + path, config.getDouble("worlds.default." + path, dfl));
          }
  
-+        public boolean fastFeatureSearchDontLoad = true;
++        public boolean fastFeatureSearchDontLoad = false;
 +        private void fastFeatureSearch() {
 +            fastFeatureSearchDontLoad = getBoolean("fast-feature-search-dont-load-chunk", fastFeatureSearchDontLoad);
 +            if (fastFeatureSearchDontLoad) {
@@ -28,13 +28,13 @@ index 40cd25dc8a..fe135b7f1a 100644
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
 diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
-index 9bc35af88d..8b3c525df7 100644
+index e2f5c2aa9e..c24c69caa4 100644
 --- a/src/main/java/net/minecraft/server/StructureGenerator.java
 +++ b/src/main/java/net/minecraft/server/StructureGenerator.java
-@@ -143,6 +143,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
-                             int j2 = i1 + k * l1;
-                             ChunkCoordIntPair chunkcoordintpair = this.a(structuresettingsfeature, j, seededrandom, i2, j2);
-                             if (!iworldreader.getWorldBorder().isChunkInBounds(chunkcoordintpair.x, chunkcoordintpair.z)) { continue; } // Paper
+@@ -151,6 +151,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+                                 }
+                             }
+                             // Paper end
 +                            // Origami start - seed based feature search doesn't load
 +                            if (iworldreader instanceof World && ((World) iworldreader).origamiConfig.fastFeatureSearchDontLoad) {
 +                                return chunkcoordintpair.l();

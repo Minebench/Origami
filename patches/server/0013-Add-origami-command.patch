@@ -1,4 +1,4 @@
-From 4042b029731ec04ed88edd692bb0ec172d1c2cf0 Mon Sep 17 00:00:00 2001
+From b54871d58db239b070dc257d52a7c580a102e755 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 15:52:09 +0100
 Subject: [PATCH] Add origami command
@@ -143,10 +143,10 @@ index 0000000000..45f72f7570
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index f55dc28f3e..a9b99e4ca1 100644
+index 5504facd2e..f1982ab02b 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -166,6 +166,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -169,6 +169,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
          com.destroystokyo.paper.PaperConfig.registerCommands();
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          // Paper end

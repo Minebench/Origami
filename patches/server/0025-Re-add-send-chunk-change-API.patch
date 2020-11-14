@@ -1,4 +1,4 @@
-From 8e16fe7d24ad881fc3f7fd6f9e59a2c057b831b6 Mon Sep 17 00:00:00 2001
+From 3b2d757cef2985f4d833f716c6d81813448639b7 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 14 May 2020 20:47:39 +0100
 Subject: [PATCH] Re-add send chunk change API
@@ -8,10 +8,10 @@ Subject: [PATCH] Re-add send chunk change API
  1 file changed, 12 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index b97be51c68..befc09c8c4 100644
+index f4f4e29f56..b08d9a4093 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -722,6 +722,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -745,6 +745,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          throw new NotImplementedException("Chunk changes do not yet work"); // TODO: Chunk changes.
      }
  

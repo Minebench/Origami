@@ -1,4 +1,4 @@
-From 171fb55bba751a9785247fd9e812a12091c79808 Mon Sep 17 00:00:00 2001
+From 68d221b1b318a6d4307302a84acae597c8cd85e8 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:31:18 +0100
 Subject: [PATCH] Check Origami repo for updates
@@ -74,10 +74,10 @@ index 0000000000..6cd58564a6
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 0b2bc20d10..499e7f3afe 100644
+index 0f7f1503d0..aab7e5634b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -347,7 +347,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -353,7 +353,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
