@@ -1,0 +1,71 @@
+From ffc730973a0d4b09a8a00d5c253b6e30c307bbf4 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <max@themoep.de>
+Date: Fri, 18 Dec 2020 01:08:05 +0100
+Subject: [PATCH] Add option to disable legacy plugin support
+
+Can be enabled by setting the "disable-legacy-support" option to false.
+
+Prints a warning and a stacktrace if something calls legacy code and
+ causes an init of the legacy class. This should help with finding all
+ the plugins that actually need the legacy code.
+---
+ src/main/java/de/minebench/origami/OrigamiConfig.java       | 5 +++++
+ .../java/org/bukkit/craftbukkit/legacy/CraftLegacy.java     | 6 ++++++
+ .../java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java | 2 ++
+ 3 files changed, 13 insertions(+)
+
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index d0f3bbbb8f..4ab9a26ca9 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -195,4 +195,9 @@ public final class OrigamiConfig {
+     private static void fixItemPositionDesync() {
+         fixItemPositionDesync = getBoolean("fix-item-position-desync", fixItemPositionDesync);
+     }
++
++    public static boolean disableLegacySupport = true;
++    private static void disableLegacySupport() {
++        disableLegacySupport = getBoolean("disable-legacy-support", disableLegacySupport);
++    }
+ }
+\ No newline at end of file
+diff --git a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
+index b14333ce9e..19d85a5332 100644
+--- a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
++++ b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
+@@ -255,6 +255,12 @@ public final class CraftLegacy {
+ 
+     static {
+         System.err.println("Initializing Legacy Material Support. Unless you have legacy plugins and/or data this is a bug!");
++        // Origami start - disable legacy support
++        if (de.minebench.origami.OrigamiConfig.disableLegacySupport) {
++            System.err.println("Legacy support was disabled in origami.yml but something is still trying to access it...");
++            new Exception().printStackTrace();
++        } else
++        // Origami end
+         if (MinecraftServer.getServer() != null && MinecraftServer.getServer().isDebugging()) {
+             new Exception().printStackTrace();
+         }
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+index aab7e5634b..81925456fd 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+@@ -322,6 +322,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+             }
+         } else {
+             if (minimumIndex == -1) {
++                if (!de.minebench.origami.OrigamiConfig.disableLegacySupport) // Origami - disable legacy support
+                 CraftLegacy.init();
+                 Bukkit.getLogger().log(Level.WARNING, "Legacy plugin " + pdf.getFullName() + " does not specify an api-version.");
+             } else {
+@@ -337,6 +338,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+     @Override
+     public byte[] processClass(PluginDescriptionFile pdf, String path, byte[] clazz) {
+         try {
++            if (!de.minebench.origami.OrigamiConfig.disableLegacySupport) // Origami - disable legacy support
+             clazz = Commodore.convert(clazz, !isLegacy(pdf));
+         } catch (Exception ex) {
+             Bukkit.getLogger().log(Level.SEVERE, "Fatal error trying to convert " + pdf.getFullName() + ":" + path, ex);
+-- 
+2.25.1.windows.1
+
