@@ -1,4 +1,4 @@
-From f87c0722a8a3c1b28981bdcd6882e19cc667eb61 Mon Sep 17 00:00:00 2001
+From 57de484605140a0491cb320678d30b3c0c874302 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 30 Jun 2020 19:02:23 +0100
 Subject: [PATCH] Add alternative, simpler plugin load order
@@ -9,7 +9,7 @@ Can be disabled with the system property useAlternativePluginLoadOrder
  1 file changed, 74 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index 26685f59b..27adf5ffb 100644
+index 26685f59b..702f4abba 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 @@ -60,6 +60,7 @@ public final class SimplePluginManager implements PluginManager {
@@ -58,7 +58,7 @@ index 26685f59b..27adf5ffb 100644
 +                    if (allLoadedBefore) {
 +                        // Check if soft dependencies got loaded before
 +                        for (String softDependency : softDependencies.getOrDefault(plugin, java.util.Collections.emptySet())) {
-+                            if (!loadedPlugins.contains(softDependency) && (plugins.containsKey(softDependency) || pluginsProvided.containsKey(softDependency))) {
++                            if (!loadedPlugins.contains(softDependency) && (plugins.containsKey(softDependency) || (pluginsProvided.containsKey(softDependency) && !pluginsProvided.get(softDependency).equals(plugin)))) {
 +                                allLoadedBefore = false;
 +                                break;
 +                            }
