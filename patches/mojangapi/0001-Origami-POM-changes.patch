@@ -1,17 +1,17 @@
-From e57e5e3b891bd16ca5604298a9f0504d9924c56f Mon Sep 17 00:00:00 2001
+From cf31f2d497135946f2114298a087f56ad31008fd Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 5 May 2020 00:58:28 +0100
 Subject: [PATCH] Origami POM changes
 
 ---
- pom.xml | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ pom.xml | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 7075a42..60fbb1f 100644
+index 7075a42..69a1156 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -3,18 +3,17 @@
+@@ -3,24 +3,23 @@
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
      <modelVersion>4.0.0</modelVersion>
      <parent>
@@ -35,6 +35,14 @@ index 7075a42..60fbb1f 100644
      <description>API additions that utilize Mojang Specific API's</description>
  
      <properties>
+         <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
+-        <maven.compiler.source>1.8</maven.compiler.source>
+-        <maven.compiler.target>1.8</maven.compiler.target>
++        <maven.compiler.source>11</maven.compiler.source>
++        <maven.compiler.target>11</maven.compiler.target>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+     </properties>
+ 
 @@ -49,8 +48,8 @@
  
      <dependencies>

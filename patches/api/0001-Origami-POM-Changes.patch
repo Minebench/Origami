@@ -1,17 +1,17 @@
-From 027c1ad46827328f099317e6bdbe7804dfbb4ae4 Mon Sep 17 00:00:00 2001
+From a3f91586ea71d9f58511e4ba6a269ceecda4ed6c Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:36 +0100
 Subject: [PATCH] Origami POM Changes
 
 ---
- pom.xml | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ pom.xml | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 1c33b1f4d..155773b16 100644
+index 1c33b1f4d..67347e35c 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -3,19 +3,18 @@
+@@ -3,24 +3,23 @@
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
      <modelVersion>4.0.0</modelVersion>
      <parent>
@@ -37,6 +37,13 @@ index 1c33b1f4d..155773b16 100644
  
      <properties>
          <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
+-        <maven.compiler.source>1.8</maven.compiler.source>
+-        <maven.compiler.target>1.8</maven.compiler.target>
++        <maven.compiler.source>11</maven.compiler.source>
++        <maven.compiler.target>11</maven.compiler.target>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+     </properties>
+ 
 -- 
 2.25.1.windows.1
 
