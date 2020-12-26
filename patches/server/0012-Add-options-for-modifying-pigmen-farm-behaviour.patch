@@ -1,4 +1,4 @@
-From 5454757592ae8d97b7e9ee0d061f2f6a4a561cc0 Mon Sep 17 00:00:00 2001
+From 3c72ed2a15cc0c89caad9120a4c4514147967a25 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
@@ -85,7 +85,7 @@ index 4132cd4c6f..fccc0bf053 100644
              EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), blockposition.getX(), blockposition.getY(), blockposition.getZ()));
              world.getServer().getPluginManager().callEvent(event);
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 0c952fea30..f3cff69611 100644
+index d9021fde3d..01438c41d9 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -193,6 +193,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
@@ -96,7 +96,7 @@ index 0c952fea30..f3cff69611 100644
      protected int numCollisions = 0; // Paper
      public void inactiveTick() { }
      // Spigot end
-@@ -1637,6 +1638,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -1643,6 +1644,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  nbttagcompound.setBoolean("Paper.FromNetherPortal", true);
              }
              // Paper end
@@ -108,7 +108,7 @@ index 0c952fea30..f3cff69611 100644
              return nbttagcompound;
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.a(throwable, "Saving entity NBT");
-@@ -1790,6 +1796,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
+@@ -1796,6 +1802,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
                  spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT;
              }
              // Paper end
@@ -117,10 +117,10 @@ index 0c952fea30..f3cff69611 100644
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.a(throwable, "Loading entity NBT");
 diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
-index 7ddf276732..7981808968 100644
+index dcc5b098bf..f2e0fcef15 100644
 --- a/src/main/java/net/minecraft/server/EntityInsentient.java
 +++ b/src/main/java/net/minecraft/server/EntityInsentient.java
-@@ -736,7 +736,7 @@ public abstract class EntityInsentient extends EntityLiving {
+@@ -738,7 +738,7 @@ public abstract class EntityInsentient extends EntityLiving {
      @Override
      protected final void doTick() {
          ++this.ticksFarFromPlayer;

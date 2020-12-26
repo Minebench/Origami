@@ -1,4 +1,4 @@
-From ffc730973a0d4b09a8a00d5c253b6e30c307bbf4 Mon Sep 17 00:00:00 2001
+From 2cc9d0e6e8e83ba5533f0aebe2d2ddb0d0c93b0c Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Fri, 18 Dec 2020 01:08:05 +0100
 Subject: [PATCH] Add option to disable legacy plugin support
@@ -9,20 +9,19 @@ Prints a warning and a stacktrace if something calls legacy code and
  causes an init of the legacy class. This should help with finding all
  the plugins that actually need the legacy code.
 ---
- src/main/java/de/minebench/origami/OrigamiConfig.java       | 5 +++++
+ src/main/java/de/minebench/origami/OrigamiConfig.java       | 4 ++++
  .../java/org/bukkit/craftbukkit/legacy/CraftLegacy.java     | 6 ++++++
  .../java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java | 2 ++
- 3 files changed, 13 insertions(+)
+ 3 files changed, 12 insertions(+)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index d0f3bbbb8f..4ab9a26ca9 100644
+index 53ddf996ef..4ab9a26ca9 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -195,4 +195,9 @@ public final class OrigamiConfig {
-     private static void fixItemPositionDesync() {
+@@ -196,4 +196,8 @@ public final class OrigamiConfig {
          fixItemPositionDesync = getBoolean("fix-item-position-desync", fixItemPositionDesync);
      }
-+
+ 
 +    public static boolean disableLegacySupport = true;
 +    private static void disableLegacySupport() {
 +        disableLegacySupport = getBoolean("disable-legacy-support", disableLegacySupport);

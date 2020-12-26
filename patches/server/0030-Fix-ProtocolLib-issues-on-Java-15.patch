@@ -1,4 +1,4 @@
-From 9be3c6e35f687802b656fcf6b7e2d8d0b9698326 Mon Sep 17 00:00:00 2001
+From 7f935ee6b7af51813beff0b84390f989fb07a2f7 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Mon, 19 Oct 2020 17:20:53 +0100
 Subject: [PATCH] Fix ProtocolLib issues on Java 15
@@ -15,10 +15,10 @@ Thanks to https://github.com/PimvanderLoos for figuring this out here:
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
-index 3ec8ba17dd..f6f74f59c2 100644
+index fb1e3c705b..934a5537ed 100644
 --- a/src/main/java/net/minecraft/server/NetworkManager.java
 +++ b/src/main/java/net/minecraft/server/NetworkManager.java
-@@ -288,9 +288,9 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
+@@ -290,9 +290,9 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
              }
              // Paper end
          } else {
@@ -30,7 +30,7 @@ index 3ec8ba17dd..f6f74f59c2 100644
                  }
  
                  // Paper start
-@@ -300,7 +300,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
+@@ -302,7 +302,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
                  }
                  try {
                      // Paper end
@@ -39,7 +39,7 @@ index 3ec8ba17dd..f6f74f59c2 100644
  
  
                  if (genericfuturelistener != null) {
-@@ -320,7 +320,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
+@@ -322,7 +322,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
                      packet.onPacketDispatchFinish(player, null);
                  }
                  // Paper end

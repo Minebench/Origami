@@ -1,4 +1,4 @@
-From d990d09d73d7d4c2aaab038460655b9a3d5c69e1 Mon Sep 17 00:00:00 2001
+From 1486517f5fc9e7c21d2a716fc5890b519c34ff9c Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 5 May 2020 15:53:57 +0100
 Subject: [PATCH] Add permission to show command error stacktrace on hover
@@ -8,10 +8,10 @@ Subject: [PATCH] Add permission to show command error stacktrace on hover
  1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index a736d676ef..faf48115c4 100644
+index 73241af662..a5ec5afd66 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -2009,7 +2009,18 @@ public class PlayerConnection implements PacketListenerPlayIn {
+@@ -2022,7 +2022,18 @@ public class PlayerConnection implements PacketListenerPlayIn {
                  return;
              }
          } catch (org.bukkit.command.CommandException ex) {
