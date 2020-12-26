@@ -45,7 +45,7 @@ case "$1" in
     ;;
     "m" | "mojangapi")
     (
-        savePatches ${FORK_NAME}-MojangAPI api
+        savePatches ${FORK_NAME}-MojangAPI mojangapi
     )
     ;;
     "s" | "server")
