@@ -1,4 +1,4 @@
-From 57de484605140a0491cb320678d30b3c0c874302 Mon Sep 17 00:00:00 2001
+From 10048a76117208bf0f713b7b553eb2f2dedfc680 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 30 Jun 2020 19:02:23 +0100
 Subject: [PATCH] Add alternative, simpler plugin load order

@@ -1,4 +1,4 @@
-From 7f935ee6b7af51813beff0b84390f989fb07a2f7 Mon Sep 17 00:00:00 2001
+From 6d4628e02163cadbaf91ee2b2626fe277bcbb885 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Mon, 19 Oct 2020 17:20:53 +0100
 Subject: [PATCH] Fix ProtocolLib issues on Java 15

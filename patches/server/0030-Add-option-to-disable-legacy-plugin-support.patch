@@ -1,4 +1,4 @@
-From 2cc9d0e6e8e83ba5533f0aebe2d2ddb0d0c93b0c Mon Sep 17 00:00:00 2001
+From f7c5474fcfcb6873f6dfb56815d3487b972784e7 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Fri, 18 Dec 2020 01:08:05 +0100
 Subject: [PATCH] Add option to disable legacy plugin support

@@ -1,4 +1,4 @@
-From b12abfec8b5044c1c944534877eb71519454e81e Mon Sep 17 00:00:00 2001
+From ef4ba82c8ebb3ba69d155537e4c85799ce29ee76 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 14 May 2020 20:47:40 +0100
 Subject: [PATCH] Re-add send chunk change API
@@ -8,7 +8,7 @@ Subject: [PATCH] Re-add send chunk change API
  1 file changed, 11 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index a23c08c48..d89d0449c 100644
+index ea5257cc9..56ea3e0a2 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
 @@ -444,6 +444,17 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM

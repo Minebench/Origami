@@ -1,4 +1,4 @@
-From d1b2a4e8cdfc8de0d115d82de02c6d24ffd60889 Mon Sep 17 00:00:00 2001
+From a9f0f10bb340ee3b37210eeb700b1263b0e7350a Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 12 Jun 2020 21:43:36 +0100
 Subject: [PATCH] Only play sound in same world if radius is set
@@ -13,7 +13,7 @@ Integer.MAX_VALUE I guess.
  3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/EntityEnderDragon.java b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-index 63a759cc18..b11bf6768f 100644
+index de53af8c01..79c57d159d 100644
 --- a/src/main/java/net/minecraft/server/EntityEnderDragon.java
 +++ b/src/main/java/net/minecraft/server/EntityEnderDragon.java
 @@ -577,13 +577,13 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
@@ -33,7 +33,7 @@ index 63a759cc18..b11bf6768f 100644
                          double deltaLength = Math.sqrt(distanceSquared);
                          double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
 diff --git a/src/main/java/net/minecraft/server/EntityWither.java b/src/main/java/net/minecraft/server/EntityWither.java
-index 1074995e8c..fe43111924 100644
+index 53482a420c..5342131353 100644
 --- a/src/main/java/net/minecraft/server/EntityWither.java
 +++ b/src/main/java/net/minecraft/server/EntityWither.java
 @@ -209,12 +209,12 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
@@ -52,7 +52,7 @@ index 1074995e8c..fe43111924 100644
                              double deltaLength = Math.sqrt(distanceSquared);
                              double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
 diff --git a/src/main/java/net/minecraft/server/ItemEnderEye.java b/src/main/java/net/minecraft/server/ItemEnderEye.java
-index 0685030128..eac6cd2339 100644
+index 3296d888a6..5448499583 100644
 --- a/src/main/java/net/minecraft/server/ItemEnderEye.java
 +++ b/src/main/java/net/minecraft/server/ItemEnderEye.java
 @@ -42,7 +42,7 @@ public class ItemEnderEye extends Item {

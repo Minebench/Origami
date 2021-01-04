@@ -1,4 +1,4 @@
-From 00646b9e7bb6b86cd022ee11a9a6dafdb12a00fe Mon Sep 17 00:00:00 2001
+From 4f1f2049e919c1abd2eb6ffe5a16cb1103f2516b Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 4 Jul 2020 20:08:42 +0100
 Subject: [PATCH] Keep weather clear after sleep
@@ -21,7 +21,7 @@ index a7e623044a..d9dbe65701 100644
      public void a(int i) {
          this.clearWeatherTime = i;
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index b196810316..064cb45f30 100644
+index 5b0b6edfa7..fb205d260e 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
 @@ -769,6 +769,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
