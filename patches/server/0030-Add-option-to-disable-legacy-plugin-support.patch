@@ -1,4 +1,4 @@
-From f7c5474fcfcb6873f6dfb56815d3487b972784e7 Mon Sep 17 00:00:00 2001
+From d7508119c070c073eaca2983d8d88c95bd94306b Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Fri, 18 Dec 2020 01:08:05 +0100
 Subject: [PATCH] Add option to disable legacy plugin support
@@ -11,8 +11,8 @@ Prints a warning and a stacktrace if something calls legacy code and
 ---
  src/main/java/de/minebench/origami/OrigamiConfig.java       | 4 ++++
  .../java/org/bukkit/craftbukkit/legacy/CraftLegacy.java     | 6 ++++++
- .../java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java | 2 ++
- 3 files changed, 12 insertions(+)
+ .../java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java | 3 ++-
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
 index 53ddf996ef..4ab9a26ca9 100644
@@ -46,7 +46,7 @@ index b14333ce9e..19d85a5332 100644
              new Exception().printStackTrace();
          }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index aab7e5634b..81925456fd 100644
+index aab7e5634b..94148d433c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -322,6 +322,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
@@ -57,14 +57,15 @@ index aab7e5634b..81925456fd 100644
                  CraftLegacy.init();
                  Bukkit.getLogger().log(Level.WARNING, "Legacy plugin " + pdf.getFullName() + " does not specify an api-version.");
              } else {
-@@ -337,6 +338,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -337,7 +338,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
      @Override
      public byte[] processClass(PluginDescriptionFile pdf, String path, byte[] clazz) {
          try {
-+            if (!de.minebench.origami.OrigamiConfig.disableLegacySupport) // Origami - disable legacy support
-             clazz = Commodore.convert(clazz, !isLegacy(pdf));
+-            clazz = Commodore.convert(clazz, !isLegacy(pdf));
++            clazz = Commodore.convert(clazz, !isLegacy(pdf) || de.minebench.origami.OrigamiConfig.disableLegacySupport); // Origami - disable legacy support
          } catch (Exception ex) {
              Bukkit.getLogger().log(Level.SEVERE, "Fatal error trying to convert " + pdf.getFullName() + ":" + path, ex);
+         }
 -- 
 2.25.1.windows.1
 
