@@ -1,4 +1,4 @@
-From 191cf52304446021025a3fb646c169d7ee540272 Mon Sep 17 00:00:00 2001
+From 89b4329c98bf024579521e76cad91dc7153d3088 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:35 +0100
 Subject: [PATCH] Origami POM Changes
@@ -9,7 +9,7 @@ Subject: [PATCH] Origami POM Changes
  2 files changed, 55 insertions(+), 14 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 80f1652913..0b69c21059 100644
+index 9ba379b7e3..f5da1bcf44 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -19,7 +19,7 @@ index 80f1652913..0b69c21059 100644
 -    <artifactId>paper</artifactId>
 +    <artifactId>origami</artifactId>
      <packaging>jar</packaging>
-     <version>1.16.4-R0.1-SNAPSHOT</version>
+     <version>1.16.5-R0.1-SNAPSHOT</version>
 -    <name>Paper</name>
 -    <url>https://papermc.io</url>
 +    <name>Origami-Server</name>
@@ -27,9 +27,9 @@ index 80f1652913..0b69c21059 100644
  
      <properties>
          <!-- <skipTests>true</skipTests> Paper - This [was] not going to end well -->
-@@ -13,27 +13,28 @@
-         <api.version>unknown</api.version>
-         <minecraft.version>1.16.4</minecraft.version>
+@@ -14,27 +14,28 @@
+         <bt.name>git</bt.name>
+         <minecraft.version>1.16.5</minecraft.version>
          <minecraft_version>1_16_R3</minecraft_version>
 -        <maven.compiler.source>1.8</maven.compiler.source>
 -        <maven.compiler.target>1.8</maven.compiler.target>
@@ -64,7 +64,7 @@ index 80f1652913..0b69c21059 100644
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
-@@ -165,7 +166,7 @@
+@@ -173,7 +174,7 @@
  
      <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
      <build>
@@ -73,7 +73,7 @@ index 80f1652913..0b69c21059 100644
          <defaultGoal>clean install</defaultGoal> <!-- Paper -->
          <plugins>
              <plugin>
-@@ -173,7 +174,7 @@
+@@ -181,7 +182,7 @@
                  <artifactId>gitdescribe-maven-plugin</artifactId>
                  <version>1.3</version>
                  <configuration>
@@ -82,7 +82,7 @@ index 80f1652913..0b69c21059 100644
                      <scmDirectory>..</scmDirectory>
                  </configuration>
                  <executions>
-@@ -415,5 +416,45 @@
+@@ -423,5 +424,45 @@
                  </plugins>
              </build>
          </profile>

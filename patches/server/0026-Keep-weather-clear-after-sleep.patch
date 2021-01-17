@@ -1,27 +1,14 @@
-From 4f1f2049e919c1abd2eb6ffe5a16cb1103f2516b Mon Sep 17 00:00:00 2001
+From 511ba9b9cf47a5c073dd94761ffbf9096d798c52 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 4 Jul 2020 20:08:42 +0100
 Subject: [PATCH] Keep weather clear after sleep
 
 ---
- src/main/java/net/minecraft/server/WorldDataServer.java | 1 +
- src/main/java/net/minecraft/server/WorldServer.java     | 1 +
- 2 files changed, 2 insertions(+)
+ src/main/java/net/minecraft/server/WorldServer.java | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/src/main/java/net/minecraft/server/WorldDataServer.java b/src/main/java/net/minecraft/server/WorldDataServer.java
-index a7e623044a..d9dbe65701 100644
---- a/src/main/java/net/minecraft/server/WorldDataServer.java
-+++ b/src/main/java/net/minecraft/server/WorldDataServer.java
-@@ -287,6 +287,7 @@ public class WorldDataServer implements IWorldDataServer, SaveData {
-         return this.clearWeatherTime;
-     }
- 
-+    public void setClearWeatherTime(int ticks) { this.a(ticks); } // Origami - OFBHELPER
-     @Override
-     public void a(int i) {
-         this.clearWeatherTime = i;
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index 5b0b6edfa7..fb205d260e 100644
+index fbe7f43f6c..cceed9d06d 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
 @@ -769,6 +769,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
