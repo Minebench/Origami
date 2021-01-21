@@ -1,4 +1,4 @@
-From 0b8a2591c4f433b9c271250d9b6ba47a4b3aff35 Mon Sep 17 00:00:00 2001
+From 75b2be13108a7c901d3268f2b0b869c066c1228b Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 31 Mar 2020 21:43:04 +0100
 Subject: [PATCH] Add option to disable observer clocks
@@ -9,7 +9,7 @@ Subject: [PATCH] Add option to disable observer clocks
  2 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 17539a7bd7..10d5b9dce1 100644
+index a52b5d3231..341cac2107 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -175,6 +175,11 @@ public final class OrigamiConfig {

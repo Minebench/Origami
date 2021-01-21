@@ -1,4 +1,4 @@
-From d7508119c070c073eaca2983d8d88c95bd94306b Mon Sep 17 00:00:00 2001
+From 7b695503d651b3d2cda652bf36ac53b8ea79b564 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Fri, 18 Dec 2020 01:08:05 +0100
 Subject: [PATCH] Add option to disable legacy plugin support
@@ -15,11 +15,11 @@ Prints a warning and a stacktrace if something calls legacy code and
  3 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 53ddf996ef..4ab9a26ca9 100644
+index ae4a0b6be7..1cad9d321d 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -196,4 +196,8 @@ public final class OrigamiConfig {
-         fixItemPositionDesync = getBoolean("fix-item-position-desync", fixItemPositionDesync);
+@@ -191,4 +191,8 @@ public final class OrigamiConfig {
+         teleportingOfVehiclesWithPassenger = getBoolean("teleporting-of-vehicles-with-passenger-via-api", teleportingOfVehiclesWithPassenger);
      }
  
 +    public static boolean disableLegacySupport = true;
@@ -46,7 +46,7 @@ index b14333ce9e..19d85a5332 100644
              new Exception().printStackTrace();
          }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index aab7e5634b..94148d433c 100644
+index c0ef68c4c5..f5e04fe0c5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -322,6 +322,7 @@ public final class CraftMagicNumbers implements UnsafeValues {

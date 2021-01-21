@@ -1,4 +1,4 @@
-From 0db24128e037980648938de988fe2d799fc4a527 Mon Sep 17 00:00:00 2001
+From f1ef45201571bd886a292d2d2d127bc605bb1c29 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Hopper Optimizations
@@ -17,7 +17,7 @@ chain.
  6 files changed, 84 insertions(+), 10 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index fe135b7f1a..3da6c6ebda 100644
+index d7b9cc389b..a52b5d3231 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -169,6 +169,12 @@ public final class OrigamiConfig {
@@ -46,7 +46,7 @@ index ccb61d656b..55a5999080 100644
  
      }
 diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
-index bc4f84c885..e97c801f82 100644
+index f41aaa7623..0ea6d243df 100644
 --- a/src/main/java/net/minecraft/server/EntityItem.java
 +++ b/src/main/java/net/minecraft/server/EntityItem.java
 @@ -135,6 +135,13 @@ public class EntityItem extends Entity {
@@ -64,7 +64,7 @@ index bc4f84c885..e97c801f82 100644
                  // CraftBukkit start - fire ItemDespawnEvent
                  if (org.bukkit.craftbukkit.event.CraftEventFactory.callItemDespawnEvent(this).isCancelled()) {
 diff --git a/src/main/java/net/minecraft/server/EntityMinecartContainer.java b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
-index 67ff7fe6ab..c8062b12e2 100644
+index 574838bd33..9b5146fcf6 100644
 --- a/src/main/java/net/minecraft/server/EntityMinecartContainer.java
 +++ b/src/main/java/net/minecraft/server/EntityMinecartContainer.java
 @@ -137,7 +137,6 @@ public abstract class EntityMinecartContainer extends EntityMinecartAbstract imp

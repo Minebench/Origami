@@ -1,4 +1,4 @@
-From 511ba9b9cf47a5c073dd94761ffbf9096d798c52 Mon Sep 17 00:00:00 2001
+From e64470be1be7d6225958c310bffd3189561db864 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 4 Jul 2020 20:08:42 +0100
 Subject: [PATCH] Keep weather clear after sleep

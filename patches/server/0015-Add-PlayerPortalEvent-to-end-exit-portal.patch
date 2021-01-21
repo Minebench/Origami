@@ -1,4 +1,4 @@
-From 143cc2cd3358f482552d59fdd75076170b196d1f Mon Sep 17 00:00:00 2001
+From 1770dc9516bab83f83ea93dc7bba275bc4b20bf2 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 20 Jan 2020 18:51:00 +0100
 Subject: [PATCH] Add PlayerPortalEvent to end exit portal
@@ -8,7 +8,7 @@ Subject: [PATCH] Add PlayerPortalEvent to end exit portal
  1 file changed, 12 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
-index 2d45279d46..58a9493cc1 100644
+index 6adb8f7f20..bf72f3b555 100644
 --- a/src/main/java/net/minecraft/server/EntityPlayer.java
 +++ b/src/main/java/net/minecraft/server/EntityPlayer.java
 @@ -894,6 +894,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {

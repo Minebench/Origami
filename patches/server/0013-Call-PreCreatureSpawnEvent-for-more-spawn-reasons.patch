@@ -1,4 +1,4 @@
-From f15bbecdff1457115e94b9f57539b09222ab5ba0 Mon Sep 17 00:00:00 2001
+From 6a6e3b17d825b27c72037af4d57fe569fc655ff2 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 16:28:31 +0100
 Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
@@ -9,7 +9,7 @@ Subject: [PATCH] Call PreCreatureSpawnEvent for more spawn reasons
  2 files changed, 25 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/EntityTypes.java b/src/main/java/net/minecraft/server/EntityTypes.java
-index ac1ccd066a..c6ed269b66 100644
+index bf914dc5ee..d44ed4c125 100644
 --- a/src/main/java/net/minecraft/server/EntityTypes.java
 +++ b/src/main/java/net/minecraft/server/EntityTypes.java
 @@ -188,6 +188,16 @@ public class EntityTypes<T extends Entity> {
@@ -30,7 +30,7 @@ index ac1ccd066a..c6ed269b66 100644
  
          if (t0 != null) {
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index 0388d1099f..ed14abf466 100644
+index de9ea6770b..781df6db14 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
 @@ -884,6 +884,21 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation

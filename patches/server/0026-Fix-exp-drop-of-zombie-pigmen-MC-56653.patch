@@ -1,4 +1,4 @@
-From d185ee54b2745d2d330d2def300fad4616cb6f2a Mon Sep 17 00:00:00 2001
+From 9572d97555a7fe6ece6036fc1209db3635ae6064 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 7 Jul 2020 00:22:11 +0100
 Subject: [PATCH] Fix exp drop of zombie pigmen (MC-56653)
@@ -9,7 +9,7 @@ Subject: [PATCH] Fix exp drop of zombie pigmen (MC-56653)
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index a2371c3812..53ddf996ef 100644
+index 341cac2107..ae4a0b6be7 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -153,6 +153,10 @@ public final class OrigamiConfig {

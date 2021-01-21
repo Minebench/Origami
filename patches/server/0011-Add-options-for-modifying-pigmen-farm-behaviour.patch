@@ -1,4 +1,4 @@
-From cb540b1811a42fa34ff2d58850477436e7e1af17 Mon Sep 17 00:00:00 2001
+From 8b2189affcaa628dcaae7fdd600338f4ec32905e Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
@@ -11,7 +11,7 @@ Subject: [PATCH] Add options for modifying pigmen farm behaviour
  4 files changed, 45 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 6026502d55..40cd25dc8a 100644
+index 63eab94b8f..efb0b1448b 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -145,6 +145,22 @@ public final class OrigamiConfig {
