@@ -1,0 +1,85 @@
+From beca85624e98fc1cd0393068cf7ea530ea1eddd5 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sat, 6 Jul 2019 17:00:04 -0500
+Subject: [PATCH] Dont send useless entity packets
+
+---
+ .../de/minebench/origami/OrigamiConfig.java     |  5 +++++
+ .../minecraft/server/EntityTrackerEntry.java    | 17 +++++++++++++++++
+ .../minecraft/server/PacketPlayOutEntity.java   | 10 +++++-----
+ 3 files changed, 27 insertions(+), 5 deletions(-)
+
+diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
+index 1cad9d321d..17f5043afa 100644
+--- a/src/main/java/de/minebench/origami/OrigamiConfig.java
++++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
+@@ -195,4 +195,9 @@ public final class OrigamiConfig {
+     private static void disableLegacySupport() {
+         disableLegacySupport = getBoolean("disable-legacy-support", disableLegacySupport);
+     }
++
++    public static boolean dontSendUselessEntityPackets = false;
++    private static void dontSendUselessEntityPackets() {
++        dontSendUselessEntityPackets = getBoolean("dont-send-useless-entity-packets", dontSendUselessEntityPackets);
++    }
+ }
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index 4efc40c01e..a82df00baf 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -171,6 +171,7 @@ public class EntityTrackerEntry {
+                         this.o = 0;
+                         packet1 = new PacketPlayOutEntityTeleport(this.tracker);
+                     }
++                    if (de.minebench.origami.OrigamiConfig.dontSendUselessEntityPackets && isUselessPacket(packet1)) packet1 = null; // Origami
+                 }
+ 
+                 if ((this.e || this.tracker.impulse || this.tracker instanceof EntityLiving && ((EntityLiving) this.tracker).isGliding()) && this.tickCounter > 0) {
+@@ -257,6 +258,22 @@ public class EntityTrackerEntry {
+ 
+     }
+ 
++    // Origami start
++    private boolean isUselessPacket(Packet<?> possibleUselessPacket) {
++        if (possibleUselessPacket instanceof PacketPlayOutEntity) {
++            PacketPlayOutEntity packet = (PacketPlayOutEntity) possibleUselessPacket;
++            if (possibleUselessPacket instanceof PacketPlayOutEntity.PacketPlayOutRelEntityMove) {
++                return packet.getX() == 0 && packet.getY() == 0 && packet.getZ() == 0;
++            } else if (possibleUselessPacket instanceof PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook) {
++                return packet.getX() == 0 && packet.getY() == 0 && packet.getZ() == 0 && packet.getYaw() == 0 && packet.getPitch() == 0;
++            } else if (possibleUselessPacket instanceof PacketPlayOutEntity.PacketPlayOutEntityLook) {
++                return packet.getYaw() == 0 && packet.getPitch() == 0;
++            }
++        }
++        return false;
++    }
++    // Origami end
++
+     public void a(EntityPlayer entityplayer) {
+         this.tracker.c(entityplayer);
+         entityplayer.c(this.tracker);
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntity.java b/src/main/java/net/minecraft/server/PacketPlayOutEntity.java
+index 8e48407fd4..f45e0b0166 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutEntity.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutEntity.java
+@@ -5,11 +5,11 @@ import java.io.IOException;
+ public class PacketPlayOutEntity implements Packet<PacketListenerPlayOut> {
+ 
+     protected int a;
+-    protected short b;
+-    protected short c;
+-    protected short d;
+-    protected byte e;
+-    protected byte f;
++    protected short b; public short getX() { return b; } // Origami - OBFHELPER
++    protected short c; public short getY() { return c; } // Origami - OBFHELPER
++    protected short d; public short getZ() { return d; } // Origami - OBFHELPER
++    protected byte e; public byte getYaw() { return e; } // Origami - OBFHELPER
++    protected byte f; public byte getPitch() { return f; } // Origami - OBFHELPER
+     protected boolean g;
+     protected boolean h;
+     protected boolean i;
+-- 
+2.25.1.windows.1
+
