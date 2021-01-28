@@ -1,0 +1,24 @@
+From 4ae2c3b0a70765c5089d40eb4377ac94385092d1 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <max@themoep.de>
+Date: Thu, 28 Jan 2021 22:47:20 +0100
+Subject: [PATCH] Disable online-mode if bungeecord is enabled
+
+---
+ src/main/java/net/minecraft/server/DedicatedServer.java | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
+index f1982ab02b..edba4e73ad 100644
+--- a/src/main/java/net/minecraft/server/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/DedicatedServer.java
+@@ -157,6 +157,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+         // Spigot start
+         this.a((PlayerList) (new DedicatedPlayerList(this, this.customRegistry, this.worldNBTStorage)));
+         org.spigotmc.SpigotConfig.init((java.io.File) options.valueOf("spigot-settings"));
++        if (org.spigotmc.SpigotConfig.bungee) this.setOnlineMode(false); // Origami - Automatically disable online-mode if bungeecord is enabled
+         org.spigotmc.SpigotConfig.registerCommands();
+         // Spigot end
+         // Paper start
+-- 
+2.25.1.windows.1
+
