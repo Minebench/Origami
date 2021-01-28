@@ -1,4 +1,4 @@
-From 3cfe847b2fc5326f2c7313a9a7bf9da346e232cf Mon Sep 17 00:00:00 2001
+From a53e92a001e1ff83e15e8d9ba352b3f9293e8899 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 12 Jun 2020 21:43:36 +0100
 Subject: [PATCH] Only play sound in same world if radius is set
@@ -33,10 +33,10 @@ index de53af8c01..79c57d159d 100644
                          double deltaLength = Math.sqrt(distanceSquared);
                          double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
 diff --git a/src/main/java/net/minecraft/server/EntityWither.java b/src/main/java/net/minecraft/server/EntityWither.java
-index 53482a420c..5342131353 100644
+index 2e623ef9be..2078fd72c4 100644
 --- a/src/main/java/net/minecraft/server/EntityWither.java
 +++ b/src/main/java/net/minecraft/server/EntityWither.java
-@@ -209,12 +209,12 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
+@@ -214,12 +214,12 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
                      // CraftBukkit start - Use relative location for far away sounds
                      // this.world.b(1023, new BlockPosition(this), 0);
                      int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API

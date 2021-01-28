@@ -1,4 +1,4 @@
-From 7b695503d651b3d2cda652bf36ac53b8ea79b564 Mon Sep 17 00:00:00 2001
+From 78f1e431d65a1615e28ea8a92a1c548a5d302866 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Fri, 18 Dec 2020 01:08:05 +0100
 Subject: [PATCH] Add option to disable legacy plugin support
@@ -46,10 +46,10 @@ index b14333ce9e..19d85a5332 100644
              new Exception().printStackTrace();
          }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index c0ef68c4c5..f5e04fe0c5 100644
+index 0661929786..92dce2ebe5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -322,6 +322,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -339,6 +339,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
              }
          } else {
              if (minimumIndex == -1) {
@@ -57,7 +57,7 @@ index c0ef68c4c5..f5e04fe0c5 100644
                  CraftLegacy.init();
                  Bukkit.getLogger().log(Level.WARNING, "Legacy plugin " + pdf.getFullName() + " does not specify an api-version.");
              } else {
-@@ -337,7 +338,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -354,7 +355,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
      @Override
      public byte[] processClass(PluginDescriptionFile pdf, String path, byte[] clazz) {
          try {

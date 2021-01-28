@@ -1,4 +1,4 @@
-From e64470be1be7d6225958c310bffd3189561db864 Mon Sep 17 00:00:00 2001
+From 8f96e8f32010d847933e60ad10bcac97400f1ec8 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 4 Jul 2020 20:08:42 +0100
 Subject: [PATCH] Keep weather clear after sleep
@@ -8,10 +8,10 @@ Subject: [PATCH] Keep weather clear after sleep
  1 file changed, 1 insertion(+)
 
 diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
-index fbe7f43f6c..cceed9d06d 100644
+index fdf6380bb9..0c47ad4ce7 100644
 --- a/src/main/java/net/minecraft/server/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/WorldServer.java
-@@ -769,6 +769,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
+@@ -770,6 +770,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
      }
  
      private void clearWeather() {
