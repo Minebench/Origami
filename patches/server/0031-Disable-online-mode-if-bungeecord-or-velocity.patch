@@ -1,24 +1,24 @@
-From 8487dd47ae4f4c9f6a6048372c3257e656c24e0c Mon Sep 17 00:00:00 2001
+From 7abc843f16ee3c41e3e5fa6a71eacfc7eccc9a1d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Thu, 28 Jan 2021 22:47:20 +0100
-Subject: [PATCH] Disable online-mode if bungeecord/velocity are enabled
+Subject: [PATCH] Disable online-mode if bungeecord or velocity
 
 ---
  src/main/java/net/minecraft/server/DedicatedServer.java | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index f1982ab02b..0c4572d22d 100644
+index f1982ab02b..793de3edae 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -157,6 +157,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
-         // Spigot start
-         this.a((PlayerList) (new DedicatedPlayerList(this, this.customRegistry, this.worldNBTStorage)));
-         org.spigotmc.SpigotConfig.init((java.io.File) options.valueOf("spigot-settings"));
+@@ -166,6 +166,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+             DedicatedServer.LOGGER.error("Unable to load server configuration", e);
+             return false;
+         }
 +        if (org.spigotmc.SpigotConfig.bungee || com.destroystokyo.paper.PaperConfig.velocitySupport) this.setOnlineMode(false); // Origami - Automatically disable online-mode if bungeecord/velocity are enabled
-         org.spigotmc.SpigotConfig.registerCommands();
-         // Spigot end
-         // Paper start
+         com.destroystokyo.paper.PaperConfig.registerCommands();
+         com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
+         // Paper end
 -- 
 2.25.1.windows.1
 
