@@ -1,4 +1,4 @@
-From f1ef45201571bd886a292d2d2d127bc605bb1c29 Mon Sep 17 00:00:00 2001
+From 8a8b145f464cdc330b5bc4374e4dcb8437619bb6 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Hopper Optimizations
@@ -103,7 +103,7 @@ index 574838bd33..9b5146fcf6 100644
      @Override
      public boolean a(EntityHuman entityhuman) {
 diff --git a/src/main/java/net/minecraft/server/TileEntityContainer.java b/src/main/java/net/minecraft/server/TileEntityContainer.java
-index 74390aebd3..9ce4f340d0 100644
+index 74390aebd3..b88df070e8 100644
 --- a/src/main/java/net/minecraft/server/TileEntityContainer.java
 +++ b/src/main/java/net/minecraft/server/TileEntityContainer.java
 @@ -84,4 +84,14 @@ public abstract class TileEntityContainer extends TileEntity implements IInvento
@@ -115,7 +115,7 @@ index 74390aebd3..9ce4f340d0 100644
 +    @Override
 +    public void update() {
 +        super.update();
-+        if (world != null) {
++        if (world != null && !world.origamiConfig.tickEmptyHoppers) {
 +            TileEntityHopper.enableTicking(world.getTileEntity(position.shift(EnumDirection.DOWN)), world.spigotConfig.hopperCheck);
 +        }
 +    }
