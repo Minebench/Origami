@@ -1,0 +1,59 @@
+From 07c59b88af487d1668c6574887c5782bb065658a Mon Sep 17 00:00:00 2001
+From: Phoenix616 <max@themoep.de>
+Date: Sat, 24 Apr 2021 12:50:21 +0100
+Subject: [PATCH] Item and exp merge improvements
+
+This changes it so that items merge into the direction of the item with
+ the higher amount again as it does in Vanilla and would be how a player
+ using that mechanic expects it to work.
+
+Also set item merge default radius to Vanilla value as well as set a
+ default value for the exp max merge value config option.
+---
+ src/main/java/com/destroystokyo/paper/PaperWorldConfig.java | 2 +-
+ src/main/java/net/minecraft/server/EntityItem.java          | 2 +-
+ src/main/java/org/spigotmc/SpigotWorldConfig.java           | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
+index 0776e68340..2cb3eb4f83 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
++++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
+@@ -387,7 +387,7 @@ public class PaperWorldConfig {
+ 
+     public int expMergeMaxValue;
+     private void expMergeMaxValue() {
+-        expMergeMaxValue = getInt("experience-merge-max-value", -1);
++        expMergeMaxValue = getInt("experience-merge-max-value", 100);
+         log("Experience Merge Max Value: " + expMergeMaxValue);
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
+index 0ea6d243df..b8fd24898c 100644
+--- a/src/main/java/net/minecraft/server/EntityItem.java
++++ b/src/main/java/net/minecraft/server/EntityItem.java
+@@ -229,7 +229,7 @@ public class EntityItem extends Entity {
+         ItemStack itemstack1 = entityitem.getItemStack();
+ 
+         if (Objects.equals(this.getOwner(), entityitem.getOwner()) && a(itemstack, itemstack1)) {
+-            if (true || itemstack1.getCount() < itemstack.getCount()) { // Spigot
++            if (itemstack1.getCount() < itemstack.getCount()) { // Spigot // Origami - revert change to re-apply Vanilla logic
+                 a(this, itemstack, entityitem, itemstack1);
+             } else {
+                 a(entityitem, itemstack1, this, itemstack);
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+index 61ad08b09c..2a6b194f53 100644
+--- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
++++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+@@ -132,7 +132,7 @@ public class SpigotWorldConfig
+     public double itemMerge;
+     private void itemMerge()
+     {
+-        itemMerge = getDouble("merge-radius.item", 2.5 );
++        itemMerge = getDouble("merge-radius.item", 0.5 );
+         log( "Item Merge Radius: " + itemMerge );
+     }
+ 
+-- 
+2.25.1.windows.1
+
