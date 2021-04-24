@@ -1,12 +1,12 @@
-From beca85624e98fc1cd0393068cf7ea530ea1eddd5 Mon Sep 17 00:00:00 2001
+From 9cc75f1765517e90a9852b44de0e8c4a03b73b9e Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sat, 6 Jul 2019 17:00:04 -0500
 Subject: [PATCH] Dont send useless entity packets
 
 ---
  .../de/minebench/origami/OrigamiConfig.java     |  5 +++++
- .../minecraft/server/EntityTrackerEntry.java    | 17 +++++++++++++++++
- .../minecraft/server/PacketPlayOutEntity.java   | 10 +++++-----
+ .../protocol/game/PacketPlayOutEntity.java      | 10 +++++-----
+ .../server/level/EntityTrackerEntry.java        | 17 +++++++++++++++++
  3 files changed, 27 insertions(+), 5 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
@@ -24,11 +24,32 @@ index 1cad9d321d..17f5043afa 100644
 +    }
  }
 \ No newline at end of file
-diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-index 4efc40c01e..a82df00baf 100644
---- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-+++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-@@ -171,6 +171,7 @@ public class EntityTrackerEntry {
+diff --git a/src/main/java/net/minecraft/network/protocol/game/PacketPlayOutEntity.java b/src/main/java/net/minecraft/network/protocol/game/PacketPlayOutEntity.java
+index 0eed10a6c4..9ea2229c0a 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/PacketPlayOutEntity.java
++++ b/src/main/java/net/minecraft/network/protocol/game/PacketPlayOutEntity.java
+@@ -9,11 +9,11 @@ import net.minecraft.world.phys.Vec3D;
+ public class PacketPlayOutEntity implements Packet<PacketListenerPlayOut> {
+ 
+     protected int a;
+-    protected short b;
+-    protected short c;
+-    protected short d;
+-    protected byte e;
+-    protected byte f;
++    protected short b; public short getX() { return b; } // Origami - OBFHELPER
++    protected short c; public short getY() { return c; } // Origami - OBFHELPER
++    protected short d; public short getZ() { return d; } // Origami - OBFHELPER
++    protected byte e; public byte getYaw() { return e; } // Origami - OBFHELPER
++    protected byte f; public byte getPitch() { return f; } // Origami - OBFHELPER
+     protected boolean g;
+     protected boolean h;
+     protected boolean i;
+diff --git a/src/main/java/net/minecraft/server/level/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/level/EntityTrackerEntry.java
+index 1df8fb8cb3..067afe6950 100644
+--- a/src/main/java/net/minecraft/server/level/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/level/EntityTrackerEntry.java
+@@ -199,6 +199,7 @@ public class EntityTrackerEntry {
                          this.o = 0;
                          packet1 = new PacketPlayOutEntityTeleport(this.tracker);
                      }
@@ -36,7 +57,7 @@ index 4efc40c01e..a82df00baf 100644
                  }
  
                  if ((this.e || this.tracker.impulse || this.tracker instanceof EntityLiving && ((EntityLiving) this.tracker).isGliding()) && this.tickCounter > 0) {
-@@ -257,6 +258,22 @@ public class EntityTrackerEntry {
+@@ -285,6 +286,22 @@ public class EntityTrackerEntry {
  
      }
  
@@ -59,27 +80,6 @@ index 4efc40c01e..a82df00baf 100644
      public void a(EntityPlayer entityplayer) {
          this.tracker.c(entityplayer);
          entityplayer.c(this.tracker);
-diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntity.java b/src/main/java/net/minecraft/server/PacketPlayOutEntity.java
-index 8e48407fd4..f45e0b0166 100644
---- a/src/main/java/net/minecraft/server/PacketPlayOutEntity.java
-+++ b/src/main/java/net/minecraft/server/PacketPlayOutEntity.java
-@@ -5,11 +5,11 @@ import java.io.IOException;
- public class PacketPlayOutEntity implements Packet<PacketListenerPlayOut> {
- 
-     protected int a;
--    protected short b;
--    protected short c;
--    protected short d;
--    protected byte e;
--    protected byte f;
-+    protected short b; public short getX() { return b; } // Origami - OBFHELPER
-+    protected short c; public short getY() { return c; } // Origami - OBFHELPER
-+    protected short d; public short getZ() { return d; } // Origami - OBFHELPER
-+    protected byte e; public byte getYaw() { return e; } // Origami - OBFHELPER
-+    protected byte f; public byte getPitch() { return f; } // Origami - OBFHELPER
-     protected boolean g;
-     protected boolean h;
-     protected boolean i;
 -- 
 2.25.1.windows.1
 

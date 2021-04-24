@@ -1,11 +1,11 @@
-From 75b2be13108a7c901d3268f2b0b869c066c1228b Mon Sep 17 00:00:00 2001
+From 6407385102c09db9144dd0aaac9c274f855e3e0f Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 31 Mar 2020 21:43:04 +0100
 Subject: [PATCH] Add option to disable observer clocks
 
 ---
- src/main/java/de/minebench/origami/OrigamiConfig.java | 5 +++++
- src/main/java/net/minecraft/server/BlockObserver.java | 3 ++-
+ src/main/java/de/minebench/origami/OrigamiConfig.java        | 5 +++++
+ .../java/net/minecraft/world/level/block/BlockObserver.java  | 3 ++-
  2 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
@@ -24,11 +24,11 @@ index a52b5d3231..341cac2107 100644
      }
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
-diff --git a/src/main/java/net/minecraft/server/BlockObserver.java b/src/main/java/net/minecraft/server/BlockObserver.java
-index 7dfe632523..29c3f328f5 100644
---- a/src/main/java/net/minecraft/server/BlockObserver.java
-+++ b/src/main/java/net/minecraft/server/BlockObserver.java
-@@ -52,7 +52,8 @@ public class BlockObserver extends BlockDirectional {
+diff --git a/src/main/java/net/minecraft/world/level/block/BlockObserver.java b/src/main/java/net/minecraft/world/level/block/BlockObserver.java
+index 291fd45f6f..039fd27455 100644
+--- a/src/main/java/net/minecraft/world/level/block/BlockObserver.java
++++ b/src/main/java/net/minecraft/world/level/block/BlockObserver.java
+@@ -64,7 +64,8 @@ public class BlockObserver extends BlockDirectional {
  
      @Override
      public IBlockData updateState(IBlockData iblockdata, EnumDirection enumdirection, IBlockData iblockdata1, GeneratorAccess generatoraccess, BlockPosition blockposition, BlockPosition blockposition1) {

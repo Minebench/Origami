@@ -1,15 +1,15 @@
-From 0654465a99b4dafade01404749cdd807d70990d4 Mon Sep 17 00:00:00 2001
+From 9679b196b90ef7942a76ffd721a73e23a57f01ef Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 13 Jan 2020 01:00:49 +0100
 Subject: [PATCH] Don't load chunk with seed based feature search
 
 ---
  src/main/java/de/minebench/origami/OrigamiConfig.java     | 8 ++++++++
- .../java/net/minecraft/server/StructureGenerator.java     | 5 +++++
- 2 files changed, 13 insertions(+)
+ .../world/level/levelgen/feature/StructureGenerator.java  | 7 ++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index efb0b1448b..d7b9cc389b 100644
+index efb0b1448..d7b9cc389 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -116,6 +116,14 @@ public final class OrigamiConfig {
@@ -27,22 +27,25 @@ index efb0b1448b..d7b9cc389b 100644
          public boolean onlyFindGeneratedFeatures = false;
          private void onlyGetGeneratedFeatures() {
              onlyFindGeneratedFeatures = getBoolean("only-find-generated-features", onlyFindGeneratedFeatures);
-diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
-index e2f5c2aa9e..c24c69caa4 100644
---- a/src/main/java/net/minecraft/server/StructureGenerator.java
-+++ b/src/main/java/net/minecraft/server/StructureGenerator.java
-@@ -151,6 +151,11 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java b/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java
+index 509084bd3..f7b006965 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java
+@@ -184,8 +184,13 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
                                  }
                              }
                              // Paper end
 +                            // Origami start - seed based feature search doesn't load
-+                            if (iworldreader instanceof World && ((World) iworldreader).origamiConfig.fastFeatureSearchDontLoad) {
++                            if (iworldreader instanceof net.minecraft.world.level.World && ((net.minecraft.world.level.World) iworldreader).origamiConfig.fastFeatureSearchDontLoad) {
 +                                return chunkcoordintpair.l();
 +                            }
 +                            // Origami end
                              // Origami start - option to only find generated features to not generate new chunks
-                             IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !(iworldreader instanceof World) || !((World) iworldreader).origamiConfig.onlyFindGeneratedFeatures);
+-                            IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !(iworldreader instanceof World) || !((World) iworldreader).origamiConfig.onlyFindGeneratedFeatures);
++                            IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !(iworldreader instanceof net.minecraft.world.level.World) || !((net.minecraft.world.level.World) iworldreader).origamiConfig.onlyFindGeneratedFeatures);
                              if (ichunkaccess == null) {
+                                 continue;
+                             }
 -- 
 2.25.1.windows.1
 

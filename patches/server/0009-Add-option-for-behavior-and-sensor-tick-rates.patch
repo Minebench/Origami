@@ -1,16 +1,16 @@
-From 89c260b43cbeda0df75619af5429aa3a0b1b37cb Mon Sep 17 00:00:00 2001
+From 26bbf2c9844abd56389d147c2814abc9510e6444 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 2 Dec 2019 20:19:11 +0100
 Subject: [PATCH] Add option for behavior and sensor tick rates
 
 ---
  .../de/minebench/origami/OrigamiConfig.java   | 28 +++++++++++++++++++
- .../java/net/minecraft/server/Behavior.java   | 18 ++++++++++++
- .../java/net/minecraft/server/Sensor.java     | 16 +++++++++--
+ .../world/entity/ai/behavior/Behavior.java    | 18 ++++++++++++
+ .../world/entity/ai/sensing/Sensor.java       | 16 +++++++++--
  3 files changed, 60 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index caf07cad8e..63eab94b8f 100644
+index caf07cad8..63eab94b8 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -1,11 +1,14 @@
@@ -60,11 +60,11 @@ index caf07cad8e..63eab94b8f 100644
      }
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
-diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
-index 65af976527..7915334116 100644
---- a/src/main/java/net/minecraft/server/Behavior.java
-+++ b/src/main/java/net/minecraft/server/Behavior.java
-@@ -11,6 +11,10 @@ public abstract class Behavior<E extends EntityLiving> {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java b/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java
+index a30b92736..83ef8ba34 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java
+@@ -15,6 +15,10 @@ public abstract class Behavior<E extends EntityLiving> {
      private long c;
      private final int d;
      private final int e;
@@ -75,7 +75,7 @@ index 65af976527..7915334116 100644
  
      public Behavior(Map<MemoryModuleType<?>, MemoryStatus> map) {
          this(map, 60);
-@@ -25,6 +29,14 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -29,6 +33,14 @@ public abstract class Behavior<E extends EntityLiving> {
          this.d = i;
          this.e = j;
          this.a = map;
@@ -90,7 +90,7 @@ index 65af976527..7915334116 100644
      }
  
      public Behavior.Status a() {
-@@ -32,6 +44,12 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -36,6 +48,12 @@ public abstract class Behavior<E extends EntityLiving> {
      }
  
      public final boolean e(WorldServer worldserver, E e0, long i) {
@@ -103,11 +103,11 @@ index 65af976527..7915334116 100644
          if (this.a(e0) && this.a(worldserver, e0)) {
              this.b = Behavior.Status.RUNNING;
              int j = this.d + worldserver.getRandom().nextInt(this.e + 1 - this.d);
-diff --git a/src/main/java/net/minecraft/server/Sensor.java b/src/main/java/net/minecraft/server/Sensor.java
-index 4dd2d99edc..d5a3651dca 100644
---- a/src/main/java/net/minecraft/server/Sensor.java
-+++ b/src/main/java/net/minecraft/server/Sensor.java
-@@ -10,10 +10,22 @@ public abstract class Sensor<E extends EntityLiving> {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
+index a531cb4bb..67fd6fd8f 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
++++ b/src/main/java/net/minecraft/world/entity/ai/sensing/Sensor.java
+@@ -14,10 +14,22 @@ public abstract class Sensor<E extends EntityLiving> {
      private static final PathfinderTargetCondition c = (new PathfinderTargetCondition()).a(16.0D).b().d().e();
      private final int d;
      private long e;
@@ -130,7 +130,7 @@ index 4dd2d99edc..d5a3651dca 100644
      }
  
      public Sensor() {
-@@ -22,7 +34,7 @@ public abstract class Sensor<E extends EntityLiving> {
+@@ -26,7 +38,7 @@ public abstract class Sensor<E extends EntityLiving> {
  
      public final void b(WorldServer worldserver, E e0) {
          if (--this.e <= 0L) {
@@ -139,7 +139,7 @@ index 4dd2d99edc..d5a3651dca 100644
              this.a(worldserver, e0);
          }
  
-@@ -33,6 +45,6 @@ public abstract class Sensor<E extends EntityLiving> {
+@@ -37,6 +49,6 @@ public abstract class Sensor<E extends EntityLiving> {
      public abstract Set<MemoryModuleType<?>> a();
  
      protected static boolean a(EntityLiving entityliving, EntityLiving entityliving1) {

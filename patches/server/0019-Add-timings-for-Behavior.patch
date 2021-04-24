@@ -1,15 +1,15 @@
-From 4b898ec73ab7b8e9f3b258ba60889905269b3134 Mon Sep 17 00:00:00 2001
+From 6857f6f111c845bbb36648e184df94af70700109 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Mon, 20 Apr 2020 17:41:09 +0100
 Subject: [PATCH] Add timings for Behavior
 
 ---
- src/main/java/co/aikar/timings/WorldTimingsHandler.java | 6 ++++++
- src/main/java/net/minecraft/server/Behavior.java        | 6 ++++++
+ src/main/java/co/aikar/timings/WorldTimingsHandler.java     | 6 ++++++
+ .../net/minecraft/world/entity/ai/behavior/Behavior.java    | 6 ++++++
  2 files changed, 12 insertions(+)
 
 diff --git a/src/main/java/co/aikar/timings/WorldTimingsHandler.java b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
-index 96aaaab5b7..5bcbf2e5ee 100644
+index c5f594d45..4ca89e527 100644
 --- a/src/main/java/co/aikar/timings/WorldTimingsHandler.java
 +++ b/src/main/java/co/aikar/timings/WorldTimingsHandler.java
 @@ -140,4 +140,10 @@ public class WorldTimingsHandler {
@@ -23,11 +23,11 @@ index 96aaaab5b7..5bcbf2e5ee 100644
 +    }
 +    // Origami end
  }
-diff --git a/src/main/java/net/minecraft/server/Behavior.java b/src/main/java/net/minecraft/server/Behavior.java
-index 7915334116..04ac83b5d9 100644
---- a/src/main/java/net/minecraft/server/Behavior.java
-+++ b/src/main/java/net/minecraft/server/Behavior.java
-@@ -15,6 +15,7 @@ public abstract class Behavior<E extends EntityLiving> {
+diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java b/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java
+index 83ef8ba34..0ee5b3e1d 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java
++++ b/src/main/java/net/minecraft/world/entity/ai/behavior/Behavior.java
+@@ -19,6 +19,7 @@ public abstract class Behavior<E extends EntityLiving> {
      private final String configKey;
      private static final String RATE_TYPE = "behavior";
      // Origami end
@@ -35,7 +35,7 @@ index 7915334116..04ac83b5d9 100644
  
      public Behavior(Map<MemoryModuleType<?>, MemoryStatus> map) {
          this(map, 60);
-@@ -37,6 +38,9 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -41,6 +42,9 @@ public abstract class Behavior<E extends EntityLiving> {
          }
          this.configKey = key;
          // Origami end
@@ -45,7 +45,7 @@ index 7915334116..04ac83b5d9 100644
      }
  
      public Behavior.Status a() {
-@@ -55,7 +59,9 @@ public abstract class Behavior<E extends EntityLiving> {
+@@ -59,7 +63,9 @@ public abstract class Behavior<E extends EntityLiving> {
              int j = this.d + worldserver.getRandom().nextInt(this.e + 1 - this.d);
  
              this.c = i + (long) j;

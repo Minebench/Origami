@@ -1,11 +1,11 @@
-From 9572d97555a7fe6ece6036fc1209db3635ae6064 Mon Sep 17 00:00:00 2001
+From d58ca186f38b5aa6c79e376590a69d3883cb4daf Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 7 Jul 2020 00:22:11 +0100
 Subject: [PATCH] Fix exp drop of zombie pigmen (MC-56653)
 
 ---
- src/main/java/de/minebench/origami/OrigamiConfig.java   | 4 ++++
- src/main/java/net/minecraft/server/EntityPigZombie.java | 2 +-
+ src/main/java/de/minebench/origami/OrigamiConfig.java         | 4 ++++
+ .../net/minecraft/world/entity/monster/EntityPigZombie.java   | 2 +-
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
@@ -23,11 +23,11 @@ index 341cac2107..ae4a0b6be7 100644
          public int pigmenPortalSpawn = 2000;
          public double pigmenPortalBoost = 0.0;
          public boolean pigmenFarmsWaterAi = false;
-diff --git a/src/main/java/net/minecraft/server/EntityPigZombie.java b/src/main/java/net/minecraft/server/EntityPigZombie.java
-index 65bae8c9f2..2bb8c483c6 100644
---- a/src/main/java/net/minecraft/server/EntityPigZombie.java
-+++ b/src/main/java/net/minecraft/server/EntityPigZombie.java
-@@ -68,7 +68,7 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
+diff --git a/src/main/java/net/minecraft/world/entity/monster/EntityPigZombie.java b/src/main/java/net/minecraft/world/entity/monster/EntityPigZombie.java
+index d10d1b7686..33f4e9211c 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/EntityPigZombie.java
++++ b/src/main/java/net/minecraft/world/entity/monster/EntityPigZombie.java
+@@ -103,7 +103,7 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {
              this.eY();
          }
  

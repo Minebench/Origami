@@ -1,18 +1,18 @@
-From f5c0d7500a539f1066e09c3ad0cc848c90a5168d Mon Sep 17 00:00:00 2001
+From 8f33af31c602ce433bdf397ff9b6b0ab6f20de47 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:51:07 +0100
 Subject: [PATCH] Log and abort if WorldUpgrader gets stuck on chunk
 
 ---
  src/main/java/net/minecraft/server/Main.java  | 22 ++++++++++++++++++-
- .../net/minecraft/server/WorldUpgrader.java   |  2 ++
+ .../util/worldupdate/WorldUpgrader.java       |  2 ++
  2 files changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index 1c6dbd29c8..7263855f3b 100644
+index 6818f8496a..46de86dfeb 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
-@@ -240,7 +240,10 @@ public class Main {
+@@ -280,7 +280,10 @@ public class Main {
          Main.LOGGER.info("Forcing world upgrade! {}", convertable_conversionsession.getLevelName()); // CraftBukkit
          WorldUpgrader worldupgrader = new WorldUpgrader(convertable_conversionsession, datafixer, immutableset, flag);
          IChatBaseComponent ichatbasecomponent = null;
@@ -24,7 +24,7 @@ index 1c6dbd29c8..7263855f3b 100644
          while (!worldupgrader.b()) {
              IChatBaseComponent ichatbasecomponent1 = worldupgrader.h();
  
-@@ -255,6 +258,23 @@ public class Main {
+@@ -295,6 +298,23 @@ public class Main {
                  int j = worldupgrader.f() + worldupgrader.g();
  
                  Main.LOGGER.info("{}% completed ({} / {} chunks)...", MathHelper.d((float) j / (float) i * 100.0F), j, i);
@@ -48,11 +48,11 @@ index 1c6dbd29c8..7263855f3b 100644
              }
  
              if (!booleansupplier.getAsBoolean()) {
-diff --git a/src/main/java/net/minecraft/server/WorldUpgrader.java b/src/main/java/net/minecraft/server/WorldUpgrader.java
-index 5ccdc0b87b..dcfcde2f4c 100644
---- a/src/main/java/net/minecraft/server/WorldUpgrader.java
-+++ b/src/main/java/net/minecraft/server/WorldUpgrader.java
-@@ -40,6 +40,7 @@ public class WorldUpgrader {
+diff --git a/src/main/java/net/minecraft/util/worldupdate/WorldUpgrader.java b/src/main/java/net/minecraft/util/worldupdate/WorldUpgrader.java
+index a497065449..c2e866d8e5 100644
+--- a/src/main/java/net/minecraft/util/worldupdate/WorldUpgrader.java
++++ b/src/main/java/net/minecraft/util/worldupdate/WorldUpgrader.java
+@@ -57,6 +57,7 @@ public class WorldUpgrader {
      private volatile IChatBaseComponent o = new ChatMessage("optimizeWorld.stage.counting");
      private static final Pattern p = Pattern.compile("^r\\.(-?[0-9]+)\\.(-?[0-9]+)\\.mca$");
      private final WorldPersistentData q;
@@ -60,7 +60,7 @@ index 5ccdc0b87b..dcfcde2f4c 100644
  
      public WorldUpgrader(Convertable.ConversionSession convertable_conversionsession, DataFixer datafixer, ImmutableSet<ResourceKey<DimensionManager>> immutableset, boolean flag) { // CraftBukkit
          this.c = immutableset;
-@@ -113,6 +114,7 @@ public class WorldUpgrader {
+@@ -130,6 +131,7 @@ public class WorldUpgrader {
  
                      if (listiterator.hasNext()) {
                          ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) listiterator.next();

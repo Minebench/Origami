@@ -1,17 +1,17 @@
-From ef4ba82c8ebb3ba69d155537e4c85799ce29ee76 Mon Sep 17 00:00:00 2001
+From d59fc2c0ff6c09669f785bce4963546972d50d1d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 14 May 2020 20:47:40 +0100
 Subject: [PATCH] Re-add send chunk change API
 
 ---
- src/main/java/org/bukkit/entity/Player.java | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ src/main/java/org/bukkit/entity/Player.java | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index ea5257cc9..56ea3e0a2 100644
+index 2ea531eae..0e5c87c48 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -444,6 +444,17 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -538,6 +538,16 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      @Deprecated
      public boolean sendChunkChange(@NotNull Location loc, int sx, int sy, int sz, @NotNull byte[] data);
  
@@ -25,10 +25,9 @@ index ea5257cc9..56ea3e0a2 100644
 +     */
 +    public boolean sendChunkChange(@NotNull org.bukkit.Chunk chunk);
 +    // Origami end
-+
+     // Paper start
      /**
       * Send a sign change. This fakes a sign change packet for a user at
-      * a certain location. This will not actually change the world in any way.
 -- 
 2.25.1.windows.1
 

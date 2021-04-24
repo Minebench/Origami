@@ -1,18 +1,18 @@
-From 1b567e9699a3c86170e227a27d9fc6b1ac158afb Mon Sep 17 00:00:00 2001
+From 4862ed25dd84eb938e901a213a9617dffebc6bca Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 30 Jan 2020 21:50:40 +0100
 Subject: [PATCH] Remove some streams and object allocations
 
 Partially based on a patch in Spottedleaf's Paper fork
 ---
- src/main/java/net/minecraft/server/ChunkMap.java | 14 ++++++++------
+ .../java/net/minecraft/server/level/ChunkMap.java  | 14 ++++++++------
  1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/src/main/java/net/minecraft/server/ChunkMap.java b/src/main/java/net/minecraft/server/ChunkMap.java
-index 7bfb5cb728..60f184a0ef 100644
---- a/src/main/java/net/minecraft/server/ChunkMap.java
-+++ b/src/main/java/net/minecraft/server/ChunkMap.java
-@@ -13,9 +13,10 @@ public abstract class ChunkMap extends LightEngineGraph {
+diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
+index b210921a8..029e07a7b 100644
+--- a/src/main/java/net/minecraft/server/level/ChunkMap.java
++++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
+@@ -16,9 +16,10 @@ public abstract class ChunkMap extends LightEngineGraph {
  
      @Override
      protected void a(long i, int j, boolean flag) {
@@ -26,7 +26,7 @@ index 7bfb5cb728..60f184a0ef 100644
  
          for (int i1 = -1; i1 <= 1; ++i1) {
              for (int j1 = -1; j1 <= 1; ++j1) {
-@@ -32,9 +33,10 @@ public abstract class ChunkMap extends LightEngineGraph {
+@@ -35,9 +36,10 @@ public abstract class ChunkMap extends LightEngineGraph {
      @Override
      protected int a(long i, long j, int k) {
          int l = k;

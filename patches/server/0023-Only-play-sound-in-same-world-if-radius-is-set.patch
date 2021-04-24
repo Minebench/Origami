@@ -1,4 +1,4 @@
-From a53e92a001e1ff83e15e8d9ba352b3f9293e8899 Mon Sep 17 00:00:00 2001
+From 35b2a685da85bdfe76b24b8e22147711b8f43e30 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 12 Jun 2020 21:43:36 +0100
 Subject: [PATCH] Only play sound in same world if radius is set
@@ -7,21 +7,21 @@ This restores the vanilla behaviour of playing the sound globally when
 no radius is set. If it should only play in one world then set it to
 Integer.MAX_VALUE I guess.
 ---
- src/main/java/net/minecraft/server/EntityEnderDragon.java | 4 ++--
- src/main/java/net/minecraft/server/EntityWither.java      | 4 ++--
- src/main/java/net/minecraft/server/ItemEnderEye.java      | 2 +-
+ .../world/entity/boss/enderdragon/EntityEnderDragon.java      | 4 ++--
+ .../net/minecraft/world/entity/boss/wither/EntityWither.java  | 4 ++--
+ src/main/java/net/minecraft/world/item/ItemEnderEye.java      | 2 +-
  3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/src/main/java/net/minecraft/server/EntityEnderDragon.java b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-index de53af8c01..79c57d159d 100644
---- a/src/main/java/net/minecraft/server/EntityEnderDragon.java
-+++ b/src/main/java/net/minecraft/server/EntityEnderDragon.java
-@@ -577,13 +577,13 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
+diff --git a/src/main/java/net/minecraft/world/entity/boss/enderdragon/EntityEnderDragon.java b/src/main/java/net/minecraft/world/entity/boss/enderdragon/EntityEnderDragon.java
+index c296fcf80c..f3ec3f0ef0 100644
+--- a/src/main/java/net/minecraft/world/entity/boss/enderdragon/EntityEnderDragon.java
++++ b/src/main/java/net/minecraft/world/entity/boss/enderdragon/EntityEnderDragon.java
+@@ -626,13 +626,13 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
                  // CraftBukkit start - Use relative location for far away sounds
                  // this.world.b(1028, this.getChunkCoordinates(), 0);
                  int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
--                for (EntityPlayer player : (List<EntityPlayer>) ((WorldServer)world).getPlayers()) {
-+                for (EntityPlayer player : this.world.getServer().getServer().getPlayerList().players) { // Origami - only play sound in same world if radius is set
+-                for (net.minecraft.server.level.EntityPlayer player : (List<net.minecraft.server.level.EntityPlayer>) ((WorldServer)world).getPlayers()) {
++                for (net.minecraft.server.level.EntityPlayer player : this.world.getServer().getServer().getPlayerList().players) { // Origami - only play sound in same world if radius is set
                      // final int viewDistance = player.getViewDistance(); // TODO apply view distance api patch
                      // Paper end
                      double deltaX = this.locX() - player.locX();
@@ -32,11 +32,11 @@ index de53af8c01..79c57d159d 100644
                      if (distanceSquared > viewDistance * viewDistance) {
                          double deltaLength = Math.sqrt(distanceSquared);
                          double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
-diff --git a/src/main/java/net/minecraft/server/EntityWither.java b/src/main/java/net/minecraft/server/EntityWither.java
-index 2e623ef9be..2078fd72c4 100644
---- a/src/main/java/net/minecraft/server/EntityWither.java
-+++ b/src/main/java/net/minecraft/server/EntityWither.java
-@@ -214,12 +214,12 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
+diff --git a/src/main/java/net/minecraft/world/entity/boss/wither/EntityWither.java b/src/main/java/net/minecraft/world/entity/boss/wither/EntityWither.java
+index 229eabe051..3adf05f957 100644
+--- a/src/main/java/net/minecraft/world/entity/boss/wither/EntityWither.java
++++ b/src/main/java/net/minecraft/world/entity/boss/wither/EntityWither.java
+@@ -265,12 +265,12 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
                      // CraftBukkit start - Use relative location for far away sounds
                      // this.world.b(1023, new BlockPosition(this), 0);
                      int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16; // Paper - updated to use worlds actual view distance incase we have to uncomment this due to removal of player view distance API
@@ -51,11 +51,11 @@ index 2e623ef9be..2078fd72c4 100644
                          if (distanceSquared > viewDistance * viewDistance) {
                              double deltaLength = Math.sqrt(distanceSquared);
                              double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
-diff --git a/src/main/java/net/minecraft/server/ItemEnderEye.java b/src/main/java/net/minecraft/server/ItemEnderEye.java
-index 3296d888a6..5448499583 100644
---- a/src/main/java/net/minecraft/server/ItemEnderEye.java
-+++ b/src/main/java/net/minecraft/server/ItemEnderEye.java
-@@ -42,7 +42,7 @@ public class ItemEnderEye extends Item {
+diff --git a/src/main/java/net/minecraft/world/item/ItemEnderEye.java b/src/main/java/net/minecraft/world/item/ItemEnderEye.java
+index f74685a7cd..d432a3ae60 100644
+--- a/src/main/java/net/minecraft/world/item/ItemEnderEye.java
++++ b/src/main/java/net/minecraft/world/item/ItemEnderEye.java
+@@ -66,7 +66,7 @@ public class ItemEnderEye extends Item {
                          double deltaX = soundPos.getX() - player.locX();
                          double deltaZ = soundPos.getZ() - player.locZ();
                          double distanceSquared = deltaX * deltaX + deltaZ * deltaZ;

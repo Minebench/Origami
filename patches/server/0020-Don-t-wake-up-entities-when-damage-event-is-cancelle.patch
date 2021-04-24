@@ -1,17 +1,17 @@
-From fde06185d67ae3f9c0176a3c0df5877ae14a38bf Mon Sep 17 00:00:00 2001
+From 4a66fc98ea71a864cb5663db1343040232a7a7d2 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 23 Apr 2020 18:03:57 +0100
 Subject: [PATCH] Don't wake up entities when damage event is cancelled
 
 ---
- .../java/net/minecraft/server/EntityLiving.java    | 14 +++++++++++---
+ .../net/minecraft/world/entity/EntityLiving.java   | 14 +++++++++++---
  1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
-index b7a362bd9c..a3edadf137 100644
---- a/src/main/java/net/minecraft/server/EntityLiving.java
-+++ b/src/main/java/net/minecraft/server/EntityLiving.java
-@@ -1111,9 +1111,12 @@ public abstract class EntityLiving extends Entity {
+diff --git a/src/main/java/net/minecraft/world/entity/EntityLiving.java b/src/main/java/net/minecraft/world/entity/EntityLiving.java
+index 2537c9fcf1..53673a4b72 100644
+--- a/src/main/java/net/minecraft/world/entity/EntityLiving.java
++++ b/src/main/java/net/minecraft/world/entity/EntityLiving.java
+@@ -1205,9 +1205,12 @@ public abstract class EntityLiving extends Entity {
          } else if (damagesource.isFire() && this.hasEffect(MobEffects.FIRE_RESISTANCE)) {
              return false;
          } else {
@@ -27,7 +27,7 @@ index b7a362bd9c..a3edadf137 100644
  
              this.ticksFarFromPlayer = 0;
              float f1 = f;
-@@ -1851,6 +1854,11 @@ public abstract class EntityLiving extends Entity {
+@@ -1945,6 +1948,11 @@ public abstract class EntityLiving extends Entity {
              if (event.isCancelled()) {
                  return false;
              }

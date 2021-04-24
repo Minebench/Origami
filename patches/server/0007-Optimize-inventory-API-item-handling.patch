@@ -1,4 +1,4 @@
-From b5a15506a47329fd6b736da83a8f8163d3961e98 Mon Sep 17 00:00:00 2001
+From feb320471e9ab2f19ee69e041ad1415231925b59 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 23:00:58 +0100
 Subject: [PATCH] Optimize inventory API item handling
@@ -8,10 +8,10 @@ Subject: [PATCH] Optimize inventory API item handling
  1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-index bba9bddc1c..70408d8933 100644
+index c3fa97ac34..1c71c12869 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-@@ -273,11 +273,13 @@ public class CraftInventory implements Inventory {
+@@ -274,11 +274,13 @@ public class CraftInventory implements Inventory {
      }
  
      private int firstPartial(ItemStack item) {
@@ -27,7 +27,7 @@ index bba9bddc1c..70408d8933 100644
          for (int i = 0; i < inventory.length; i++) {
              ItemStack cItem = inventory[i];
              if (cItem != null && cItem.getAmount() < cItem.getMaxStackSize() && cItem.isSimilar(filteredItem)) {
-@@ -295,9 +297,10 @@ public class CraftInventory implements Inventory {
+@@ -296,9 +298,10 @@ public class CraftInventory implements Inventory {
          /* TODO: some optimization
           *  - Create a 'firstPartial' with a 'fromIndex'
           *  - Record the lastPartial per Material
@@ -39,7 +39,7 @@ index bba9bddc1c..70408d8933 100644
          for (int i = 0; i < items.length; i++) {
              ItemStack item = items[i];
              while (true) {
-@@ -307,7 +310,11 @@ public class CraftInventory implements Inventory {
+@@ -308,7 +311,11 @@ public class CraftInventory implements Inventory {
                  // Drat! no partial stack
                  if (firstPartial == -1) {
                      // Find a free spot!
@@ -52,7 +52,7 @@ index bba9bddc1c..70408d8933 100644
  
                      if (firstFree == -1) {
                          // No space at all!
-@@ -320,9 +327,11 @@ public class CraftInventory implements Inventory {
+@@ -321,9 +328,11 @@ public class CraftInventory implements Inventory {
                              stack.setAmount(getMaxItemStack());
                              setItem(firstFree, stack);
                              item.setAmount(item.getAmount() - getMaxItemStack());

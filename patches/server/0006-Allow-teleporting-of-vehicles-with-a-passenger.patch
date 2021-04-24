@@ -1,4 +1,4 @@
-From 0330fee5aaec88826e3c26a03547232a82b1a7c0 Mon Sep 17 00:00:00 2001
+From 33c1ce024b1c987ed5f9e37b56734c209e9b2166 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:56:23 +0100
 Subject: [PATCH] Allow teleporting of vehicles with a passenger
@@ -24,10 +24,10 @@ index fe7330fabe..e7207e835b 100644
  }
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-index 475dc1aa2c..f0766b008d 100644
+index 295ffab086..e79abd8215 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-@@ -540,7 +540,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+@@ -544,7 +544,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
          Preconditions.checkArgument(location != null, "location");
          location.checkFinite();
  

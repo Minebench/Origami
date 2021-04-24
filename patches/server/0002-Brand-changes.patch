@@ -1,4 +1,4 @@
-From c7b8dc38db691ae041a54933da07da35654748a5 Mon Sep 17 00:00:00 2001
+From b86a56c85b3d2fe62ef84cdd404763b3190eb411 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:28:42 +0100
 Subject: [PATCH] Brand changes
@@ -34,10 +34,10 @@ index dee00aac05..b002426b1d 100644
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/net/minecraft/server/EULA.java b/src/main/java/net/minecraft/server/EULA.java
-index 550232cb38..a551d9eead 100644
+index a0f53c9eff..1d6b29a3b4 100644
 --- a/src/main/java/net/minecraft/server/EULA.java
 +++ b/src/main/java/net/minecraft/server/EULA.java
-@@ -70,7 +70,7 @@ public class EULA {
+@@ -72,7 +72,7 @@ public class EULA {
                      Properties properties = new Properties();
  
                      properties.setProperty("eula", "false");
@@ -47,10 +47,10 @@ index 550232cb38..a551d9eead 100644
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index ccf2d0b090..26ef09c865 100644
+index 61712ae515..92dc544b41 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1450,7 +1450,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1579,7 +1579,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -60,7 +60,7 @@ index ccf2d0b090..26ef09c865 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 9ad6ea5ef3..ec073da662 100644
+index 03b8d67a5f..3623d265e0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -232,7 +232,7 @@ import javax.annotation.Nullable; // Paper
@@ -73,10 +73,10 @@ index 9ad6ea5ef3..ec073da662 100644
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 22bde39593..245a98963b 100644
+index 154f3a6a3d..fe35eeb783 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -252,7 +252,7 @@ public class Main {
+@@ -253,7 +253,7 @@ public class Main {
                      if (buildDate.before(deadline.getTime())) {
                          // Paper start - This is some stupid bullshit
                          System.err.println("*** Warning, you've not updated in a while! ***");

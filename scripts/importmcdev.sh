@@ -14,7 +14,7 @@ decompiledir=$workdir/Minecraft/$minecraftversion/forge
 # replace for now
 decompiledir="$workdir/Minecraft/$minecraftversion/spigot"
 
-nms="net/minecraft/server"
+nms="net/minecraft"
 export MODLOG=""
 cd $basedir
 
@@ -28,7 +28,7 @@ function containsElement {
 
 export importedmcdev=""
 function import {
-    if [ -f "$basedir/Paper/Paper-Server/src/main/java/net/minecraft/server/$1.java" ]; then
+    if [ -f "$basedir/Paper/Paper-Server/src/main/java/$nms/$1.java" ]; then
         echo "ALREADY IMPORTED $1"
         return 0
     fi
@@ -55,14 +55,15 @@ function import {
 )
 
 
-files=$(cat patches/server/* | grep "+++ b/src/main/java/net/minecraft/server/" | sort | uniq | sed 's/\+\+\+ b\/src\/main\/java\/net\/minecraft\/server\///g' | sed 's/.java//g')
+files=$(cat patches/server/* | grep "+++ b/src/main/java/net/minecraft/" | sort | uniq | sed 's/\+\+\+ b\/src\/main\/java\/net\/minecraft\///g')
 
-nonnms=$(cat patches/server/* | grep "create mode " | grep -Po "src/main/java/net/minecraft/server/(.*?).java" | sort | uniq | sed 's/src\/main\/java\/net\/minecraft\/server\///g' | sed 's/.java//g')
+nonnms=$(grep -R "new file mode" -B 1 "$basedir/patches/server/" | grep -v "new file mode" | grep -oE --color=none "net\/minecraft\/.*.java" | sed 's/.*\/net\/minecraft\///g')
 
 for f in $files; do
     containsElement "$f" ${nonnms[@]}
     if [ "$?" == "1" ]; then
-        if [ ! -f "$basedir/Paper/Paper-Server/src/main/java/net/minecraft/server/$f.java" ]; then
+        if [ ! -f "$basedir/Paper/Paper-Server/src/main/java/net/minecraft/$f" ]; then
+            f="$(echo "$f" | sed 's/.java//g')"
             if [ ! -f "$decompiledir/$nms/$f.java" ]; then
                 echo "$(bashColor 1 31) ERROR!!! Missing NMS$(bashColor 1 34) $f $(bashColorReset)";
             else

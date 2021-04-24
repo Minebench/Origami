@@ -1,4 +1,4 @@
-From 07c59b88af487d1668c6574887c5782bb065658a Mon Sep 17 00:00:00 2001
+From 72857a895740c7f5509b05ef8af3dcd31f001c92 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Sat, 24 Apr 2021 12:50:21 +0100
 Subject: [PATCH] Item and exp merge improvements
@@ -10,13 +10,13 @@ This changes it so that items merge into the direction of the item with
 Also set item merge default radius to Vanilla value as well as set a
  default value for the exp max merge value config option.
 ---
- src/main/java/com/destroystokyo/paper/PaperWorldConfig.java | 2 +-
- src/main/java/net/minecraft/server/EntityItem.java          | 2 +-
- src/main/java/org/spigotmc/SpigotWorldConfig.java           | 2 +-
+ src/main/java/com/destroystokyo/paper/PaperWorldConfig.java   | 2 +-
+ src/main/java/net/minecraft/world/entity/item/EntityItem.java | 2 +-
+ src/main/java/org/spigotmc/SpigotWorldConfig.java             | 2 +-
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index 0776e68340..2cb3eb4f83 100644
+index 921253a06d..fe60777f08 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 @@ -387,7 +387,7 @@ public class PaperWorldConfig {
@@ -28,11 +28,11 @@ index 0776e68340..2cb3eb4f83 100644
          log("Experience Merge Max Value: " + expMergeMaxValue);
      }
  
-diff --git a/src/main/java/net/minecraft/server/EntityItem.java b/src/main/java/net/minecraft/server/EntityItem.java
-index 0ea6d243df..b8fd24898c 100644
---- a/src/main/java/net/minecraft/server/EntityItem.java
-+++ b/src/main/java/net/minecraft/server/EntityItem.java
-@@ -229,7 +229,7 @@ public class EntityItem extends Entity {
+diff --git a/src/main/java/net/minecraft/world/entity/item/EntityItem.java b/src/main/java/net/minecraft/world/entity/item/EntityItem.java
+index a3cf6a4351..da2a34b761 100644
+--- a/src/main/java/net/minecraft/world/entity/item/EntityItem.java
++++ b/src/main/java/net/minecraft/world/entity/item/EntityItem.java
+@@ -256,7 +256,7 @@ public class EntityItem extends Entity {
          ItemStack itemstack1 = entityitem.getItemStack();
  
          if (Objects.equals(this.getOwner(), entityitem.getOwner()) && a(itemstack, itemstack1)) {
@@ -42,7 +42,7 @@ index 0ea6d243df..b8fd24898c 100644
              } else {
                  a(entityitem, itemstack1, this, itemstack);
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index 61ad08b09c..2a6b194f53 100644
+index 094a934c16..71e2061a30 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -132,7 +132,7 @@ public class SpigotWorldConfig

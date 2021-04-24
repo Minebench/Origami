@@ -1,20 +1,29 @@
-From af2b2cc0243dc1a5a05448f8dbe80b868571b7c1 Mon Sep 17 00:00:00 2001
+From fa5a2c3f8d236bea699de085e38acff403087631 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:31:18 +0100
 Subject: [PATCH] Check Origami repo for updates
 
 ---
- .../paper/PaperVersionFetcher.java            |  4 +--
- .../origami/OrigamiVersionFetcher.java        | 35 +++++++++++++++++++
+ .../paper/PaperVersionFetcher.java            |  6 +++---
+ .../origami/OrigamiVersionFetcher.java        | 21 +++++++++++++++++++
  .../craftbukkit/util/CraftMagicNumbers.java   |  2 +-
- 3 files changed, 38 insertions(+), 3 deletions(-)
+ 3 files changed, 25 insertions(+), 4 deletions(-)
  create mode 100644 src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 49a38c6608..77324bbb16 100644
+index dc0ea65ab8..db92d44208 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -90,7 +90,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -51,7 +51,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+         return mcVer;
+     }
+ 
+-    private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
++    protected static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) { // Origami - expose to extending classes
+         int distance;
+         try {
+             int jenkinsBuild = Integer.parseInt(versionInfo);
+@@ -94,7 +94,7 @@ public class PaperVersionFetcher implements VersionFetcher {
      }
  
      // Contributed by Techcable <Techcable@outlook.com> in GH-65
@@ -23,24 +32,26 @@ index 49a38c6608..77324bbb16 100644
          try {
              HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
              connection.connect();
-@@ -117,7 +117,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -121,7 +121,7 @@ public class PaperVersionFetcher implements VersionFetcher {
      }
  
      @Nullable
--    private String getHistory() {
-+    protected String getHistory() { // Origami - expose to extending classes
+-    private Component getHistory() {
++    protected Component getHistory() { // Origami - expose to extending classes
          final VersionHistoryManager.VersionData data = VersionHistoryManager.INSTANCE.getVersionData();
          if (data == null) {
              return null;
 diff --git a/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java b/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 new file mode 100644
-index 0000000000..6cd58564a6
+index 0000000000..1d320d7708
 --- /dev/null
 +++ b/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,21 @@
 +package de.minebench.origami;
 +
 +import com.destroystokyo.paper.PaperVersionFetcher;
++import net.kyori.adventure.text.Component;
++import net.kyori.adventure.text.TextComponent;
 +
 +import javax.annotation.Nonnull;
 +
@@ -48,36 +59,20 @@ index 0000000000..6cd58564a6
 +
 +    @Nonnull
 +    @Override
-+    public String getVersionMessage(@Nonnull String serverVersion) {
++    public Component getVersionMessage(@Nonnull String serverVersion) {
 +        String[] parts = serverVersion.substring("git-Origami-".length()).split("[-\\s]");
 +        String[] mcParts = parts.length > 2 ? parts[2].split("\\.") : new String[0];
-+        String updateMessage = getUpdateStatusMessage("Minebench/Origami", mcParts.length > 0 ? mcParts[0] + "." + mcParts[1] : "master", parts[0]);
-+        String history = getHistory();
++        Component updateMessage = getUpdateStatusMessage("Minebench/Origami", mcParts.length > 0 ? mcParts[0] + "." + mcParts[1] : "master", parts[0]);
++        Component history = getHistory();
 +
-+        return history != null ? history + "\n" + updateMessage : updateMessage;
-+    }
-+
-+    private static String getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
-+        versionInfo = versionInfo.replace("\"", "");
-+        int distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
-+
-+        switch (distance) {
-+            case -1:
-+                return "Error obtaining version information";
-+            case 0:
-+                return "You are running the latest version";
-+            case -2:
-+                return "Unknown version";
-+            default:
-+                return "You are " + distance + " version(s) behind";
-+        }
++        return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index ac5003dc82..0661929786 100644
+index 6141e86278..0716c3de3f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -370,7 +370,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -397,7 +397,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {

@@ -24,11 +24,11 @@ if [ ! -d ".git" ]; then
     git init
 fi
 
-rm src/net/minecraft/server/*.java
-cp $basedir/$decompile/net/minecraft/server/*.java src/net/minecraft/server
+rm src/net/minecraft/*.java
+cp $basedir/$decompile/net/minecraft/*.java src/net/minecraft/
 
-base="$basedir/Paper/Paper-Server/src/main/java/net/minecraft/server"
-cd $basedir/mc-dev/src/net/minecraft/server/
+base="$basedir/Paper/Paper-Server/src/main/java/net/minecraft"
+cd $basedir/mc-dev/src/net/minecraft/
 for file in $(/bin/ls $base)
 do
     if [ -f "$file" ]; then

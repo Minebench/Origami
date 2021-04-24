@@ -1,4 +1,4 @@
-From 09cd9fc11e7a443024cc04818961500ed5142870 Mon Sep 17 00:00:00 2001
+From 0cce663909368271a28377e83c9fa635ac1f7b8c Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 01:27:40 +0100
 Subject: [PATCH] Add setting to only find generated features
@@ -10,7 +10,7 @@ by the items more often than normal when used in less-generated area.
 Thanks @electronicboy for the improvements.
 ---
  src/main/java/de/minebench/origami/OrigamiConfig.java      | 5 +++++
- src/main/java/net/minecraft/server/StructureGenerator.java | 7 ++++++-
+ .../world/level/levelgen/feature/StructureGenerator.java   | 7 ++++++-
  2 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
@@ -29,11 +29,11 @@ index e7207e835b..caf07cad8e 100644
      }
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
-diff --git a/src/main/java/net/minecraft/server/StructureGenerator.java b/src/main/java/net/minecraft/server/StructureGenerator.java
-index a62c87bcea..e2f5c2aa9e 100644
---- a/src/main/java/net/minecraft/server/StructureGenerator.java
-+++ b/src/main/java/net/minecraft/server/StructureGenerator.java
-@@ -151,7 +151,12 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java b/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java
+index 6df42ff26f..509084bd30 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java
+@@ -184,7 +184,12 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
                                  }
                              }
                              // Paper end
