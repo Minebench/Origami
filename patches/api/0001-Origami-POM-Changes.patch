@@ -1,4 +1,4 @@
-From 5fc2945c87ff23c14e0f3cd10ab3d4b53001d595 Mon Sep 17 00:00:00 2001
+From 417b7678ce70762864fa8ec810c83e597c07ec48 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:08:36 +0100
 Subject: [PATCH] Origami POM Changes
@@ -8,7 +8,7 @@ Subject: [PATCH] Origami POM Changes
  1 file changed, 8 insertions(+), 9 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 6c6ae6b48..b37512ddb 100644
+index c2e9ca1c..19fb839b 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,24 +3,23 @@
@@ -42,8 +42,8 @@ index 6c6ae6b48..b37512ddb 100644
 +        <maven.compiler.source>11</maven.compiler.source>
 +        <maven.compiler.target>11</maven.compiler.target>
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+         <adventure.version>4.7.0</adventure.version> <!-- Paper - When updating this make sure to update the linked JavaDocs on the homepage as well! -->
      </properties>
- 
 -- 
 2.25.1.windows.1
 

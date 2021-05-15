@@ -1,4 +1,4 @@
-From b86a56c85b3d2fe62ef84cdd404763b3190eb411 Mon Sep 17 00:00:00 2001
+From d5249703e2a594d74113896545568e1edd7662ec Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:28:42 +0100
 Subject: [PATCH] Brand changes
@@ -12,7 +12,7 @@ Subject: [PATCH] Brand changes
  5 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index dee00aac05..b002426b1d 100644
+index dee00aac0..b002426b1 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -593,7 +593,7 @@ public class Metrics {
@@ -34,7 +34,7 @@ index dee00aac05..b002426b1d 100644
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/net/minecraft/server/EULA.java b/src/main/java/net/minecraft/server/EULA.java
-index a0f53c9eff..1d6b29a3b4 100644
+index a0f53c9ef..1d6b29a3b 100644
 --- a/src/main/java/net/minecraft/server/EULA.java
 +++ b/src/main/java/net/minecraft/server/EULA.java
 @@ -72,7 +72,7 @@ public class EULA {
@@ -47,10 +47,10 @@ index a0f53c9eff..1d6b29a3b4 100644
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 61712ae515..92dc544b41 100644
+index 35bb4d0b9..53e29ecf4 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1579,7 +1579,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1580,7 +1580,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -60,7 +60,7 @@ index 61712ae515..92dc544b41 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 03b8d67a5f..3623d265e0 100644
+index 6cc8eb04f..59a78a216 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -232,7 +232,7 @@ import javax.annotation.Nullable; // Paper
@@ -73,7 +73,7 @@ index 03b8d67a5f..3623d265e0 100644
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 154f3a6a3d..fe35eeb783 100644
+index 154f3a6a3..fe35eeb78 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -253,7 +253,7 @@ public class Main {

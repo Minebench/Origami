@@ -1,4 +1,4 @@
-From 0240c63b777624255657011f35fc0ea45623f3e2 Mon Sep 17 00:00:00 2001
+From 9fde48e9c2953000b7d0a3adde6d3df35973d1a5 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Thu, 28 Jan 2021 22:47:20 +0100
 Subject: [PATCH] Disable online-mode if bungeecord or velocity
@@ -8,7 +8,7 @@ Subject: [PATCH] Disable online-mode if bungeecord or velocity
  1 file changed, 1 insertion(+)
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 7d0a4e0fbd..b6d68ddb1e 100644
+index 8952ead9c..3ecefe6fa 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -211,6 +211,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
@@ -18,7 +18,7 @@ index 7d0a4e0fbd..b6d68ddb1e 100644
 +        if (org.spigotmc.SpigotConfig.bungee || com.destroystokyo.paper.PaperConfig.velocitySupport) this.setOnlineMode(false); // Origami - Automatically disable online-mode if bungeecord/velocity are enabled
          com.destroystokyo.paper.PaperConfig.registerCommands();
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
-         // Paper end
+         io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
 -- 
 2.25.1.windows.1
 

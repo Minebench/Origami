@@ -1,4 +1,4 @@
-From 4fc1a4cc981fce05e4f3531a08d7b83cb9d17011 Mon Sep 17 00:00:00 2001
+From 8543cc9bc0215e04c937cf3fc6587821289b76c3 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 3 Jan 2020 15:52:09 +0100
 Subject: [PATCH] Add origami command
@@ -143,12 +143,12 @@ index 000000000..4d6f3b93e
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 52bb528e7..7d0a4e0fb 100644
+index df8270c40..8952ead9c 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -214,6 +214,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
-         com.destroystokyo.paper.PaperConfig.registerCommands();
+@@ -215,6 +215,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
+         io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
          // Paper end
 +        de.minebench.origami.OrigamiCommand.register(); // Origami - add command
  
