@@ -1,0 +1,61 @@
+From ca3b942e982092be3cbd769af724714440992d6e Mon Sep 17 00:00:00 2001
+From: Phoenix616 <max@themoep.de>
+Date: Mon, 31 May 2021 00:29:14 +0100
+Subject: [PATCH] Fix Endermen being able to load chunks on teleport
+
+Vanilla behaviour is quite odd: If an Enderman teleports into a chunk
+ which was unloaded and gets loaded by the Enderman and then the chunk
+ unloads again the Enderman will be immediately removed (unless they
+ have a custom name) so the chunk load was pointless. To keep Vanilla
+ behaviour the Enderman just gets removed directly.
+
+Based on a patch under the following license:
+Airplane
+Copyright (C) 2020 Technove LLC
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+---
+ .../world/entity/monster/EntityEnderman.java     | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/world/entity/monster/EntityEnderman.java b/src/main/java/net/minecraft/world/entity/monster/EntityEnderman.java
+index e993b1849..b5a3a53f1 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/EntityEnderman.java
++++ b/src/main/java/net/minecraft/world/entity/monster/EntityEnderman.java
+@@ -314,7 +314,21 @@ public class EntityEnderman extends EntityMonster implements IEntityAngerable {
+     private boolean p(double d0, double d1, double d2) {
+         BlockPosition.MutableBlockPosition blockposition_mutableblockposition = new BlockPosition.MutableBlockPosition(d0, d1, d2);
+ 
+-        while (blockposition_mutableblockposition.getY() > 0 && !this.world.getType(blockposition_mutableblockposition).getMaterial().isSolid()) {
++        // Origami start - Don't load chunks on teleport and remove if teleporting into unloaded
++        net.minecraft.world.level.chunk.Chunk chunk = this.world.getChunkIfLoaded(blockposition_mutableblockposition);
++        if (chunk == null) {
++            if (!this.isPersistent() && !this.isSpecialPersistence()) {
++                this.die();
++                if (!this.isSilent()) {
++                    this.world.playSound(null, this.lastX, this.lastY, this.lastZ, SoundEffects.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
++                    this.playSound(SoundEffects.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
++                }
++                return true;
++            }
++            return false;
++        }
++        while (blockposition_mutableblockposition.getY() > 0 && !chunk.getType(blockposition_mutableblockposition).getMaterial().isSolid()) {
++        // Origami end
+             blockposition_mutableblockposition.c(EnumDirection.DOWN);
+         }
+ 
+-- 
+2.25.1.windows.1
+
