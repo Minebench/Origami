@@ -1,4 +1,4 @@
-From 0cce663909368271a28377e83c9fa635ac1f7b8c Mon Sep 17 00:00:00 2001
+From 6bed2bdf1e62f9877dbcb87cab6bf2999d898acf Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Wed, 27 Nov 2019 01:27:40 +0100
 Subject: [PATCH] Add setting to only find generated features
@@ -14,7 +14,7 @@ Thanks @electronicboy for the improvements.
  2 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index e7207e835b..caf07cad8e 100644
+index e7207e835..caf07cad8 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
 @@ -112,6 +112,11 @@ public final class OrigamiConfig {
@@ -30,7 +30,7 @@ index e7207e835b..caf07cad8e 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java b/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java
-index 6df42ff26f..509084bd30 100644
+index 6df42ff26..f18a66176 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/feature/StructureGenerator.java
 @@ -184,7 +184,12 @@ public abstract class StructureGenerator<C extends WorldGenFeatureConfiguration>
@@ -39,7 +39,7 @@ index 6df42ff26f..509084bd30 100644
                              // Paper end
 -                            IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS);
 +                            // Origami start - option to only find generated features to not generate new chunks
-+                            IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !(iworldreader instanceof World) || !((World) iworldreader).origamiConfig.onlyFindGeneratedFeatures);
++                            IChunkAccess ichunkaccess = iworldreader.getChunkAt(chunkcoordintpair.x, chunkcoordintpair.z, ChunkStatus.STRUCTURE_STARTS, !(iworldreader instanceof net.minecraft.world.level.World) || !((net.minecraft.world.level.World) iworldreader).origamiConfig.onlyFindGeneratedFeatures);
 +                            if (ichunkaccess == null) {
 +                                continue;
 +                            }
