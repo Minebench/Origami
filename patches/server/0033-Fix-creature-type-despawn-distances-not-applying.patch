@@ -1,0 +1,36 @@
+From 6eede9388a72aba5a0680ce77b6c075f64f8aae1 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <max@themoep.de>
+Date: Mon, 31 May 2021 00:56:07 +0100
+Subject: [PATCH] Fix creature type despawn distances not applying
+
+In Vanilla the despawn ranges are not the same for every creature type.
+ Namely the water ambient creatures despawn at half the range of all the
+ other mobs. This calculates the ratio to the default 128 and applies
+ that to the paper config value.
+---
+ .../net/minecraft/world/entity/EntityInsentient.java     | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/src/main/java/net/minecraft/world/entity/EntityInsentient.java b/src/main/java/net/minecraft/world/entity/EntityInsentient.java
+index 78f17dc25..bcfcb3bf8 100644
+--- a/src/main/java/net/minecraft/world/entity/EntityInsentient.java
++++ b/src/main/java/net/minecraft/world/entity/EntityInsentient.java
+@@ -783,10 +783,11 @@ public abstract class EntityInsentient extends EntityLiving {
+ 
+             if (entityhuman != null) {
+                 double d0 = entityhuman.h((Entity) this); // CraftBukkit - decompile error
+-                int i = this.getEntityType().e().f();
+-                int j = i * i;
+-
+-                if (d0 > (double) world.paperConfig.hardDespawnDistance) { // CraftBukkit - remove isTypeNotPersistent() check // Paper - custom despawn distances
++                // Origami start - Fix creature type despawn distances not applying
++                double i = this.getEntityType().e().f() / 128.0D; // Ratio to the default despawn 128. Yes it's a magic number, sue me.
++                double j = i * i;
++                if (d0 > (double) world.paperConfig.hardDespawnDistance * j) { // CraftBukkit - remove isTypeNotPersistent() check // Paper - custom despawn distances
++                // Origami end
+                     this.die();
+                 }
+ 
+-- 
+2.25.1.windows.1
+
