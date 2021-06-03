@@ -1,0 +1,36 @@
+From 143055fd6c7a4220378bd18a33b4f82cbd7b43a2 Mon Sep 17 00:00:00 2001
+From: Phoenix616 <max@themoep.de>
+Date: Thu, 3 Jun 2021 16:11:26 +0100
+Subject: [PATCH] Fix missing particles
+
+This fixes some cases where particles are present in single player but
+ not in multiplayer by forwarding the addParticle call (which is usually
+ only used when the world is clientside) to the sendParticles method.
+
+A quick check has shown no case where both, broadcastEffect and the
+ addParticle method is used, only some where the clientside check is
+ completely missing so this should not produce duplicate particles.
+---
+ src/main/java/net/minecraft/server/level/WorldServer.java | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/level/WorldServer.java b/src/main/java/net/minecraft/server/level/WorldServer.java
+index b5139589b..c8f693b48 100644
+--- a/src/main/java/net/minecraft/server/level/WorldServer.java
++++ b/src/main/java/net/minecraft/server/level/WorldServer.java
+@@ -1721,6 +1721,12 @@ public class WorldServer extends World implements GeneratorAccessSeed {
+     public void broadcastEntityEffect(Entity entity, byte b0) {
+         this.getChunkProvider().broadcastIncludingSelf(entity, new PacketPlayOutEntityStatus(entity, b0));
+     }
++    // Origami start - Fix missing particles
++    @Override
++    public void addParticle(ParticleParam particleparam, double x, double y, double z, double offsetX, double offsetY, double offsetZ) {
++        sendParticles(null, particleparam, x, y, z, 1, offsetX, offsetY, offsetZ, 0d, false);
++    }
++    // Origami end
+ 
+     @Override
+     public ChunkProviderServer getChunkProvider() {
+-- 
+2.25.1.windows.1
+
