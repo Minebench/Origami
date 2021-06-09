@@ -1,4 +1,4 @@
-From a379302fefdee86cd8eb743949ec513b3ec3153f Mon Sep 17 00:00:00 2001
+From 840d5152c973408ee31219c42091b2fc8cabd85d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Mon, 19 Oct 2020 17:20:53 +0100
 Subject: [PATCH] Fix ProtocolLib issues on Java 15
@@ -15,7 +15,7 @@ Thanks to https://github.com/PimvanderLoos for figuring this out here:
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/network/NetworkManager.java b/src/main/java/net/minecraft/network/NetworkManager.java
-index f86f430598..c19509b2ce 100644
+index bf0c01eaf..84cd34f9b 100644
 --- a/src/main/java/net/minecraft/network/NetworkManager.java
 +++ b/src/main/java/net/minecraft/network/NetworkManager.java
 @@ -308,9 +308,9 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>> {

@@ -1,4 +1,4 @@
-From 6eede9388a72aba5a0680ce77b6c075f64f8aae1 Mon Sep 17 00:00:00 2001
+From a277900911be3806b50e303d81ffd2784efeac5f Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Mon, 31 May 2021 00:56:07 +0100
 Subject: [PATCH] Fix creature type despawn distances not applying
@@ -12,7 +12,7 @@ In Vanilla the despawn ranges are not the same for every creature type.
  1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityInsentient.java b/src/main/java/net/minecraft/world/entity/EntityInsentient.java
-index 78f17dc25..bcfcb3bf8 100644
+index 8b379843d..c1bd26115 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityInsentient.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityInsentient.java
 @@ -783,10 +783,11 @@ public abstract class EntityInsentient extends EntityLiving {

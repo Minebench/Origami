@@ -1,4 +1,4 @@
-From 4a66fc98ea71a864cb5663db1343040232a7a7d2 Mon Sep 17 00:00:00 2001
+From ec16bc773d7ece558ec0451562e6358c202e7ade Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Thu, 23 Apr 2020 18:03:57 +0100
 Subject: [PATCH] Don't wake up entities when damage event is cancelled
@@ -8,7 +8,7 @@ Subject: [PATCH] Don't wake up entities when damage event is cancelled
  1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityLiving.java b/src/main/java/net/minecraft/world/entity/EntityLiving.java
-index 2537c9fcf1..53673a4b72 100644
+index b7b07b652..4a55c3131 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityLiving.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityLiving.java
 @@ -1205,9 +1205,12 @@ public abstract class EntityLiving extends Entity {

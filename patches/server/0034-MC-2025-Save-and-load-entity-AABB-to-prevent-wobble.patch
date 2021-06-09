@@ -1,4 +1,4 @@
-From 24b2693033581e59f77a48a005c4c129b6cb93a8 Mon Sep 17 00:00:00 2001
+From 5963a4e4f580834427bed858930ebdd9f6bb2fa4 Mon Sep 17 00:00:00 2001
 From: Zach Brown <zach.brown@destroystokyo.com>
 Date: Tue, 4 Sep 2018 19:07:57 -0400
 Subject: [PATCH] MC-2025: Save and load entity AABB to prevent wobble
@@ -26,10 +26,10 @@ store the AABB in NBT data on chunk save and restore the AABB exactly as it was 
  1 file changed, 16 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index fd82fb4a9..1a2fadee9 100644
+index 6540f0a60..7cfc16135 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1736,6 +1736,12 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
+@@ -1768,6 +1768,12 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
              if (fromNetherPortal) {
                  nbttagcompound.setBoolean("Paper.FromNetherPortal", true);
              }
@@ -42,7 +42,7 @@ index fd82fb4a9..1a2fadee9 100644
              // Paper end
              // Origami start
              if (fromMobFarm) {
-@@ -1819,6 +1825,16 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
+@@ -1851,6 +1857,16 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
              } else {
                  throw new IllegalStateException("Entity has invalid position");
              }

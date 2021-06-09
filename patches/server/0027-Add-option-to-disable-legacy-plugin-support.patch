@@ -1,4 +1,4 @@
-From 444e5b2feeab166fe7a084669ee128e6798f5150 Mon Sep 17 00:00:00 2001
+From 46ee4b3e3a2fe075c2701c8df076102987fcdf0e Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Fri, 18 Dec 2020 01:08:05 +0100
 Subject: [PATCH] Add option to disable legacy plugin support
@@ -15,10 +15,10 @@ Prints a warning and a stacktrace if something calls legacy code and
  3 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index ae4a0b6be7..1cad9d321d 100644
+index 04cf1c7e1..6100b5aa0 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -191,4 +191,8 @@ public final class OrigamiConfig {
+@@ -183,4 +183,8 @@ public final class OrigamiConfig {
          teleportingOfVehiclesWithPassenger = getBoolean("teleporting-of-vehicles-with-passenger-via-api", teleportingOfVehiclesWithPassenger);
      }
  
@@ -29,7 +29,7 @@ index ae4a0b6be7..1cad9d321d 100644
  }
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
-index b86604cbf3..ee71458e9b 100644
+index b86604cbf..ee71458e9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
 +++ b/src/main/java/org/bukkit/craftbukkit/legacy/CraftLegacy.java
 @@ -255,6 +255,12 @@ public final class CraftLegacy {
@@ -46,7 +46,7 @@ index b86604cbf3..ee71458e9b 100644
              new Exception().printStackTrace();
          }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 0716c3de3f..959c01b7d8 100644
+index 837972b90..cb9a3d36e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -366,6 +366,7 @@ public final class CraftMagicNumbers implements UnsafeValues {

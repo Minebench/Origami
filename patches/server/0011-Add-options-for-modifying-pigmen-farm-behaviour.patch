@@ -1,4 +1,4 @@
-From f42eb75c7d94e9a5228f8cf86a1665e810094f05 Mon Sep 17 00:00:00 2001
+From 613db34c2104daa957a8520119f640549ff005cb Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 29 Dec 2019 00:53:17 +0100
 Subject: [PATCH] Add options for modifying pigmen farm behaviour
@@ -38,7 +38,7 @@ index 63eab94b8..efb0b1448 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 429f0591c..fd82fb4a9 100644
+index 6e1304f71..6540f0a60 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -285,6 +285,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
@@ -49,7 +49,7 @@ index 429f0591c..fd82fb4a9 100644
      protected int numCollisions = 0; // Paper
      public void inactiveTick() { }
      // Spigot end
-@@ -1736,6 +1737,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
+@@ -1768,6 +1769,11 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                  nbttagcompound.setBoolean("Paper.FromNetherPortal", true);
              }
              // Paper end
@@ -61,7 +61,7 @@ index 429f0591c..fd82fb4a9 100644
              return nbttagcompound;
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.a(throwable, "Saving entity NBT");
-@@ -1889,6 +1895,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
+@@ -1925,6 +1931,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, ne
                  spawnReason = org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT;
              }
              // Paper end
@@ -70,7 +70,7 @@ index 429f0591c..fd82fb4a9 100644
          } catch (Throwable throwable) {
              CrashReport crashreport = CrashReport.a(throwable, "Loading entity NBT");
 diff --git a/src/main/java/net/minecraft/world/entity/EntityInsentient.java b/src/main/java/net/minecraft/world/entity/EntityInsentient.java
-index a246edd09..78f17dc25 100644
+index 6c024a5fd..8b379843d 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityInsentient.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityInsentient.java
 @@ -808,7 +808,7 @@ public abstract class EntityInsentient extends EntityLiving {
@@ -83,7 +83,7 @@ index a246edd09..78f17dc25 100644
                  if (goalFloat.validConditions()) goalFloat.update();
                  this.getControllerJump().jumpIfSet();
 diff --git a/src/main/java/net/minecraft/world/level/block/BlockPortal.java b/src/main/java/net/minecraft/world/level/block/BlockPortal.java
-index 5f797260e..6ae6104bd 100644
+index f030aa3dd..1678e6253 100644
 --- a/src/main/java/net/minecraft/world/level/block/BlockPortal.java
 +++ b/src/main/java/net/minecraft/world/level/block/BlockPortal.java
 @@ -52,7 +52,7 @@ public class BlockPortal extends Block {
@@ -109,9 +109,9 @@ index 5f797260e..6ae6104bd 100644
                  }
              }
          }
-@@ -83,6 +90,19 @@ public class BlockPortal extends Block {
-     @Override
+@@ -84,6 +91,19 @@ public class BlockPortal extends Block {
      public void a(IBlockData iblockdata, World world, BlockPosition blockposition, Entity entity) {
+         if (!new io.papermc.paper.event.entity.EntityInsideBlockEvent(entity.getBukkitEntity(), org.bukkit.craftbukkit.block.CraftBlock.at(world, blockposition)).callEvent()) { return; } // Paper
          if (!entity.isPassenger() && !entity.isVehicle() && entity.canPortal()) {
 +            // Origami start - Pig Zombie portal boost
 +            if (entity instanceof net.minecraft.world.entity.monster.EntityPigZombie && world.origamiConfig.pigmenPortalBoost > 0) {

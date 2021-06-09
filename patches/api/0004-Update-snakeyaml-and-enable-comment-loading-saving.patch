@@ -1,4 +1,4 @@
-From 2499baf425c06664e972d5dd05d70d5c8e59b5f4 Mon Sep 17 00:00:00 2001
+From 3e60ed235e88ddd48967213661bc9d2b0ac8d850 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Wed, 9 Jun 2021 12:51:29 +0100
 Subject: [PATCH] Update snakeyaml and enable comment loading/saving
@@ -9,7 +9,7 @@ Subject: [PATCH] Update snakeyaml and enable comment loading/saving
  2 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/pom.xml b/pom.xml
-index 19fb839b..4bf9c679 100644
+index 9081b7a6..0bda4689 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -114,7 +114,7 @@
@@ -20,7 +20,7 @@ index 19fb839b..4bf9c679 100644
 +            <version>1.29</version> <!-- Origami - update snakeyml -->
              <scope>compile</scope>
          </dependency>
-         <!-- annotations -->
+         <!-- not part of the API proper -->
 diff --git a/src/main/java/org/bukkit/configuration/file/YamlConfiguration.java b/src/main/java/org/bukkit/configuration/file/YamlConfiguration.java
 index 6476f379..e9e3591f 100644
 --- a/src/main/java/org/bukkit/configuration/file/YamlConfiguration.java

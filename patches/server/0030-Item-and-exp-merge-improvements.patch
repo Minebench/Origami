@@ -1,4 +1,4 @@
-From 72857a895740c7f5509b05ef8af3dcd31f001c92 Mon Sep 17 00:00:00 2001
+From 67b26957d48cc6ba35261808a9a8872dc5aac672 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Sat, 24 Apr 2021 12:50:21 +0100
 Subject: [PATCH] Item and exp merge improvements
@@ -16,10 +16,10 @@ Also set item merge default radius to Vanilla value as well as set a
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-index 921253a06d..fe60777f08 100644
+index fcacc08db..d5c0b4ab9 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperWorldConfig.java
-@@ -387,7 +387,7 @@ public class PaperWorldConfig {
+@@ -389,7 +389,7 @@ public class PaperWorldConfig {
  
      public int expMergeMaxValue;
      private void expMergeMaxValue() {
@@ -29,10 +29,10 @@ index 921253a06d..fe60777f08 100644
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/item/EntityItem.java b/src/main/java/net/minecraft/world/entity/item/EntityItem.java
-index a3cf6a4351..da2a34b761 100644
+index 96d2497f1..4cb49b3f7 100644
 --- a/src/main/java/net/minecraft/world/entity/item/EntityItem.java
 +++ b/src/main/java/net/minecraft/world/entity/item/EntityItem.java
-@@ -256,7 +256,7 @@ public class EntityItem extends Entity {
+@@ -264,7 +264,7 @@ public class EntityItem extends Entity {
          ItemStack itemstack1 = entityitem.getItemStack();
  
          if (Objects.equals(this.getOwner(), entityitem.getOwner()) && a(itemstack, itemstack1)) {
@@ -42,7 +42,7 @@ index a3cf6a4351..da2a34b761 100644
              } else {
                  a(entityitem, itemstack1, this, itemstack);
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index 094a934c16..71e2061a30 100644
+index 094a934c1..71e2061a3 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -132,7 +132,7 @@ public class SpigotWorldConfig

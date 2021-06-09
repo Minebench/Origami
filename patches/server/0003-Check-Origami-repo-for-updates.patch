@@ -1,4 +1,4 @@
-From fa5a2c3f8d236bea699de085e38acff403087631 Mon Sep 17 00:00:00 2001
+From b51a9817c372bea1824fdc9b2c8f4a72b031c6bf Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:31:18 +0100
 Subject: [PATCH] Check Origami repo for updates
@@ -11,10 +11,10 @@ Subject: [PATCH] Check Origami repo for updates
  create mode 100644 src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index dc0ea65ab8..db92d44208 100644
+index 580bae0d4..37e440ae1 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -51,7 +51,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -52,7 +52,7 @@ public class PaperVersionFetcher implements VersionFetcher {
          return mcVer;
      }
  
@@ -23,7 +23,7 @@ index dc0ea65ab8..db92d44208 100644
          int distance;
          try {
              int jenkinsBuild = Integer.parseInt(versionInfo);
-@@ -94,7 +94,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -99,7 +99,7 @@ public class PaperVersionFetcher implements VersionFetcher {
      }
  
      // Contributed by Techcable <Techcable@outlook.com> in GH-65
@@ -32,7 +32,7 @@ index dc0ea65ab8..db92d44208 100644
          try {
              HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
              connection.connect();
-@@ -121,7 +121,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -126,7 +126,7 @@ public class PaperVersionFetcher implements VersionFetcher {
      }
  
      @Nullable
@@ -43,7 +43,7 @@ index dc0ea65ab8..db92d44208 100644
              return null;
 diff --git a/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java b/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 new file mode 100644
-index 0000000000..1d320d7708
+index 000000000..1d320d770
 --- /dev/null
 +++ b/src/main/java/de/minebench/origami/OrigamiVersionFetcher.java
 @@ -0,0 +1,21 @@
@@ -69,7 +69,7 @@ index 0000000000..1d320d7708
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 6141e86278..0716c3de3f 100644
+index 6cb8608f8..837972b90 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -397,7 +397,7 @@ public final class CraftMagicNumbers implements UnsafeValues {

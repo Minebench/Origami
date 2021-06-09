@@ -1,4 +1,4 @@
-From d5249703e2a594d74113896545568e1edd7662ec Mon Sep 17 00:00:00 2001
+From 663382c56e0de0a703e1ba7289060d8609fed288 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:28:42 +0100
 Subject: [PATCH] Brand changes
@@ -47,10 +47,10 @@ index a0f53c9ef..1d6b29a3b 100644
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 35bb4d0b9..53e29ecf4 100644
+index bf80e870e..d937a49d6 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1580,7 +1580,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1583,7 +1583,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -60,10 +60,10 @@ index 35bb4d0b9..53e29ecf4 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 6cc8eb04f..59a78a216 100644
+index cebecee64..9ae93c8ff 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -232,7 +232,7 @@ import javax.annotation.Nullable; // Paper
+@@ -230,7 +230,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -73,10 +73,10 @@ index 6cc8eb04f..59a78a216 100644
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 154f3a6a3..fe35eeb78 100644
+index 409fbeeb6..d76384b05 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -253,7 +253,7 @@ public class Main {
+@@ -265,7 +265,7 @@ public class Main {
                      if (buildDate.before(deadline.getTime())) {
                          // Paper start - This is some stupid bullshit
                          System.err.println("*** Warning, you've not updated in a while! ***");

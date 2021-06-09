@@ -1,4 +1,4 @@
-From 143055fd6c7a4220378bd18a33b4f82cbd7b43a2 Mon Sep 17 00:00:00 2001
+From 0f5d6e219cf7c1680564c0ad20c96c5a81d47c89 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Thu, 3 Jun 2021 16:11:26 +0100
 Subject: [PATCH] Fix missing particles
@@ -15,7 +15,7 @@ A quick check has shown no case where both, broadcastEffect and the
  1 file changed, 6 insertions(+)
 
 diff --git a/src/main/java/net/minecraft/server/level/WorldServer.java b/src/main/java/net/minecraft/server/level/WorldServer.java
-index b5139589b..c8f693b48 100644
+index e6d897c12..2e06662c9 100644
 --- a/src/main/java/net/minecraft/server/level/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/level/WorldServer.java
 @@ -1721,6 +1721,12 @@ public class WorldServer extends World implements GeneratorAccessSeed {

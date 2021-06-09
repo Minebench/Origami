@@ -1,4 +1,4 @@
-From 35b2a685da85bdfe76b24b8e22147711b8f43e30 Mon Sep 17 00:00:00 2001
+From a2119cad7f13b9548f121ea5d4a1aceab52bc780 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Fri, 12 Jun 2020 21:43:36 +0100
 Subject: [PATCH] Only play sound in same world if radius is set
@@ -13,7 +13,7 @@ Integer.MAX_VALUE I guess.
  3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/world/entity/boss/enderdragon/EntityEnderDragon.java b/src/main/java/net/minecraft/world/entity/boss/enderdragon/EntityEnderDragon.java
-index c296fcf80c..f3ec3f0ef0 100644
+index c296fcf80..f3ec3f0ef 100644
 --- a/src/main/java/net/minecraft/world/entity/boss/enderdragon/EntityEnderDragon.java
 +++ b/src/main/java/net/minecraft/world/entity/boss/enderdragon/EntityEnderDragon.java
 @@ -626,13 +626,13 @@ public class EntityEnderDragon extends EntityInsentient implements IMonster {
@@ -33,7 +33,7 @@ index c296fcf80c..f3ec3f0ef0 100644
                          double deltaLength = Math.sqrt(distanceSquared);
                          double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
 diff --git a/src/main/java/net/minecraft/world/entity/boss/wither/EntityWither.java b/src/main/java/net/minecraft/world/entity/boss/wither/EntityWither.java
-index 229eabe051..3adf05f957 100644
+index 635b1493e..c82e59c3f 100644
 --- a/src/main/java/net/minecraft/world/entity/boss/wither/EntityWither.java
 +++ b/src/main/java/net/minecraft/world/entity/boss/wither/EntityWither.java
 @@ -265,12 +265,12 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
@@ -52,7 +52,7 @@ index 229eabe051..3adf05f957 100644
                              double deltaLength = Math.sqrt(distanceSquared);
                              double relativeX = player.locX() + (deltaX / deltaLength) * viewDistance;
 diff --git a/src/main/java/net/minecraft/world/item/ItemEnderEye.java b/src/main/java/net/minecraft/world/item/ItemEnderEye.java
-index f74685a7cd..d432a3ae60 100644
+index f74685a7c..d432a3ae6 100644
 --- a/src/main/java/net/minecraft/world/item/ItemEnderEye.java
 +++ b/src/main/java/net/minecraft/world/item/ItemEnderEye.java
 @@ -66,7 +66,7 @@ public class ItemEnderEye extends Item {

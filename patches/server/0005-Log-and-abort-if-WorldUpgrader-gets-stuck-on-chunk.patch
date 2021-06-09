@@ -1,4 +1,4 @@
-From 8f33af31c602ce433bdf397ff9b6b0ab6f20de47 Mon Sep 17 00:00:00 2001
+From 038a0502ebae347a99b76282ff39277198cc46c0 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sun, 24 Nov 2019 22:51:07 +0100
 Subject: [PATCH] Log and abort if WorldUpgrader gets stuck on chunk
@@ -9,10 +9,10 @@ Subject: [PATCH] Log and abort if WorldUpgrader gets stuck on chunk
  2 files changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index 6818f8496a..46de86dfeb 100644
+index 15b972b4a..4aeda676b 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
-@@ -280,7 +280,10 @@ public class Main {
+@@ -291,7 +291,10 @@ public class Main {
          Main.LOGGER.info("Forcing world upgrade! {}", convertable_conversionsession.getLevelName()); // CraftBukkit
          WorldUpgrader worldupgrader = new WorldUpgrader(convertable_conversionsession, datafixer, immutableset, flag);
          IChatBaseComponent ichatbasecomponent = null;
@@ -24,7 +24,7 @@ index 6818f8496a..46de86dfeb 100644
          while (!worldupgrader.b()) {
              IChatBaseComponent ichatbasecomponent1 = worldupgrader.h();
  
-@@ -295,6 +298,23 @@ public class Main {
+@@ -306,6 +309,23 @@ public class Main {
                  int j = worldupgrader.f() + worldupgrader.g();
  
                  Main.LOGGER.info("{}% completed ({} / {} chunks)...", MathHelper.d((float) j / (float) i * 100.0F), j, i);
@@ -49,12 +49,12 @@ index 6818f8496a..46de86dfeb 100644
  
              if (!booleansupplier.getAsBoolean()) {
 diff --git a/src/main/java/net/minecraft/util/worldupdate/WorldUpgrader.java b/src/main/java/net/minecraft/util/worldupdate/WorldUpgrader.java
-index a497065449..c2e866d8e5 100644
+index dca2e9e45..a9f77710e 100644
 --- a/src/main/java/net/minecraft/util/worldupdate/WorldUpgrader.java
 +++ b/src/main/java/net/minecraft/util/worldupdate/WorldUpgrader.java
 @@ -57,6 +57,7 @@ public class WorldUpgrader {
      private volatile IChatBaseComponent o = new ChatMessage("optimizeWorld.stage.counting");
-     private static final Pattern p = Pattern.compile("^r\\.(-?[0-9]+)\\.(-?[0-9]+)\\.mca$");
+     private static final Pattern p = Pattern.compile("^r\\.(-?[0-9]+)\\.(-?[0-9]+)\\.mca$"); public static final Pattern getRegionfileRegex() { return p; } // Paper - OBFHELPER
      private final WorldPersistentData q;
 +    public ChunkCoordIntPair currentChunk = null; // Origami - Abort stuck WorldUpgrader
  

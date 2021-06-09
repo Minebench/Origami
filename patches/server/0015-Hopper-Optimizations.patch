@@ -1,4 +1,4 @@
-From 5cf73c01a43d9fbe22ca1bb86902b3875a8f0091 Mon Sep 17 00:00:00 2001
+From 4d87efeeca6fc6930beb7958e900643609e53c3b Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 24 Mar 2020 17:40:50 +0100
 Subject: [PATCH] Hopper Optimizations
@@ -17,10 +17,10 @@ chain.
  6 files changed, 85 insertions(+), 10 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index d7b9cc389..a52b5d323 100644
+index efb0b1448..c42d9d735 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -169,6 +169,12 @@ public final class OrigamiConfig {
+@@ -161,6 +161,12 @@ public final class OrigamiConfig {
                  Bukkit.getLogger().info("Farm detection radius: " + pigmenFarmsRadius + ", count: " + pigmenFarmsCount);
              }
          }
@@ -34,7 +34,7 @@ index d7b9cc389..a52b5d323 100644
  
      public static boolean teleportingOfVehiclesWithPassenger = true;
 diff --git a/src/main/java/net/minecraft/world/entity/item/EntityItem.java b/src/main/java/net/minecraft/world/entity/item/EntityItem.java
-index 575833807..be485cafd 100644
+index 8b79220c2..96d2497f1 100644
 --- a/src/main/java/net/minecraft/world/entity/item/EntityItem.java
 +++ b/src/main/java/net/minecraft/world/entity/item/EntityItem.java
 @@ -162,6 +162,13 @@ public class EntityItem extends Entity {

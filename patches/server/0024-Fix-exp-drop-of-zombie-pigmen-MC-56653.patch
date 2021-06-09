@@ -1,4 +1,4 @@
-From d58ca186f38b5aa6c79e376590a69d3883cb4daf Mon Sep 17 00:00:00 2001
+From 024103e0dce7d9f40b7e907a8099c85794e42146 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 7 Jul 2020 00:22:11 +0100
 Subject: [PATCH] Fix exp drop of zombie pigmen (MC-56653)
@@ -9,10 +9,10 @@ Subject: [PATCH] Fix exp drop of zombie pigmen (MC-56653)
  2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 341cac2107..ae4a0b6be7 100644
+index c51912b31..04cf1c7e1 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -153,6 +153,10 @@ public final class OrigamiConfig {
+@@ -145,6 +145,10 @@ public final class OrigamiConfig {
          public int getTickRate(String type, String typeName, String entityType, int def) {
              return tickRates.getOrDefault(type + "." + entityType + "." + typeName, tickRates.getOrDefault(type + "." + typeName, def));
          }
@@ -24,7 +24,7 @@ index 341cac2107..ae4a0b6be7 100644
          public double pigmenPortalBoost = 0.0;
          public boolean pigmenFarmsWaterAi = false;
 diff --git a/src/main/java/net/minecraft/world/entity/monster/EntityPigZombie.java b/src/main/java/net/minecraft/world/entity/monster/EntityPigZombie.java
-index d10d1b7686..33f4e9211c 100644
+index d10d1b768..33f4e9211 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/EntityPigZombie.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/EntityPigZombie.java
 @@ -103,7 +103,7 @@ public class EntityPigZombie extends EntityZombie implements IEntityAngerable {

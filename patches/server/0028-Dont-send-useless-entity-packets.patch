@@ -1,4 +1,4 @@
-From 9cc75f1765517e90a9852b44de0e8c4a03b73b9e Mon Sep 17 00:00:00 2001
+From 35add3a22ed3189e5dfffa47032ea550726551b1 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sat, 6 Jul 2019 17:00:04 -0500
 Subject: [PATCH] Dont send useless entity packets
@@ -10,10 +10,10 @@ Subject: [PATCH] Dont send useless entity packets
  3 files changed, 27 insertions(+), 5 deletions(-)
 
 diff --git a/src/main/java/de/minebench/origami/OrigamiConfig.java b/src/main/java/de/minebench/origami/OrigamiConfig.java
-index 1cad9d321d..17f5043afa 100644
+index 6100b5aa0..c6c6a1be4 100644
 --- a/src/main/java/de/minebench/origami/OrigamiConfig.java
 +++ b/src/main/java/de/minebench/origami/OrigamiConfig.java
-@@ -195,4 +195,9 @@ public final class OrigamiConfig {
+@@ -187,4 +187,9 @@ public final class OrigamiConfig {
      private static void disableLegacySupport() {
          disableLegacySupport = getBoolean("disable-legacy-support", disableLegacySupport);
      }
@@ -25,7 +25,7 @@ index 1cad9d321d..17f5043afa 100644
  }
 \ No newline at end of file
 diff --git a/src/main/java/net/minecraft/network/protocol/game/PacketPlayOutEntity.java b/src/main/java/net/minecraft/network/protocol/game/PacketPlayOutEntity.java
-index 0eed10a6c4..9ea2229c0a 100644
+index 0eed10a6c..9ea2229c0 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/PacketPlayOutEntity.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/PacketPlayOutEntity.java
 @@ -9,11 +9,11 @@ import net.minecraft.world.phys.Vec3D;
@@ -46,7 +46,7 @@ index 0eed10a6c4..9ea2229c0a 100644
      protected boolean h;
      protected boolean i;
 diff --git a/src/main/java/net/minecraft/server/level/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/level/EntityTrackerEntry.java
-index 1df8fb8cb3..067afe6950 100644
+index 1df8fb8cb..067afe695 100644
 --- a/src/main/java/net/minecraft/server/level/EntityTrackerEntry.java
 +++ b/src/main/java/net/minecraft/server/level/EntityTrackerEntry.java
 @@ -199,6 +199,7 @@ public class EntityTrackerEntry {

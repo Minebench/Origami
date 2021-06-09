@@ -1,4 +1,4 @@
-From e0e7181fd64ef8b1b97223cc091a12c5547373e6 Mon Sep 17 00:00:00 2001
+From 5290ff5b123892fd793a156116c6068963c79426 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 14 Apr 2020 15:31:23 +0100
 Subject: [PATCH] Force tile entity ID to lowercase when creating it
@@ -8,7 +8,7 @@ Subject: [PATCH] Force tile entity ID to lowercase when creating it
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/TileEntity.java b/src/main/java/net/minecraft/world/level/block/entity/TileEntity.java
-index 93d02ccb87..736a2bb1fe 100644
+index 93d02ccb8..736a2bb1f 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/TileEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/TileEntity.java
 @@ -132,7 +132,7 @@ public abstract class TileEntity implements net.minecraft.server.KeyedObject { /

@@ -1,4 +1,4 @@
-From 9fde48e9c2953000b7d0a3adde6d3df35973d1a5 Mon Sep 17 00:00:00 2001
+From 5d4e86d4b43ea54d0a2cb4a1fa97e88d0edc9d8d Mon Sep 17 00:00:00 2001
 From: Phoenix616 <max@themoep.de>
 Date: Thu, 28 Jan 2021 22:47:20 +0100
 Subject: [PATCH] Disable online-mode if bungeecord or velocity
@@ -8,7 +8,7 @@ Subject: [PATCH] Disable online-mode if bungeecord or velocity
  1 file changed, 1 insertion(+)
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 8952ead9c..3ecefe6fa 100644
+index 506219195..095652bec 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -211,6 +211,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer

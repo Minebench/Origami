@@ -1,4 +1,4 @@
-From b97fd7d6fe433e97163c85415d946b1a60050fcb Mon Sep 17 00:00:00 2001
+From fb6ced4f30e24e31f125e4962d1f2cad98b3c82a Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Sat, 4 Jul 2020 20:08:42 +0100
 Subject: [PATCH] Keep weather clear after sleep
@@ -8,7 +8,7 @@ Subject: [PATCH] Keep weather clear after sleep
  1 file changed, 1 insertion(+)
 
 diff --git a/src/main/java/net/minecraft/server/level/WorldServer.java b/src/main/java/net/minecraft/server/level/WorldServer.java
-index 47fbb8df04..9a11529964 100644
+index f68a25237..e6d897c12 100644
 --- a/src/main/java/net/minecraft/server/level/WorldServer.java
 +++ b/src/main/java/net/minecraft/server/level/WorldServer.java
 @@ -884,6 +884,7 @@ public class WorldServer extends World implements GeneratorAccessSeed {
@@ -17,7 +17,7 @@ index 47fbb8df04..9a11529964 100644
      private void clearWeather() {
 +        this.worldDataServer.setClearWeatherTime(6000 + this.randomTickRandom.nextInt(24000)); // Origami - keep weather clear for at least 5 minutes after sleep
          // CraftBukkit start
-         this.worldDataServer.setStorm(false);
+         this.worldDataServer.setStorm(false, org.bukkit.event.weather.WeatherChangeEvent.Cause.SLEEP); // Paper - when passing the night
          // If we stop due to everyone sleeping we should reset the weather duration to some other random value.
 -- 
 2.25.1.windows.1

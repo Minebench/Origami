@@ -1,4 +1,4 @@
-From 10048a76117208bf0f713b7b553eb2f2dedfc680 Mon Sep 17 00:00:00 2001
+From 9f5dea5850f3c2e5e2f53ab1578200a88168bad5 Mon Sep 17 00:00:00 2001
 From: Phoenix616 <mail@moep.tv>
 Date: Tue, 30 Jun 2020 19:02:23 +0100
 Subject: [PATCH] Add alternative, simpler plugin load order
@@ -9,18 +9,18 @@ Can be disabled with the system property useAlternativePluginLoadOrder
  1 file changed, 74 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index 26685f59b..702f4abba 100644
+index 0e251195..10727ec3 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -60,6 +60,7 @@ public final class SimplePluginManager implements PluginManager {
-     private final Map<String, Map<Permissible, Boolean>> permSubs = new HashMap<String, Map<Permissible, Boolean>>();
+@@ -61,6 +61,7 @@ public final class SimplePluginManager implements PluginManager {
      private final Map<Boolean, Map<Permissible, Boolean>> defSubs = new HashMap<Boolean, Map<Permissible, Boolean>>();
      private boolean useTimings = false;
+     private File pluginsDirectory; public @Nullable File pluginsDirectory() { return this.pluginsDirectory; } // Paper
 +    private boolean useAlternativeLoadOrder = System.getProperty("useAlternativePluginLoadOrder", "true").equalsIgnoreCase("true"); // Origami - use alternative load order
  
      public SimplePluginManager(@NotNull Server instance, @NotNull SimpleCommandMap commandMap) {
          server = instance;
-@@ -242,6 +243,79 @@ public final class SimplePluginManager implements PluginManager {
+@@ -254,6 +255,79 @@ public final class SimplePluginManager implements PluginManager {
              }
          }
  
